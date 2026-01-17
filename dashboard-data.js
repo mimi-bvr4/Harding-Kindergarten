@@ -1,43 +1,296 @@
-// This file stores the dashboard data
-// Last updated: 1/16/2026, 8:46:47 PM
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Harding Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-header {
+            background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="gradient-header text-white shadow-lg">
+            <div class="max-w-6xl mx-auto px-4 py-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-3xl font-bold flex items-center gap-2">
+                            <i class="fas fa-shield-halved"></i>
+                            Admin Dashboard
+                        </h1>
+                        <p class="text-purple-200 mt-1">Manage Harding Academy Parent Dashboard</p>
+                    </div>
+                    <a href="parent-dashboard.html" target="_blank" class="px-4 py-2 bg-white text-purple-700 rounded-lg hover:bg-purple-50 transition font-medium">
+                        <i class="fas fa-external-link mr-2"></i>View Parent Dashboard
+                    </a>
+                </div>
+            </div>
+        </header>
 
-const dashboardData = {
-    "lastUpdated": "2026-01-17T02:46:45.513Z",
-    "weeklyEmail": {
-        "week": "",
-        "compassUrl": "https://hardingacademy.myschoolapp.com/podium/push/default.aspx?i=698278&s=287&snd=a33ab57b-19db-400e-8915-27a1ea63bd15",
-        "emailUrl": "",
-        "kindergartenExcerpt": "",
-        "highlights": [
-            "Kindergarten Spirit Night!  Please join your fellow kindergarten friends on Friday, January 23rd to cheer on the Harding girls basketball team!  All Kindergarten families are encouraged to show their Harding spirit at this fun sporting event!  ",
-            "Please continue to save boxes (of all sizes) for our Kindergarten adventure called Roxaboxen which begins January 26th.  We will ask you to bring boxes in on Monday, January 26th.  "
-        ],
-        "importantDates": [
-            "January 19- Dr. Martin Luther King, Jr. Day (school holiday) ",
-            "January 23- Kindergarten Spirit Basketball Game at 5:30pm ",
-            "January 29- Rox-a-boxen Drive in Movie (4:00-6:00pm in the theater) Please sign up by purchasing the auction item!",
-            "February 12- Valentine’s Day Party (information sent home on pink sheet in student folders) ",
-            "February 13 and February 16- School holidays (President's Weekend) "
-        ]
-    },
-    "schoolEvents": []
-};
-    schoolEvents: [
-        { date: '2026-01-20', title: 'Martin Luther King Jr. Day', type: 'holiday', location: 'No School' },
-        { date: '2026-01-24', title: 'Parent-Teacher Conferences', type: 'meeting', location: 'Main Building' },
-        { date: '2026-02-14', title: "Valentine's Day Party", type: 'party', location: 'Classroom' },
-        { date: '2026-02-16', title: 'Presidents Day', type: 'holiday', location: 'No School' },
-        { date: '2026-02-26', title: 'All Day Parent Conferences', type: 'meeting', location: 'School Wide' },
-        { date: '2026-03-13', title: 'No School', type: 'holiday', location: '' },
-        { date: '2026-03-16', title: 'Spring Break Begins', type: 'holiday', location: 'No School (Mar 16-20)' },
-        { date: '2026-04-03', title: 'No School', type: 'holiday', location: '' },
-        { date: '2026-05-01', title: 'No School', type: 'holiday', location: '' },
-        { date: '2026-05-20', title: 'Last Day of School', type: 'event', location: '' }
-    ],
-    volunteerOpportunities: [
-        { date: '2026-01-22', activity: 'Classroom Helper', slots: 2, filled: 1 },
-        { date: '2026-01-29', activity: 'Field Trip Chaperone', slots: 4, filled: 2 },
-        { date: '2026-02-05', activity: 'Art Class Support', slots: 2, filled: 0 },
-        { date: '2026-02-12', activity: 'Library Assistant', slots: 3, filled: 1 }
-    ]
-};
+        <div class="max-w-6xl mx-auto px-4 py-8">
+            <!-- Success Message -->
+            <div id="successMessage" class="hidden mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+                <i class="fas fa-check-circle mr-2"></i>
+                <span id="successText">Changes saved successfully!</span>
+            </div>
+
+            <!-- Weekly Email Section -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-envelope text-yellow-600"></i>
+                    Update Weekly Email
+                </h2>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Week Of:</label>
+                        <input type="text" id="weekOf" placeholder="e.g., Week of January 13-17, 2026"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-medium text-gray-700">Compass Connection URL (Sunday Email):</label>
+                            <button onclick="clearField('compassUrl')" class="text-xs px-2 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition">
+                                <i class="fas fa-times mr-1"></i>Clear
+                            </button>
+                        </div>
+                        <input type="url" id="compassUrl" placeholder="https://hardingacademy.myschoolapp.com/podium/push/default.aspx?..."
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <p class="text-xs text-gray-500 mt-1">Paste the link from Sunday's Compass Connection email</p>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-medium text-gray-700">Weekly Email URL (Optional):</label>
+                            <button onclick="clearField('emailUrl')" class="text-xs px-2 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition">
+                                <i class="fas fa-times mr-1"></i>Clear
+                            </button>
+                        </div>
+                        <input type="url" id="emailUrl" placeholder="https://hardingacademy.myschoolapp.com/podium/push/default.aspx?..."
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <p class="text-xs text-gray-500 mt-1">Paste the link from the weekly email for reference</p>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                                <i class="fas fa-graduation-cap text-purple-600"></i>
+                                Kindergarten Excerpt:
+                            </label>
+                            <button onclick="clearField('kindergartenExcerpt')" class="text-xs px-2 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition">
+                                <i class="fas fa-times mr-1"></i>Clear
+                            </button>
+                        </div>
+                        <textarea id="kindergartenExcerpt" rows="8" placeholder="Paste the kindergarten-specific content from the weekly email here..."
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">This will display prominently at the top of the weekly newsletter section</p>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-medium text-gray-700">Highlights (one per line):</label>
+                            <button onclick="clearField('highlights')" class="text-xs px-2 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition">
+                                <i class="fas fa-times mr-1"></i>Clear
+                            </button>
+                        </div>
+                        <textarea id="highlights" rows="6" placeholder="Enter each highlight on a new line..."
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-medium text-gray-700">Important Dates (one per line):</label>
+                            <button onclick="clearField('importantDates')" class="text-xs px-2 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition">
+                                <i class="fas fa-times mr-1"></i>Clear
+                            </button>
+                        </div>
+                        <textarea id="importantDates" rows="4" placeholder="e.g., Jan 20 - MLK Day (No School)"
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
+                    </div>
+
+                    <button onclick="saveWeeklyEmail()" class="w-full px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium">
+                        <i class="fas fa-save mr-2"></i>Save Weekly Email
+                    </button>
+
+                    <button onclick="downloadData()" class="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium">
+                        <i class="fas fa-download mr-2"></i>Download dashboard-data.js for GitHub
+                    </button>
+                </div>
+            </div>
+
+            <!-- Info Box - School Events -->
+            <div class="bg-blue-50 rounded-lg shadow-lg p-6 mb-6 border-2 border-blue-200">
+                <h2 class="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <i class="fas fa-info-circle text-blue-600"></i>
+                    School Events (Auto-Updated)
+                </h2>
+                <p class="text-gray-700 mb-2">
+                    <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                    School events are now automatically pulled from the Harding Academy calendar feed.
+                </p>
+                <p class="text-sm text-gray-600">
+                    Events, holidays, and special dates will update automatically - no manual entry needed!
+                </p>
+            </div>
+
+            <!-- Info Box - Auto-Update -->
+            <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg shadow-lg p-6 border-2 border-green-200">
+                <h3 class="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
+                    <i class="fas fa-check-circle text-green-600"></i>
+                    Instant Updates
+                </h3>
+                <p class="text-sm text-gray-700 mb-2">
+                    <i class="fas fa-magic text-purple-600 mr-2"></i>
+                    When you click "Save Weekly Email" above, the parent dashboard updates automatically!
+                </p>
+                <p class="text-xs text-gray-600">
+                    No file uploads needed. Parents see changes instantly when they refresh the page.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let data = {
+            lastUpdated: new Date().toISOString(),
+            weeklyEmail: {
+                week: "",
+                compassUrl: "",
+                emailUrl: "",
+                kindergartenExcerpt: "",
+                highlights: [],
+                importantDates: []
+            },
+            schoolEvents: [] // Auto-populated from iCal feed on parent dashboard
+        };
+
+        // Load existing data on page load
+        window.addEventListener('load', () => {
+            loadFromLocalStorage();
+            populateEmailForm();
+        });
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('hardingAdminData');
+            if (saved) {
+                data = JSON.parse(saved);
+            }
+        }
+
+        function saveToLocalStorage() {
+            data.lastUpdated = new Date().toISOString();
+            localStorage.setItem('hardingAdminData', JSON.stringify(data));
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+            successText.textContent = message;
+            successDiv.classList.remove('hidden');
+            setTimeout(() => successDiv.classList.add('hidden'), 3000);
+        }
+
+        function showGmailStatus(message, isError = false) {
+            const statusDiv = document.getElementById('gmailStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = `text-sm mt-2 ${isError ? 'text-red-600' : 'text-blue-600'}`;
+        }
+
+        async function loadFromGmail() {
+            showGmailStatus('🔍 Searching for labeled emails...', false);
+
+            // Note: This is a simplified version that will work when opened from Gmail
+            // For full Gmail API integration, you would need OAuth setup
+
+            try {
+                // Check if we have Gmail API access (requires being opened in context where Gmail is accessible)
+                if (typeof gapi === 'undefined') {
+                    showGmailStatus('⚠️ Gmail API not available. Please paste email content manually for now.', true);
+                    alert('Gmail API Integration Coming Soon!\n\nFor now, please:\n1. Open the email with "Dashboard Update" label\n2. Copy the kindergarten section\n3. Paste it into the form below\n\nThis takes only 30 seconds!');
+                    return;
+                }
+
+                // If Gmail API is available, fetch the email
+                // This would require OAuth setup which we're avoiding due to the issues
+                showGmailStatus('Gmail integration requires additional setup. Please paste content manually.', true);
+
+            } catch (error) {
+                showGmailStatus('Error: ' + error.message, true);
+            }
+        }
+
+        function populateEmailForm() {
+            document.getElementById('weekOf').value = data.weeklyEmail.week || '';
+            document.getElementById('compassUrl').value = data.weeklyEmail.compassUrl || '';
+            document.getElementById('emailUrl').value = data.weeklyEmail.emailUrl || '';
+            document.getElementById('kindergartenExcerpt').value = data.weeklyEmail.kindergartenExcerpt || '';
+            document.getElementById('highlights').value = (data.weeklyEmail.highlights || []).join('\n');
+            document.getElementById('importantDates').value = (data.weeklyEmail.importantDates || []).join('\n');
+        }
+
+        function clearField(fieldId) {
+            const confirmed = confirm(`Clear the ${fieldId} field? This will not save automatically - click "Save Weekly Email" after clearing if you want to keep it empty.`);
+            if (confirmed) {
+                document.getElementById(fieldId).value = '';
+                document.getElementById(fieldId).focus();
+            }
+        }
+
+        function saveWeeklyEmail() {
+            data.weeklyEmail.week = document.getElementById('weekOf').value;
+            data.weeklyEmail.compassUrl = document.getElementById('compassUrl').value;
+            data.weeklyEmail.emailUrl = document.getElementById('emailUrl').value;
+            data.weeklyEmail.kindergartenExcerpt = document.getElementById('kindergartenExcerpt').value;
+            data.weeklyEmail.highlights = document.getElementById('highlights').value.split('\n').filter(line => line.trim());
+            data.weeklyEmail.importantDates = document.getElementById('importantDates').value.split('\n').filter(line => line.trim());
+
+            saveToLocalStorage();
+
+            // Also save to shared localStorage key for parent dashboard
+            localStorage.setItem('hardingDashboardData', JSON.stringify(data));
+
+            showSuccess('Weekly email updated successfully! Parents will see the changes immediately.');
+        }
+
+
+        function downloadData() {
+            // Only include the weekly email data that you actually update
+            // School events come from the calendar feed automatically
+            const cleanData = {
+                lastUpdated: new Date().toISOString(),
+                weeklyEmail: {
+                    week: data.weeklyEmail.week,
+                    compassUrl: data.weeklyEmail.compassUrl,
+                    emailUrl: data.weeklyEmail.emailUrl,
+                    kindergartenExcerpt: data.weeklyEmail.kindergartenExcerpt,
+                    highlights: data.weeklyEmail.highlights,
+                    importantDates: data.weeklyEmail.importantDates
+                }
+            };
+
+            const dataContent = `// This file stores the dashboard data
+// Last updated: ${new Date().toLocaleString()}
+
+const dashboardData = ${JSON.stringify(cleanData, null, 4)};`;
+
+            const blob = new Blob([dataContent], { type: 'text/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'dashboard-data.js';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showSuccess('Data file downloaded! Upload this to GitHub to update the parent dashboard.');
+        }
+    </script>
+</body>
+</html>
