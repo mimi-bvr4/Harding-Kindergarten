@@ -97,40 +97,25 @@
 
         // Initialize the dashboard
         async function initDashboard() {
-            // Priority: shared localStorage (admin updates) > dashboard-data.js (file) > fallback
-            const sharedData = localStorage.getItem('hardingDashboardData');
+            // Always use dashboard-data.js file as the source of truth
             let data;
 
-            if (sharedData) {
-                // Use shared localStorage data (updated via admin dashboard)
-                data = JSON.parse(sharedData);
-                console.log('Loading data from admin updates (shared localStorage)');
-            } else if (typeof dashboardData !== 'undefined') {
-                // Use dashboard-data.js file if no shared data
+            if (typeof dashboardData !== 'undefined') {
+                // Use dashboard-data.js file
                 data = dashboardData;
                 console.log('Loading data from dashboard-data.js file');
             } else {
-                // Fallback to default data
+                // Fallback to empty data if file doesn't load
                 data = {
                     weeklyEmail: {
-                        week: "Week of January 13-17, 2026",
+                        week: "",
                         kindergartenExcerpt: "",
-                        highlights: [
-                            "Thank you to all parents who attended the winter concert!",
-                            "Reminder: Book fair is next week, Monday-Friday in the library",
-                            "Lost and found items will be donated on Jan 31st - please check!"
-                        ],
-                        importantDates: [
-                            "Jan 20 - MLK Day (No School)",
-                            "Jan 24 - Parent-Teacher Conferences 3-7 PM"
-                        ]
+                        highlights: [],
+                        importantDates: []
                     },
-                    schoolEvents: [],
-                    volunteerOpportunities: [
-                        { date: '2026-01-22', activity: 'Classroom Helper', slots: 2, filled: 1 }
-                    ]
+                    schoolEvents: []
                 };
-                console.log('Using fallback default data');
+                console.log('Using empty fallback data - dashboard-data.js not found');
             }
 
             // Load calendar events from iCal feed
@@ -678,8 +663,8 @@
                                     Quick Links
                                 </h2>
                                 <div class="space-y-2">
-                                    <a href="https://www.hardingacademy.org"
-                                       target="_blank"
+                                    <a href="https://www.hardingacademy.org" 
+                                       target="_blank" 
                                        rel="noopener noreferrer"
                                        class="block p-3 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition">
                                         <div class="flex items-center justify-between">
@@ -687,8 +672,8 @@
                                             <i class="fas fa-external-link text-blue-600 text-sm"></i>
                                         </div>
                                     </a>
-                                    <a href="https://www.signupgenius.com/go/10C0A4CADA62FA0FFC07-58545046-kivett#/"
-                                       target="_blank"
+                                    <a href="https://www.signupgenius.com/go/10C0A4CADA62FA0FFC07-58545046-kivett#/" 
+                                       target="_blank" 
                                        rel="noopener noreferrer"
                                        class="block p-3 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 transition">
                                         <div class="flex items-center justify-between">
