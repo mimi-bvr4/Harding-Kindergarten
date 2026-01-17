@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harding Academy Parent Dashboard - Kivett Family</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="dashboard-data.js"></script>
+    <script src="ical-parser.js"></script>
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --secondary-gold: #fbbf24;
+            --accent-red: #dc2626;
+            --light-bg: #f8fafc;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        .gradient-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #1e40af 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .card-shadow:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.3s ease;
+        }
+        .highlight-today {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="root"></div>
+
+    <script>
+        // School calendar iCal feed URL
+        const CALENDAR_URL = 'https://hardingacademy.myschoolapp.com/podium/feed/iCal.aspx?z=x3MP9krCXdJfr%2bmy77FX9nsQ%2fqwLtAVaxWPKhQSn%2bVHlgPICB4VIxO%2fqnJtm8Rn%2ftXpOAZHe4%2bu6VU4VYxI1wQ%3d%3d';
+
+        // Complete Show & Share schedule from your calendars
+        const showAndShareSchedule = [
+            // January 2026
+            { date: '2026-01-05', studentName: 'Aiden' }, { date: '2026-01-06', studentName: 'Brooks' },
+            { date: '2026-01-07', studentName: 'Charlotte' }, { date: '2026-01-08', studentName: 'Cooper' },
+            { date: '2026-01-09', studentName: 'Daisy' }, { date: '2026-01-12', studentName: 'Doc' },
+            { date: '2026-01-13', studentName: 'Dottie' }, { date: '2026-01-14', studentName: 'Ellison' },
+            { date: '2026-01-15', studentName: 'Evie' }, { date: '2026-01-16', studentName: 'Evie Clare' },
+            { date: '2026-01-20', studentName: 'Grace' }, { date: '2026-01-21', studentName: 'Harrison' },
+            { date: '2026-01-22', studentName: 'Jhanvi' }, { date: '2026-01-23', studentName: 'Leyton' },
+            { date: '2026-01-26', studentName: 'Margo' }, { date: '2026-01-27', studentName: 'Mateo' },
+            { date: '2026-01-28', studentName: 'Parker' }, { date: '2026-01-29', studentName: 'Quinn' },
+            { date: '2026-01-30', studentName: 'Venice' },
+            // February 2026
+            { date: '2026-02-02', studentName: 'Wren' }, { date: '2026-02-03', studentName: 'Aiden' },
+            { date: '2026-02-04', studentName: 'Brooks' }, { date: '2026-02-05', studentName: 'Charlotte' },
+            { date: '2026-02-06', studentName: 'Cooper' }, { date: '2026-02-09', studentName: 'Daisy' },
+            { date: '2026-02-10', studentName: 'Doc' }, { date: '2026-02-11', studentName: 'Dottie' },
+            { date: '2026-02-12', studentName: 'Ellison' }, { date: '2026-02-17', studentName: 'Evie' },
+            { date: '2026-02-18', studentName: 'Evie Clare' }, { date: '2026-02-19', studentName: 'Grace' },
+            { date: '2026-02-20', studentName: 'Harrison' }, { date: '2026-02-23', studentName: 'Jhanvi' },
+            { date: '2026-02-24', studentName: 'Leyton' }, { date: '2026-02-25', studentName: 'Margo' },
+            { date: '2026-02-26', studentName: 'Mateo' },
+            // March 2026
+            { date: '2026-03-02', studentName: 'Parker' }, { date: '2026-03-03', studentName: 'Quinn' },
+            { date: '2026-03-04', studentName: 'Venice' }, { date: '2026-03-05', studentName: 'Wren' },
+            { date: '2026-03-06', studentName: 'Aiden' }, { date: '2026-03-09', studentName: 'Brooks' },
+            { date: '2026-03-10', studentName: 'Charlotte' }, { date: '2026-03-11', studentName: 'Cooper' },
+            { date: '2026-03-12', studentName: 'Daisy' }, { date: '2026-03-23', studentName: 'Doc' },
+            { date: '2026-03-24', studentName: 'Dottie' }, { date: '2026-03-25', studentName: 'Ellison' },
+            { date: '2026-03-26', studentName: 'Evie' }, { date: '2026-03-27', studentName: 'Evie Clare' },
+            { date: '2026-03-30', studentName: 'Grace' }, { date: '2026-03-31', studentName: 'Harrison' },
+            // April 2026
+            { date: '2026-04-06', studentName: 'Jhanvi' }, { date: '2026-04-07', studentName: 'Leyton' },
+            { date: '2026-04-08', studentName: 'Margo' }, { date: '2026-04-09', studentName: 'Mateo' },
+            { date: '2026-04-10', studentName: 'Parker' }, { date: '2026-04-13', studentName: 'Quinn' },
+            { date: '2026-04-14', studentName: 'Venice' }, { date: '2026-04-15', studentName: 'Wren' },
+            { date: '2026-04-16', studentName: 'Aiden' }, { date: '2026-04-17', studentName: 'Brooks' },
+            { date: '2026-04-20', studentName: 'Charlotte' }, { date: '2026-04-21', studentName: 'Cooper' },
+            { date: '2026-04-22', studentName: 'Daisy' }, { date: '2026-04-23', studentName: 'Doc' },
+            { date: '2026-04-24', studentName: 'Dottie' }, { date: '2026-04-27', studentName: 'Ellison' },
+            { date: '2026-04-28', studentName: 'Evie' }, { date: '2026-04-29', studentName: 'Evie Clare' },
+            { date: '2026-04-30', studentName: 'Grace' },
+            // May 2026
+            { date: '2026-05-04', studentName: 'Harrison' }, { date: '2026-05-05', studentName: 'Jhanvi' },
+            { date: '2026-05-06', studentName: 'Leyton' }, { date: '2026-05-07', studentName: 'Margo' },
+            { date: '2026-05-08', studentName: 'Mateo' }, { date: '2026-05-11', studentName: 'Parker' },
+            { date: '2026-05-12', studentName: 'Quinn' }, { date: '2026-05-13', studentName: 'Venice' },
+            { date: '2026-05-14', studentName: 'Wren' }
+        ];
+
+        // Initialize the dashboard
+        async function initDashboard() {
+            // Priority: shared localStorage (admin updates) > dashboard-data.js (file) > fallback
+            const sharedData = localStorage.getItem('hardingDashboardData');
+            let data;
+
+            if (sharedData) {
+                // Use shared localStorage data (updated via admin dashboard)
+                data = JSON.parse(sharedData);
+                console.log('Loading data from admin updates (shared localStorage)');
+            } else if (typeof dashboardData !== 'undefined') {
+                // Use dashboard-data.js file if no shared data
+                data = dashboardData;
+                console.log('Loading data from dashboard-data.js file');
+            } else {
+                // Fallback to default data
+                data = {
+                    weeklyEmail: {
+                        week: "Week of January 13-17, 2026",
+                        kindergartenExcerpt: "",
+                        highlights: [
+                            "Thank you to all parents who attended the winter concert!",
+                            "Reminder: Book fair is next week, Monday-Friday in the library",
+                            "Lost and found items will be donated on Jan 31st - please check!"
+                        ],
+                        importantDates: [
+                            "Jan 20 - MLK Day (No School)",
+                            "Jan 24 - Parent-Teacher Conferences 3-7 PM"
+                        ]
+                    },
+                    schoolEvents: [],
+                    volunteerOpportunities: [
+                        { date: '2026-01-22', activity: 'Classroom Helper', slots: 2, filled: 1 }
+                    ]
+                };
+                console.log('Using fallback default data');
+            }
+
+            // Load calendar events from iCal feed
+            try {
+                const calendarEvents = await loadCalendar(CALENDAR_URL);
+                if (calendarEvents && calendarEvents.length > 0) {
+                    data.schoolEvents = calendarEvents;
+                    console.log(`Loaded ${calendarEvents.length} events from calendar`);
+                }
+            } catch (error) {
+                console.error('Failed to load calendar events:', error);
+                // Continue with existing data if calendar fails to load
+            }
+
+            return data;
+        }
+
+        const currentDate = new Date();
+
+        function parseDateString(dateString) {
+            // Handle both string dates and Date objects
+            if (!dateString) return null;
+            if (dateString instanceof Date) return dateString;
+            if (typeof dateString !== 'string') return null;
+
+            const [year, month, day] = dateString.split('-').map(Number);
+            return new Date(year, month - 1, day);
+        }
+
+        function formatDate(dateString) {
+            const date = parseDateString(dateString);
+            if (!date) return 'Invalid Date';
+            const options = { month: 'short', day: 'numeric', year: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function getShortDayOfWeek(dateString) {
+            const date = parseDateString(dateString);
+            if (!date) return 'Invalid';
+            const options = { weekday: 'short' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function getDayOfWeek(dateString) {
+            const date = parseDateString(dateString);
+            if (!date) return 'Invalid';
+            const options = { weekday: 'long' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function isUpcoming(event) {
+            // Handle both date string and event object
+            const dateString = typeof event === 'string' ? event : event.date;
+            const eventDate = parseDateString(dateString);
+            if (!eventDate) return false;
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            eventDate.setHours(0, 0, 0, 0);
+            return eventDate >= today;
+        }
+
+        function isToday(dateString) {
+            const eventDate = parseDateString(dateString);
+            if (!eventDate) return false;
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            eventDate.setHours(0, 0, 0, 0);
+            return eventDate.getTime() === today.getTime();
+        }
+
+        function daysUntil(dateString) {
+            const eventDate = parseDateString(dateString);
+            if (!eventDate) return 'Unknown';
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            eventDate.setHours(0, 0, 0, 0);
+            const diff = Math.ceil((eventDate - today) / (1000 * 60 * 60 * 24));
+            if (diff === 0) return 'Today';
+            if (diff === 1) return 'Tomorrow';
+            if (diff < 0) return 'Past';
+            return `${diff} days`;
+        }
+
+        function getCurrentWeekShowAndShare(data) {
+            const now = new Date();
+            const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+
+            // Determine which Monday to start from
+            let monday = new Date(now);
+            monday.setHours(0, 0, 0, 0);
+
+            if (dayOfWeek === 0) {
+                // Sunday - show upcoming Monday (tomorrow)
+                monday.setDate(now.getDate() + 1);
+            } else if (dayOfWeek === 6) {
+                // Saturday - show upcoming Monday (in 2 days)
+                monday.setDate(now.getDate() + 2);
+            } else if (dayOfWeek === 5 && now.getHours() >= 17) {
+                // Friday after 5pm - show next Monday (in 3 days)
+                monday.setDate(now.getDate() + 3);
+            } else {
+                // Monday-Friday (or Friday before 5pm) - show this week's Monday
+                // Calculate days to go back to Monday
+                const daysToSubtract = dayOfWeek - 1; // Mon=0, Tue=1, Wed=2, Thu=3, Fri=4
+                monday.setDate(now.getDate() - daysToSubtract);
+            }
+
+            // Get Monday through Friday of that week (5 days)
+            const weekDays = [];
+            for (let i = 0; i < 5; i++) {
+                const day = new Date(monday);
+                day.setDate(monday.getDate() + i);
+                // Use local date formatting to avoid timezone issues
+                const year = day.getFullYear();
+                const month = String(day.getMonth() + 1).padStart(2, '0');
+                const date = String(day.getDate()).padStart(2, '0');
+                weekDays.push(`${year}-${month}-${date}`);
+            }
+
+            // Find Show & Share for each day and check for holidays
+            return weekDays.map(dateStr => {
+                const item = showAndShareSchedule.find(s => s.date === dateStr);
+                const holiday = data.schoolEvents.find(e => e.date === dateStr && e.type === 'holiday');
+
+                return {
+                    date: dateStr,
+                    studentName: holiday ? holiday.title : (item ? item.studentName : 'No Show & Share'),
+                    hasStudent: !!item,
+                    isHoliday: !!holiday
+                };
+            });
+        }
+
+        function getEventIcon(type) {
+            const icons = {
+                holiday: 'fa-calendar-xmark',
+                meeting: 'fa-users',
+                event: 'fa-star',
+                party: 'fa-cake-candles',
+                fieldtrip: 'fa-bus'
+            };
+            return icons[type] || 'fa-calendar';
+        }
+
+        function getEventColor(type) {
+            const colors = {
+                holiday: 'bg-red-100 text-red-700 border-red-300',
+                meeting: 'bg-blue-100 text-blue-700 border-blue-300',
+                event: 'bg-purple-100 text-purple-700 border-purple-300',
+                party: 'bg-pink-100 text-pink-700 border-pink-300',
+                fieldtrip: 'bg-yellow-100 text-yellow-700 border-yellow-300'
+            };
+            return colors[type] || 'bg-gray-100 text-gray-700 border-gray-300';
+        }
+
+        // Render the dashboard with loaded data
+        function renderDashboard(data) {
+            const upcomingEvents = data.schoolEvents.filter(isUpcoming).slice(0, 10);
+            const weeklyShowAndShare = getCurrentWeekShowAndShare(data);
+            const todaysShowAndShare = showAndShareSchedule.find(item => isToday(item.date));
+            const todaysEvent = data.schoolEvents.find(item => isToday(item.date));
+
+            const dayOfWeek = currentDate.getDay();
+            const isWednesday = dayOfWeek === 3;
+            const isFriday = dayOfWeek === 5;
+
+            // Build the HTML
+            document.getElementById('root').innerHTML = `
+            <div class="min-h-screen bg-gray-50">
+                <!-- Header -->
+                <header class="gradient-header text-white shadow-lg">
+                    <div class="max-w-7xl mx-auto px-4 py-6">
+                        <div class="flex items-center justify-between flex-wrap gap-4">
+                            <div class="flex items-center gap-4">
+                                <img src="Hawk-Head-Pantone.jpg" alt="Harding Hawks" class="h-16 w-16 object-contain">
+                                <div>
+                                    <h1 class="text-3xl font-bold">Harding Academy</h1>
+                                    <p class="text-blue-200 mt-1">Kivett Family Dashboard</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end gap-3">
+                                <div class="flex items-center gap-4">
+                                    <div class="text-2xl text-blue-100 font-semibold">${currentDate.toLocaleDateString('en-US', { weekday: 'long' })}</div>
+                                    <div class="text-2xl font-bold">${currentDate.toLocaleDateString('en-US', { month: 'long' })}</div>
+                                    <div class="text-6xl font-bold leading-none">
+                                        ${currentDate.toLocaleDateString('en-US', { day: 'numeric' })}
+                                    </div>
+                                </div>
+                                ${data.weeklyEmail.compassUrl ? `
+                                    <a href="${data.weeklyEmail.compassUrl}" target="_blank" rel="noopener noreferrer"
+                                       class="inline-flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white rounded-lg transition border border-white border-opacity-30">
+                                        <i class="fas fa-compass text-sm"></i>
+                                        <span class="text-sm font-medium">Compass Connection</span>
+                                        <i class="fas fa-external-link text-xs"></i>
+                                    </a>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                ${(isWednesday || isFriday || todaysEvent) ? `
+                    <div class="bg-gradient-to-r from-yellow-50 via-orange-50 to-yellow-50 border-b-2 border-yellow-400">
+                        <div class="max-w-7xl mx-auto px-4 py-4">
+                            <div class="flex flex-wrap gap-3 items-center justify-center">
+                                ${todaysEvent ? `
+                                    <div class="flex items-center gap-2 px-4 py-2 ${getEventColor(todaysEvent.type)} border-2 rounded-lg shadow highlight-today">
+                                        <i class="fas ${getEventIcon(todaysEvent.type)} text-xl"></i>
+                                        <span class="font-bold">${todaysEvent.title}</span>
+                                        ${todaysEvent.location ? `<span class="text-sm">${todaysEvent.location}</span>` : ''}
+                                    </div>
+                                ` : ''}
+                                ${isWednesday && !todaysEvent ? `
+                                    <div class="flex items-center gap-2 px-4 py-2 bg-blue-100 border-2 border-blue-400 rounded-lg shadow highlight-today">
+                                        <i class="fas fa-clock text-blue-600 text-xl"></i>
+                                        <span class="font-bold text-blue-900">Late Start Today!</span>
+                                        <span class="text-blue-700">School begins at 9:00 AM</span>
+                                    </div>
+                                ` : ''}
+                                ${isFriday && !todaysEvent ? `
+                                    <div class="flex items-center gap-2 px-4 py-2 bg-green-100 border-2 border-green-400 rounded-lg shadow highlight-today">
+                                        <i class="fas fa-shirt text-green-600 text-xl"></i>
+                                        <span class="font-bold text-green-900">Spirit Day!</span>
+                                        <span class="text-green-700">Wear school t-shirt & uniform bottoms</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                ` : ''}
+
+                <div class="max-w-7xl mx-auto px-4 py-8">
+                    <!-- Main Content Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Left Column -->
+                        <div class="lg:col-span-2 space-y-6">
+                            <!-- Important Dates (from weekly email) -->
+                            ${data.weeklyEmail.importantDates.length > 0 ? `
+                                <div class="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-lg card-shadow p-6 border-l-4 border-amber-500">
+                                    <h2 class="text-xl font-bold text-amber-900 mb-4 flex items-center gap-2">
+                                        <i class="fas fa-calendar-check text-amber-600"></i>
+                                        Important Dates
+                                    </h2>
+                                    <ul class="space-y-3">
+                                        ${data.weeklyEmail.importantDates.map(item => `
+                                            <li class="flex items-start gap-3 text-gray-700">
+                                                <span class="text-amber-500 mt-1 text-lg">•</span>
+                                                <span class="flex-1">${item}</span>
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+
+                            <!-- Upcoming Events -->
+                            <div class="bg-white rounded-lg card-shadow p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                                        <i class="fas fa-calendar-days text-blue-600"></i>
+                                        Upcoming Events
+                                    </h2>
+                                    <span class="text-sm text-gray-500">${upcomingEvents.length} events</span>
+                                </div>
+                                <div class="space-y-3">
+                                    ${upcomingEvents.map(event => `
+                                        <div class="p-4 rounded-lg border-l-4 ${getEventColor(event.type)} border ${isToday(event.date) ? 'ring-2 ring-yellow-400' : ''}">
+                                            <div class="flex items-start justify-between">
+                                                <div class="flex-1">
+                                                    <div class="flex items-center gap-2 mb-1">
+                                                        <i class="fas ${getEventIcon(event.type)}"></i>
+                                                        <h3 class="font-semibold">${event.title}</h3>
+                                                        ${isToday(event.date) ? '<span class="text-xs bg-yellow-400 text-yellow-900 px-2 py-0.5 rounded-full font-bold">TODAY</span>' : ''}
+                                                    </div>
+                                                    <div class="flex items-center gap-3 text-sm mt-2">
+                                                        <span class="flex items-center gap-1">
+                                                            <i class="fas fa-calendar text-xs"></i>
+                                                            ${formatDate(event.date)} (${getShortDayOfWeek(event.date)})
+                                                        </span>
+                                                        ${event.location ? `
+                                                            <span class="flex items-center gap-1">
+                                                                <i class="fas fa-location-dot text-xs"></i>
+                                                                ${event.location}
+                                                            </span>
+                                                        ` : ''}
+                                                    </div>
+                                                </div>
+                                                <span class="text-xs font-semibold px-2 py-1 bg-white rounded-full whitespace-nowrap ml-2">
+                                                    ${daysUntil(event.date)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <!-- Weekly Email -->
+                            <div class="bg-white rounded-lg card-shadow p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                                        <i class="fas fa-envelope-open-text text-yellow-600"></i>
+                                        Weekly Newsletter
+                                    </h2>
+                                    ${data.weeklyEmail.week ? `
+                                        <span class="text-sm text-gray-500">${data.weeklyEmail.week}</span>
+                                    ` : ''}
+                                </div>
+
+                                ${data.weeklyEmail.emailUrl ? `
+                                    <div class="mb-4">
+                                        <a href="${data.weeklyEmail.emailUrl}" target="_blank" rel="noopener noreferrer"
+                                           class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg border border-blue-200 transition text-sm">
+                                            <i class="fas fa-external-link"></i>
+                                            View Full Email
+                                        </a>
+                                    </div>
+                                ` : ''}
+
+                                ${data.weeklyEmail.kindergartenExcerpt ? `
+                                    <div class="mb-4 p-4 bg-purple-50 rounded-lg border-2 border-purple-200">
+                                        <h3 class="font-bold text-purple-900 mb-3 flex items-center gap-2">
+                                            <i class="fas fa-graduation-cap text-purple-600"></i>
+                                            Kindergarten This Week
+                                        </h3>
+                                        <div class="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+                                            ${data.weeklyEmail.kindergartenExcerpt}
+                                        </div>
+                                    </div>
+                                ` : ''}
+
+                                ${data.weeklyEmail.highlights && data.weeklyEmail.highlights.length > 0 ? `
+                                    <div class="mb-4">
+                                        <h3 class="font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                            <i class="fas fa-star text-yellow-500 text-sm"></i>
+                                            Highlights
+                                        </h3>
+                                        <ul class="space-y-2">
+                                            ${data.weeklyEmail.highlights.map(item => `
+                                                <li class="flex items-start gap-2 text-gray-700">
+                                                    <span class="text-yellow-500 mt-1">•</span>
+                                                    <span>${item}</span>
+                                                </li>
+                                            `).join('')}
+                                        </ul>
+                                    </div>
+                                ` : ''}
+
+                                ${!data.weeklyEmail.emailUrl && !data.weeklyEmail.kindergartenExcerpt && (!data.weeklyEmail.highlights || data.weeklyEmail.highlights.length === 0) ? `
+                                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                                        <p class="text-sm text-gray-500">
+                                            <i class="fas fa-info-circle mr-2"></i>
+                                            No newsletter content has been added for this week yet.
+                                        </p>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="space-y-6">
+                            <!-- Show & Share -->
+                            <div class="bg-gradient-to-br from-gray-50 to-slate-50 rounded-lg card-shadow p-6 border-l-4 border-gray-400">
+                                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                    <i class="fas fa-presentation text-gray-600"></i>
+                                    Show & Share This Week
+                                </h2>
+                                <div class="space-y-2">
+                                    ${weeklyShowAndShare.map(item => {
+                                        const isItemToday = isToday(item.date);
+                                        const dayName = getShortDayOfWeek(item.date);
+                                        const monthDay = new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+                                        // Determine background and border colors
+                                        let bgClass, borderClass, textClass, iconClass, icon;
+
+                                        if (isItemToday) {
+                                            bgClass = 'bg-yellow-100';
+                                            borderClass = 'border-yellow-400 ring-2 ring-yellow-400';
+                                            textClass = 'text-yellow-900';
+                                            if (item.isHoliday) {
+                                                icon = '<i class="fas fa-calendar-xmark text-red-600"></i>';
+                                            } else if (item.hasStudent) {
+                                                icon = '<i class="fas fa-star text-purple-600"></i>';
+                                            } else {
+                                                icon = '<i class="fas fa-minus-circle text-gray-400"></i>';
+                                            }
+                                        } else if (item.isHoliday) {
+                                            bgClass = 'bg-red-50';
+                                            borderClass = 'border-red-300';
+                                            textClass = 'text-red-900';
+                                            icon = '<i class="fas fa-calendar-xmark text-red-600"></i>';
+                                        } else if (item.hasStudent) {
+                                            bgClass = 'bg-blue-50';
+                                            borderClass = 'border-blue-300';
+                                            textClass = 'text-blue-900';
+                                            icon = '<i class="fas fa-star text-blue-600"></i>';
+                                        } else {
+                                            bgClass = 'bg-white';
+                                            borderClass = 'border-gray-200';
+                                            textClass = 'text-gray-500';
+                                            icon = '<i class="fas fa-minus-circle text-gray-400"></i>';
+                                        }
+
+                                        return `
+                                            <div class="p-3 rounded-lg border ${bgClass} ${borderClass}">
+                                                <div class="flex items-center justify-between">
+                                                    <div class="flex items-center gap-3">
+                                                        <div class="text-center min-w-[60px]">
+                                                            <div class="text-xs font-medium ${isItemToday ? 'text-yellow-700' : 'text-gray-500'}">${dayName}</div>
+                                                            <div class="text-sm font-semibold ${isItemToday ? 'text-yellow-900' : 'text-gray-700'}">${monthDay}</div>
+                                                        </div>
+                                                        <div class="h-8 w-px ${isItemToday ? 'bg-yellow-400' : 'bg-gray-300'}"></div>
+                                                        <div class="flex items-center gap-2">
+                                                            ${icon}
+                                                            <span class="font-semibold ${textClass}">
+                                                                ${item.studentName}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    ${isItemToday ? '<span class="text-xs bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full font-bold">TODAY</span>' : ''}
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                                <p class="text-xs text-gray-500 mt-3 text-center">
+                                    ${currentDate.getDay() === 5 && currentDate.getHours() >= 17 ? 'Showing next week' : 'Updates to next week on Friday at 5pm'}
+                                </p>
+                            </div>
+
+                            <!-- Volunteer Signups -->
+                            <div class="bg-white rounded-lg card-shadow p-6">
+                                <div class="mb-4">
+                                    <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                                        <i class="fas fa-hands-helping text-green-600"></i>
+                                        Volunteer Signups
+                                    </h2>
+                                </div>
+
+                                <!-- Reading/Cooking in K -->
+                                <div class="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
+                                    <h3 class="font-semibold text-green-900 mb-2 flex items-center gap-2">
+                                        <i class="fas fa-book-open"></i>
+                                        Reading/Cooking in K
+                                    </h3>
+                                    <p class="text-sm text-gray-600 mb-3">
+                                        Sign up to help with reading or cooking activities in kindergarten!
+                                    </p>
+                                    <a href="https://www.signupgenius.com/go/10C0A4CADA62FA0FFC07-58545046-kivett#/"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium">
+                                        <i class="fas fa-external-link"></i>
+                                        View & Sign Up
+                                    </a>
+                                </div>
+
+                                <!-- HPA Volunteer Lists -->
+                                <div class="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                                    <h3 class="font-semibold text-purple-900 mb-2 flex items-center gap-2">
+                                        <i class="fas fa-users"></i>
+                                        HPA Volunteer Lists
+                                    </h3>
+                                    <p class="text-sm text-gray-600 mb-3">
+                                        Sign up for Harding Parents Association volunteer opportunities!
+                                    </p>
+                                    <a href="https://www.signupgenius.com/go/30E0945A9A828A57-57688501-grade#/"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium">
+                                        <i class="fas fa-external-link"></i>
+                                        View & Sign Up
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- 2026-2027 School Year Dates -->
+                            <div class="bg-white rounded-lg card-shadow p-6">
+                                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                    <i class="fas fa-calendar-days text-orange-600"></i>
+                                    2026-2027 School Year
+                                </h2>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                        <span class="text-gray-600">First Day of Classes</span>
+                                        <span class="font-semibold text-gray-800">August 19, 2026</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                        <span class="text-gray-600">Labor Day</span>
+                                        <span class="font-semibold text-gray-800">September 7, 2026</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                        <span class="text-gray-600">Parent/Teacher Conferences</span>
+                                        <span class="font-semibold text-gray-800">Oct 12-13, 2026</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                        <span class="text-gray-600">Fall Break</span>
+                                        <span class="font-semibold text-gray-800">Oct 14-16, 2026</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                        <span class="text-gray-600">Thanksgiving Break</span>
+                                        <span class="font-semibold text-gray-800">Nov 25-27, 2026</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                        <span class="text-gray-600">Winter Break</span>
+                                        <span class="font-semibold text-gray-800">Dec 21, 2026-Jan 1, 2027</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                        <span class="text-gray-600">Classes Resume</span>
+                                        <span class="font-semibold text-gray-800">January 4, 2027</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                        <span class="text-gray-600">MLK, Jr. Day</span>
+                                        <span class="font-semibold text-gray-800">January 18, 2027</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                        <span class="text-gray-600">Parent/Teacher Conferences</span>
+                                        <span class="font-semibold text-gray-800">Feb 25-26, 2027</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                        <span class="text-gray-600">Spring Break</span>
+                                        <span class="font-semibold text-gray-800">March 12-19, 2027</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                        <span class="text-gray-600">Harding Art Show</span>
+                                        <span class="font-semibold text-gray-800">April 29-May 1, 2027</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                        <span class="text-gray-600">Last Day of Classes</span>
+                                        <span class="font-semibold text-gray-800">May 27, 2027</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-gray-600">Graduation</span>
+                                        <span class="font-semibold text-gray-800">May 28, 2027</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quick Links -->
+                            <div class="bg-white rounded-lg card-shadow p-6">
+                                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                    <i class="fas fa-link text-blue-600"></i>
+                                    Quick Links
+                                </h2>
+                                <div class="space-y-2">
+                                    <a href="https://www.hardingacademy.org" 
+                                       target="_blank" 
+                                       rel="noopener noreferrer"
+                                       class="block p-3 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition">
+                                        <div class="flex items-center justify-between">
+                                            <span class="font-medium text-blue-900">School Website</span>
+                                            <i class="fas fa-external-link text-blue-600 text-sm"></i>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.signupgenius.com/go/10C0A4CADA62FA0FFC07-58545046-kivett#/" 
+                                       target="_blank" 
+                                       rel="noopener noreferrer"
+                                       class="block p-3 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 transition">
+                                        <div class="flex items-center justify-between">
+                                            <span class="font-medium text-green-900">Volunteer Signup</span>
+                                            <i class="fas fa-external-link text-green-600 text-sm"></i>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 text-center text-gray-500 text-sm">
+                        <p>Last updated: ${data.lastUpdated ? new Date(data.lastUpdated).toLocaleString() : 'N/A'}</p>
+                        <p class="mt-1">💡 Tip: Bookmark this page for quick access to all school information</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        } // End renderDashboard function
+
+        // Initialize and render the dashboard
+        initDashboard().then(data => {
+            renderDashboard(data);
+        }).catch(error => {
+            console.error('Failed to initialize dashboard:', error);
+            console.error('Error stack:', error.stack);
+            document.getElementById('root').innerHTML = `
+                <div class="min-h-screen bg-gray-50 flex items-center justify-center">
+                    <div class="text-center p-8">
+                        <h1 class="text-2xl font-bold text-gray-800 mb-4">Error Loading Dashboard</h1>
+                        <p class="text-gray-600 mb-4">Please refresh the page to try again.</p>
+                        <details class="text-left bg-red-50 p-4 rounded border border-red-200">
+                            <summary class="cursor-pointer text-red-700 font-semibold">Error Details (for debugging)</summary>
+                            <pre class="mt-2 text-xs text-red-900 overflow-auto">${error.message}\n\n${error.stack || ''}</pre>
+                        </details>
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
