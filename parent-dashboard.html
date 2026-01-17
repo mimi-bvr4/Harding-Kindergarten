@@ -355,44 +355,114 @@
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <!-- Left Column -->
                         <div class="lg:col-span-2 space-y-6">
-                            <!-- Important Dates (from weekly email) -->
-                            ${data.weeklyEmail.importantDates.length > 0 ? `
-                                <div class="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-lg card-shadow p-6 border-l-4 border-amber-500">
-                                    <h2 class="text-xl font-bold text-amber-900 mb-4 flex items-center gap-2">
-                                        <i class="fas fa-calendar-check text-amber-600"></i>
-                                        Important Dates
-                                    </h2>
-                                    <ul class="space-y-3">
-                                        ${data.weeklyEmail.importantDates.map(item => `
-                                            <li class="flex items-start gap-3 text-gray-700">
-                                                <span class="text-amber-500 mt-1 text-lg">•</span>
-                                                <span class="flex-1">${item}</span>
-                                            </li>
-                                        `).join('')}
-                                    </ul>
-                                </div>
-                            ` : ''}
+                            <!-- Two-Column Grid for Mobile -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Important Dates (from weekly email) -->
+                                ${data.weeklyEmail.importantDates.length > 0 ? `
+                                    <div class="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-lg card-shadow p-4 border-l-4 border-amber-500">
+                                        <h2 class="text-lg font-bold text-amber-900 mb-3 flex items-center gap-2">
+                                            <i class="fas fa-calendar-check text-amber-600"></i>
+                                            Important Dates
+                                        </h2>
+                                        <ul class="space-y-2">
+                                            ${data.weeklyEmail.importantDates.map(item => `
+                                                <li class="flex items-start gap-2 text-sm text-gray-700">
+                                                    <span class="text-amber-500 mt-0.5">•</span>
+                                                    <span class="flex-1">${item}</span>
+                                                </li>
+                                            `).join('')}
+                                        </ul>
+                                    </div>
+                                ` : ''}
 
-                            <!-- Upcoming Events -->
+                                <!-- Show & Share -->
+                                <div class="bg-gradient-to-br from-gray-50 to-slate-50 rounded-lg card-shadow p-4 border-l-4 border-gray-400">
+                                    <h2 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                                        <i class="fas fa-presentation text-gray-600"></i>
+                                        Show & Share
+                                    </h2>
+                                    <div class="space-y-2">
+                                        ${weeklyShowAndShare.map(item => {
+                                            const isItemToday = isToday(item.date);
+                                            const dayName = getShortDayOfWeek(item.date);
+                                            const monthDay = new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+                                            let bgClass, borderClass, textClass, icon;
+
+                                            if (isItemToday) {
+                                                bgClass = 'bg-yellow-100';
+                                                borderClass = 'border-yellow-400 ring-2 ring-yellow-400';
+                                                textClass = 'text-yellow-900';
+                                                if (item.isHoliday) {
+                                                    icon = '<i class="fas fa-calendar-xmark text-red-600"></i>';
+                                                } else if (item.hasStudent) {
+                                                    icon = '<i class="fas fa-star text-purple-600"></i>';
+                                                } else {
+                                                    icon = '<i class="fas fa-minus-circle text-gray-400"></i>';
+                                                }
+                                            } else if (item.isHoliday) {
+                                                bgClass = 'bg-red-50';
+                                                borderClass = 'border-red-300';
+                                                textClass = 'text-red-900';
+                                                icon = '<i class="fas fa-calendar-xmark text-red-600"></i>';
+                                            } else if (item.hasStudent) {
+                                                bgClass = 'bg-blue-50';
+                                                borderClass = 'border-blue-300';
+                                                textClass = 'text-blue-900';
+                                                icon = '<i class="fas fa-star text-blue-600"></i>';
+                                            } else {
+                                                bgClass = 'bg-white';
+                                                borderClass = 'border-gray-200';
+                                                textClass = 'text-gray-500';
+                                                icon = '<i class="fas fa-minus-circle text-gray-400"></i>';
+                                            }
+
+                                            return `
+                                                <div class="p-2 rounded-lg border ${bgClass} ${borderClass}">
+                                                    <div class="flex items-center justify-between">
+                                                        <div class="flex items-center gap-2">
+                                                            <div class="text-center min-w-[50px]">
+                                                                <div class="text-xs font-medium ${isItemToday ? 'text-yellow-700' : 'text-gray-500'}">${dayName}</div>
+                                                                <div class="text-xs font-semibold ${isItemToday ? 'text-yellow-900' : 'text-gray-700'}">${monthDay}</div>
+                                                            </div>
+                                                            <div class="flex items-center gap-1.5">
+                                                                ${icon}
+                                                                <span class="text-sm font-semibold ${textClass}">
+                                                                    ${item.studentName}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        ${isItemToday ? '<span class="text-xs bg-yellow-400 text-yellow-900 px-2 py-0.5 rounded-full font-bold">TODAY</span>' : ''}
+                                                    </div>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-2 text-center">
+                                        ${currentDate.getDay() === 5 && currentDate.getHours() >= 17 ? 'Next week' : 'Updates Fri 5pm'}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Upcoming Events - Expandable -->
                             <div class="bg-white rounded-lg card-shadow p-6">
                                 <div class="flex items-center justify-between mb-4">
                                     <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
                                         <i class="fas fa-calendar-days text-blue-600"></i>
                                         Upcoming Events
                                     </h2>
-                                    <span class="text-sm text-gray-500">${upcomingEvents.length} events</span>
                                 </div>
-                                <div class="space-y-3">
-                                    ${upcomingEvents.map(event => `
-                                        <div class="p-4 rounded-lg border-l-4 ${getEventColor(event.type)} border ${isToday(event.date) ? 'ring-2 ring-yellow-400' : ''}">
+                                <div id="eventsContainer" class="space-y-3">
+                                    ${upcomingEvents.slice(0, 2).map(event => `
+                                        <div class="p-3 rounded-lg border-l-4 ${getEventColor(event.type)} border ${isToday(event.date) ? 'ring-2 ring-yellow-400' : ''}">
                                             <div class="flex items-start justify-between">
                                                 <div class="flex-1">
                                                     <div class="flex items-center gap-2 mb-1">
                                                         <i class="fas ${getEventIcon(event.type)}"></i>
-                                                        <h3 class="font-semibold">${event.title}</h3>
+                                                        <h3 class="font-semibold text-sm">${event.title}</h3>
                                                         ${isToday(event.date) ? '<span class="text-xs bg-yellow-400 text-yellow-900 px-2 py-0.5 rounded-full font-bold">TODAY</span>' : ''}
                                                     </div>
-                                                    <div class="flex items-center gap-3 text-sm mt-2">
+                                                    <div class="flex items-center gap-2 text-xs mt-1">
                                                         <span class="flex items-center gap-1">
                                                             <i class="fas fa-calendar text-xs"></i>
                                                             ${formatDate(event.date)} (${getShortDayOfWeek(event.date)})
@@ -405,13 +475,42 @@
                                                         ` : ''}
                                                     </div>
                                                 </div>
-                                                <span class="text-xs font-semibold px-2 py-1 bg-white rounded-full whitespace-nowrap ml-2">
-                                                    ${daysUntil(event.date)}
-                                                </span>
                                             </div>
                                         </div>
                                     `).join('')}
                                 </div>
+                                <div id="moreEventsContainer" class="hidden space-y-3 mt-3">
+                                    ${upcomingEvents.slice(2).map(event => `
+                                        <div class="p-3 rounded-lg border-l-4 ${getEventColor(event.type)} border ${isToday(event.date) ? 'ring-2 ring-yellow-400' : ''}">
+                                            <div class="flex items-start justify-between">
+                                                <div class="flex-1">
+                                                    <div class="flex items-center gap-2 mb-1">
+                                                        <i class="fas ${getEventIcon(event.type)}"></i>
+                                                        <h3 class="font-semibold text-sm">${event.title}</h3>
+                                                        ${isToday(event.date) ? '<span class="text-xs bg-yellow-400 text-yellow-900 px-2 py-0.5 rounded-full font-bold">TODAY</span>' : ''}
+                                                    </div>
+                                                    <div class="flex items-center gap-2 text-xs mt-1">
+                                                        <span class="flex items-center gap-1">
+                                                            <i class="fas fa-calendar text-xs"></i>
+                                                            ${formatDate(event.date)} (${getShortDayOfWeek(event.date)})
+                                                        </span>
+                                                        ${event.location ? `
+                                                            <span class="flex items-center gap-1">
+                                                                <i class="fas fa-location-dot text-xs"></i>
+                                                                ${event.location}
+                                                            </span>
+                                                        ` : ''}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                ${upcomingEvents.length > 2 ? `
+                                    <button onclick="toggleEvents()" id="toggleEventsBtn" class="w-full mt-3 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition text-sm font-medium">
+                                        <i class="fas fa-chevron-down mr-2"></i>Show ${upcomingEvents.length - 2} More Events
+                                    </button>
+                                ` : ''}
                             </div>
 
                             <!-- Weekly Email -->
@@ -478,76 +577,6 @@
 
                         <!-- Right Column -->
                         <div class="space-y-6">
-                            <!-- Show & Share -->
-                            <div class="bg-gradient-to-br from-gray-50 to-slate-50 rounded-lg card-shadow p-6 border-l-4 border-gray-400">
-                                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                                    <i class="fas fa-presentation text-gray-600"></i>
-                                    Show & Share This Week
-                                </h2>
-                                <div class="space-y-2">
-                                    ${weeklyShowAndShare.map(item => {
-                                        const isItemToday = isToday(item.date);
-                                        const dayName = getShortDayOfWeek(item.date);
-                                        const monthDay = new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-
-                                        // Determine background and border colors
-                                        let bgClass, borderClass, textClass, iconClass, icon;
-
-                                        if (isItemToday) {
-                                            bgClass = 'bg-yellow-100';
-                                            borderClass = 'border-yellow-400 ring-2 ring-yellow-400';
-                                            textClass = 'text-yellow-900';
-                                            if (item.isHoliday) {
-                                                icon = '<i class="fas fa-calendar-xmark text-red-600"></i>';
-                                            } else if (item.hasStudent) {
-                                                icon = '<i class="fas fa-star text-purple-600"></i>';
-                                            } else {
-                                                icon = '<i class="fas fa-minus-circle text-gray-400"></i>';
-                                            }
-                                        } else if (item.isHoliday) {
-                                            bgClass = 'bg-red-50';
-                                            borderClass = 'border-red-300';
-                                            textClass = 'text-red-900';
-                                            icon = '<i class="fas fa-calendar-xmark text-red-600"></i>';
-                                        } else if (item.hasStudent) {
-                                            bgClass = 'bg-blue-50';
-                                            borderClass = 'border-blue-300';
-                                            textClass = 'text-blue-900';
-                                            icon = '<i class="fas fa-star text-blue-600"></i>';
-                                        } else {
-                                            bgClass = 'bg-white';
-                                            borderClass = 'border-gray-200';
-                                            textClass = 'text-gray-500';
-                                            icon = '<i class="fas fa-minus-circle text-gray-400"></i>';
-                                        }
-
-                                        return `
-                                            <div class="p-3 rounded-lg border ${bgClass} ${borderClass}">
-                                                <div class="flex items-center justify-between">
-                                                    <div class="flex items-center gap-3">
-                                                        <div class="text-center min-w-[60px]">
-                                                            <div class="text-xs font-medium ${isItemToday ? 'text-yellow-700' : 'text-gray-500'}">${dayName}</div>
-                                                            <div class="text-sm font-semibold ${isItemToday ? 'text-yellow-900' : 'text-gray-700'}">${monthDay}</div>
-                                                        </div>
-                                                        <div class="h-8 w-px ${isItemToday ? 'bg-yellow-400' : 'bg-gray-300'}"></div>
-                                                        <div class="flex items-center gap-2">
-                                                            ${icon}
-                                                            <span class="font-semibold ${textClass}">
-                                                                ${item.studentName}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    ${isItemToday ? '<span class="text-xs bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full font-bold">TODAY</span>' : ''}
-                                                </div>
-                                            </div>
-                                        `;
-                                    }).join('')}
-                                </div>
-                                <p class="text-xs text-gray-500 mt-3 text-center">
-                                    ${currentDate.getDay() === 5 && currentDate.getHours() >= 17 ? 'Showing next week' : 'Updates to next week on Friday at 5pm'}
-                                </p>
-                            </div>
-
                             <!-- Volunteer Signups -->
                             <div class="bg-white rounded-lg card-shadow p-6">
                                 <div class="mb-4">
@@ -694,6 +723,26 @@
             </div>
         `;
         } // End renderDashboard function
+
+        // Toggle events expand/collapse
+        function toggleEvents() {
+            const moreContainer = document.getElementById('moreEventsContainer');
+            const btn = document.getElementById('toggleEventsBtn');
+            const icon = btn.querySelector('i');
+
+            if (moreContainer.classList.contains('hidden')) {
+                moreContainer.classList.remove('hidden');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+                btn.innerHTML = '<i class="fas fa-chevron-up mr-2"></i>Show Less';
+            } else {
+                moreContainer.classList.add('hidden');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+                const count = moreContainer.querySelectorAll('.p-3').length;
+                btn.innerHTML = `<i class="fas fa-chevron-down mr-2"></i>Show ${count} More Events`;
+            }
+        }
 
         // Initialize and render the dashboard
         initDashboard().then(data => {
