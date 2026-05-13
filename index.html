@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harding Academy Parent Dashboard - Kivett Family</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="dashboard-data.js?v=1"></script>
+    <script src="ical-parser.js?v=1"></script>
+    <style>
+        :root {
+            --harding-blue: #012169;
+            --light-gray: #f9fafb;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--light-gray);
+        }
+
+        .harding-bg {
+            background-color: var(--harding-blue);
+        }
+
+        .harding-text {
+            color: var(--harding-blue);
+        }
+
+        .harding-border {
+            border-color: var(--harding-blue);
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card:active {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        a {
+            color: var(--harding-blue);
+            text-decoration: none;
+        }
+
+        a:active, a:focus {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="root"></div>
+
+    <script>
+        const CALENDAR_URL = 'https://hardingacademy.myschoolapp.com/podium/feed/iCal.aspx?z=96wT5QnMrJrphQP5BInbTmAAJCsRcQpy%2bmDKcAacSR8eeFymiEdCFAWuYOhCPhXy4XjpFPFcjomN3uHn%2bWimYA%3d%3d';
+
+        const showAndShareSchedule = [
+            // January 2026
+            { date: '2026-01-05', studentName: 'Aiden' }, { date: '2026-01-06', studentName: 'Brooks' },
+            { date: '2026-01-07', studentName: 'Charlotte' }, { date: '2026-01-08', studentName: 'Cooper' },
+            { date: '2026-01-09', studentName: 'Daisy' }, { date: '2026-01-12', studentName: 'Doc' },
+            { date: '2026-01-13', studentName: 'Dottie' }, { date: '2026-01-14', studentName: 'Ellison' },
+            { date: '2026-01-15', studentName: 'Evie' }, { date: '2026-01-16', studentName: 'Evie Clare' },
+            { date: '2026-01-20', studentName: 'Grace' }, { date: '2026-01-21', studentName: 'Harrison' },
+            { date: '2026-01-22', studentName: 'Jhanvi' }, { date: '2026-01-23', studentName: 'Leyton' },
+            { date: '2026-01-26', studentName: 'Margo' }, { date: '2026-01-27', studentName: 'Mateo' },
+            { date: '2026-01-28', studentName: 'Parker' }, { date: '2026-01-29', studentName: 'Quinn' },
+            { date: '2026-01-30', studentName: 'Venice' },
+            // February 2026
+            { date: '2026-02-02', studentName: 'Wren' }, { date: '2026-02-03', studentName: 'Aiden' },
+            { date: '2026-02-04', studentName: 'Brooks' }, { date: '2026-02-05', studentName: 'Charlotte' },
+            { date: '2026-02-06', studentName: 'Cooper' }, { date: '2026-02-09', studentName: 'Daisy' },
+            { date: '2026-02-10', studentName: 'Doc' }, { date: '2026-02-11', studentName: 'Dottie' },
+            { date: '2026-02-12', studentName: 'Ellison' }, { date: '2026-02-17', studentName: 'Evie' },
+            { date: '2026-02-18', studentName: 'Evie Clare' }, { date: '2026-02-19', studentName: 'Grace' },
+            { date: '2026-02-20', studentName: 'Harrison' }, { date: '2026-02-23', studentName: 'Jhanvi' },
+            { date: '2026-02-24', studentName: 'Leyton' }, { date: '2026-02-25', studentName: 'Margo' },
+            { date: '2026-02-26', studentName: 'Mateo' },
+            // March 2026
+            { date: '2026-03-02', studentName: 'Parker' }, { date: '2026-03-03', studentName: 'Quinn' },
+            { date: '2026-03-04', studentName: 'Venice' }, { date: '2026-03-05', studentName: 'Wren' },
+            { date: '2026-03-06', studentName: 'Aiden' }, { date: '2026-03-09', studentName: 'Brooks' },
+            { date: '2026-03-10', studentName: 'Charlotte' }, { date: '2026-03-11', studentName: 'Cooper' },
+            { date: '2026-03-12', studentName: 'Daisy' }, { date: '2026-03-23', studentName: 'Doc' },
+            { date: '2026-03-24', studentName: 'Dottie' }, { date: '2026-03-25', studentName: 'Ellison' },
+            { date: '2026-03-26', studentName: 'Evie' }, { date: '2026-03-27', studentName: 'Evie Clare' },
+            { date: '2026-03-30', studentName: 'Grace' }, { date: '2026-03-31', studentName: 'Harrison' },
+            // April 2026
+            { date: '2026-04-06', studentName: 'Jhanvi' }, { date: '2026-04-07', studentName: 'Leyton' },
+            { date: '2026-04-08', studentName: 'Margo' }, { date: '2026-04-09', studentName: 'Mateo' },
+            { date: '2026-04-10', studentName: 'Parker' }, { date: '2026-04-13', studentName: 'Quinn' },
+            { date: '2026-04-14', studentName: 'Venice' }, { date: '2026-04-15', studentName: 'Wren' },
+            { date: '2026-04-16', studentName: 'Aiden' }, { date: '2026-04-17', studentName: 'Brooks' },
+            { date: '2026-04-20', studentName: 'Charlotte' }, { date: '2026-04-21', studentName: 'Cooper' },
+            { date: '2026-04-22', studentName: 'Daisy' }, { date: '2026-04-23', studentName: 'Doc' },
+            { date: '2026-04-24', studentName: 'Dottie' }, { date: '2026-04-27', studentName: 'Ellison' },
+            { date: '2026-04-28', studentName: 'Evie' }, { date: '2026-04-29', studentName: 'Evie Clare' },
+            { date: '2026-04-30', studentName: 'Grace' },
+            // May 2026
+            { date: '2026-05-04', studentName: 'Harrison' }, { date: '2026-05-05', studentName: 'Jhanvi' },
+            { date: '2026-05-06', studentName: 'Leyton' }, { date: '2026-05-07', studentName: 'Margo' },
+            { date: '2026-05-08', studentName: 'Mateo' }, { date: '2026-05-11', studentName: 'Parker' },
+            { date: '2026-05-12', studentName: 'Quinn' }, { date: '2026-05-13', studentName: 'Venice' },
+            { date: '2026-05-14', studentName: 'Wren' }
+        ];
+
+        async function initDashboard() {
+            let data = typeof dashboardData !== 'undefined' ? dashboardData : {
+                weeklyEmail: { week: "", kindergartenExcerpt: "", highlights: [], importantDates: [] },
+                schoolEvents: []
+            };
+
+            try {
+                const calendarEvents = await loadCalendar(CALENDAR_URL);
+                if (calendarEvents && calendarEvents.length > 0) {
+                    data.schoolEvents = calendarEvents;
+                }
+            } catch (error) {
+                console.error('Calendar load failed:', error);
+            }
+
+            return data;
+        }
+
+        const currentDate = new Date();
+
+        function parseDateString(dateString) {
+            if (!dateString || typeof dateString !== 'string') return null;
+            const [year, month, day] = dateString.split('-').map(Number);
+            return new Date(year, month - 1, day);
+        }
+
+        function formatDate(dateString) {
+            const date = parseDateString(dateString);
+            if (!date) return '';
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        function getShortDay(dateString) {
+            const date = parseDateString(dateString);
+            if (!date) return '';
+            return date.toLocaleDateString('en-US', { weekday: 'short' });
+        }
+
+        function isToday(dateString) {
+            const eventDate = parseDateString(dateString);
+            if (!eventDate) return false;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            eventDate.setHours(0, 0, 0, 0);
+            return eventDate.getTime() === today.getTime();
+        }
+
+        function isUpcoming(event) {
+            const dateString = typeof event === 'string' ? event : event.date;
+            const eventDate = parseDateString(dateString);
+            if (!eventDate) return false;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            eventDate.setHours(0, 0, 0, 0);
+            return eventDate >= today;
+        }
+
+        function getCurrentWeekShowAndShare(data) {
+            const now = new Date();
+            const dayOfWeek = now.getDay();
+
+            let monday = new Date(now);
+            monday.setHours(0, 0, 0, 0);
+
+            if (dayOfWeek === 0) {
+                monday.setDate(now.getDate() + 1);
+            } else if (dayOfWeek === 6) {
+                monday.setDate(now.getDate() + 2);
+            } else if (dayOfWeek === 5 && now.getHours() >= 17) {
+                monday.setDate(now.getDate() + 3);
+            } else {
+                const daysToSubtract = dayOfWeek - 1;
+                monday.setDate(now.getDate() - daysToSubtract);
+            }
+
+            const weekDays = [];
+            for (let i = 0; i < 5; i++) {
+                const day = new Date(monday);
+                day.setDate(monday.getDate() + i);
+                const year = day.getFullYear();
+                const month = String(day.getMonth() + 1).padStart(2, '0');
+                const date = String(day.getDate()).padStart(2, '0');
+                weekDays.push(`${year}-${month}-${date}`);
+            }
+
+            return weekDays.map(dateStr => {
+                const item = showAndShareSchedule.find(s => s.date === dateStr);
+                return {
+                    date: dateStr,
+                    studentName: item ? item.studentName : 'No Student',
+                    hasStudent: !!item
+                };
+            });
+        }
+
+        function renderDashboard(data) {
+            const upcomingEvents = data.schoolEvents.filter(isUpcoming).slice(0, 5);
+            const weeklyShowAndShare = getCurrentWeekShowAndShare(data);
+            const todaysEvent = data.schoolEvents.find(item => isToday(item.date));
+
+            document.getElementById('root').innerHTML = `
+            <div class="min-h-screen">
+                <!-- Header -->
+                <header class="harding-bg text-white sticky top-0 z-50 shadow-md">
+                    <div class="px-4 py-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <img src="Hawk-Head-Pantone.jpg" alt="Harding" class="w-12 h-12 object-contain">
+                                <div>
+                                    <h1 class="text-xl font-bold">Harding Academy</h1>
+                                    <p class="text-xs opacity-90">Kivett Family</p>
+                                </div>
+                            </div>
+                            <div class="text-right text-sm">
+                                <div class="font-semibold">${currentDate.toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                                <div class="text-lg font-bold">${currentDate.getDate()}</div>
+                            </div>
+                        </div>
+                        ${data.weeklyEmail.compassUrl ? `
+                            <a href="${data.weeklyEmail.compassUrl}" target="_blank" class="inline-block w-full text-center py-2 bg-white bg-opacity-20 rounded-lg text-sm font-medium">
+                                Compass Connection
+                            </a>
+                        ` : ''}
+                    </div>
+                </header>
+
+                <!-- Alert Banner -->
+                ${todaysEvent ? `
+                    <div class="bg-amber-50 border-b-2 border-amber-300 px-4 py-3">
+                        <div class="flex items-start gap-2">
+                            <i class="fas fa-star text-amber-600 mt-0.5 flex-shrink-0"></i>
+                            <div class="flex-1">
+                                <h2 class="font-bold text-amber-900 text-sm">${todaysEvent.title}</h2>
+                                ${todaysEvent.location ? `<p class="text-xs text-amber-800">${todaysEvent.location}</p>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                ` : ''}
+
+                <main class="px-4 py-5 space-y-4 max-w-2xl mx-auto pb-8">
+                    <!-- Show & Share -->
+                    <section class="card p-4">
+                        <h2 class="font-bold harding-text text-sm mb-3 flex items-center gap-2">
+                            <i class="fas fa-presentation"></i>
+                            This Week's Show & Share
+                        </h2>
+                        <div class="grid grid-cols-5 gap-1.5">
+                            ${weeklyShowAndShare.map(item => {
+                                const isTodayItem = isToday(item.date);
+                                const bgClass = isTodayItem ? 'bg-blue-100' : item.hasStudent ? 'bg-blue-50' : 'bg-gray-50';
+                                const textClass = isTodayItem ? 'harding-text font-bold' : 'text-gray-600';
+                                return `
+                                    <div class="text-center">
+                                        <div class="text-xs text-gray-500 mb-1">${getShortDay(item.date)}</div>
+                                        <div class="${bgClass} rounded-lg p-2 min-h-[60px] flex items-center justify-center">
+                                            <div class="text-xs ${textClass} text-center leading-tight">
+                                                ${item.studentName}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </section>
+
+                    <!-- Important Dates -->
+                    ${data.weeklyEmail.importantDates.length > 0 ? `
+                        <section class="card p-4">
+                            <h2 class="font-bold harding-text text-sm mb-3 flex items-center gap-2">
+                                <i class="fas fa-calendar"></i>
+                                Important Dates
+                            </h2>
+                            <ul class="space-y-2">
+                                ${data.weeklyEmail.importantDates.map(item => `
+                                    <li class="text-sm text-gray-700 flex gap-2">
+                                        <span class="harding-text">•</span>
+                                        <span>${item}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </section>
+                    ` : ''}
+
+                    <!-- Upcoming Events -->
+                    ${upcomingEvents.length > 0 ? `
+                        <section class="card p-4">
+                            <h2 class="font-bold harding-text text-sm mb-3 flex items-center gap-2">
+                                <i class="fas fa-calendar-days"></i>
+                                Upcoming Events
+                            </h2>
+                            <div class="space-y-2">
+                                ${upcomingEvents.map(event => `
+                                    <div class="p-3 bg-gray-50 rounded-lg border-l-4 harding-border">
+                                        <div class="font-semibold text-sm text-gray-900">${event.title}</div>
+                                        <div class="text-xs text-gray-600 mt-1">
+                                            ${formatDate(event.date)} • ${getShortDay(event.date)}
+                                            ${event.location ? ` • ${event.location}` : ''}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </section>
+                    ` : ''}
+
+                    <!-- Newsletter -->
+                    ${data.weeklyEmail.kindergartenExcerpt || data.weeklyEmail.highlights.length > 0 ? `
+                        <section class="card p-4">
+                            <h2 class="font-bold harding-text text-sm mb-3 flex items-center gap-2">
+                                <i class="fas fa-envelope"></i>
+                                Weekly News
+                            </h2>
+
+                            ${data.weeklyEmail.kindergartenExcerpt ? `
+                                <div class="mb-4 pb-4 border-b border-gray-200">
+                                    <h3 class="text-xs font-semibold harding-text mb-2">Kindergarten Update</h3>
+                                    <p class="text-sm text-gray-700 whitespace-pre-wrap">${data.weeklyEmail.kindergartenExcerpt}</p>
+                                </div>
+                            ` : ''}
+
+                            ${data.weeklyEmail.highlights.length > 0 ? `
+                                <div>
+                                    <h3 class="text-xs font-semibold harding-text mb-2">Highlights</h3>
+                                    <ul class="space-y-1.5">
+                                        ${data.weeklyEmail.highlights.map(item => `
+                                            <li class="text-sm text-gray-700 flex gap-2">
+                                                <span class="harding-text">•</span>
+                                                <span>${item}</span>
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                        </section>
+                    ` : ''}
+
+                    <!-- Quick Actions -->
+                    <section class="space-y-2">
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSf0ZxMKD-qzCMVHG98KHEINJuAcsnnvlIxsniv8aPx96s74cA/viewform" target="_blank" class="card p-4 block harding-text font-semibold text-sm">
+                            <i class="fas fa-clipboard-list mr-2"></i>
+                            Weekly Dismissal Form
+                        </a>
+                        <a href="https://www.signupgenius.com/go/10C0A4CADA62FA0FFC07-58545046-kivett#/" target="_blank" class="card p-4 block harding-text font-semibold text-sm">
+                            <i class="fas fa-book-open mr-2"></i>
+                            Reading/Cooking Signup
+                        </a>
+                        <a href="https://www.signupgenius.com/go/30E0945A9A828A57-57688501-grade#/" target="_blank" class="card p-4 block harding-text font-semibold text-sm">
+                            <i class="fas fa-hands-helping mr-2"></i>
+                            Volunteer Opportunities
+                        </a>
+                    </section>
+
+                    <!-- Footer -->
+                    <p class="text-xs text-gray-500 text-center pt-4">
+                        Last updated: ${data.lastUpdated ? new Date(data.lastUpdated).toLocaleDateString() : 'N/A'}
+                    </p>
+                </main>
+            </div>
+            `;
+        }
+
+        initDashboard().then(data => renderDashboard(data)).catch(error => {
+            console.error('Error:', error);
+            document.getElementById('root').innerHTML = `
+                <div class="min-h-screen flex items-center justify-center p-4">
+                    <div class="text-center">
+                        <p class="text-gray-600">Error loading dashboard. Please refresh.</p>
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
