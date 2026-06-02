@@ -1,10 +1,17 @@
+console.log('Server starting...');
+console.log('Node version:', process.version);
+console.log('CWD:', process.cwd());
+console.log('__dirname:', __dirname);
+
 const express = require('express');
+console.log('Express loaded');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+console.log('PORT:', PORT);
 const API_KEY = process.env.API_KEY || 'dev-key-change-me';
 const DATA_FILE = path.join(__dirname, 'public', 'data', 'dashboard-data.json');
 
@@ -19,7 +26,11 @@ try {
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+const publicDir = path.join(__dirname, 'public');
+console.log('Static dir:', publicDir, 'exists:', fs.existsSync(publicDir));
+console.log('index.html exists:', fs.existsSync(path.join(publicDir, 'index.html')));
+console.log('data file exists:', fs.existsSync(DATA_FILE));
+app.use(express.static(publicDir));
 
 // ------- API ROUTES -------
 
