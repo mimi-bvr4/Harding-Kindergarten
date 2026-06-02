@@ -79,11 +79,13 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', uptime: process.uptime() });
 });
 
-// Catch-all: serve index.html for any non-API route
+// Catch-all: serve index.html for non-API, non-file routes
 app.get('*', (req, res) => {
-    if (!req.path.startsWith('/api')) {
-        res.sendFile(path.join(__dirname, 'public', 'index.html'));
-    }
+    if (req.path.startsWith('/api')) return;
+    // If it looks like a file request (has extension), let it 404 naturally
+    if (path.extname(req.path)) return res.status(404).send('Not found');
+    // Otherwise serve the dashboard
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, '0.0.0.0', () => {
