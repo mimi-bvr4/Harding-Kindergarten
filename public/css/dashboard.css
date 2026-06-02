@@ -1,0 +1,38 @@
+/* Harding Academy Dashboard - Styles */
+:root {
+    --harding-blue: #012169;
+    --harding-blue-light: #0A3A7F;
+    --gold: #FF9800;
+    --accent-red: #dc2626;
+    --accent-green: #2E7D32;
+    --accent-purple: #7B1FA2;
+    --light-bg: #f8fafc;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--light-bg);
+    margin: 0;
+}
+
+.gradient-header {
+    background: linear-gradient(135deg, var(--harding-blue) 0%, var(--harding-blue-light) 100%);
+}
+
+.card-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.3s ease;
+}
+
+.card-shadow:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.highlight-today {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
