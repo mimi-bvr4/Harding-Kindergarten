@@ -7,6 +7,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.API_KEY || 'dev-key-change-me';
 const DATA_FILE = path.join(__dirname, 'public', 'data', 'dashboard-data.json');
+const DATA_DIR = path.join(__dirname, 'data');
+
+// Ensure data directories exist
+if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+if (!fs.existsSync(path.dirname(DATA_FILE))) fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
 
 // Middleware
 app.use(cors());
@@ -108,6 +113,6 @@ app.get('*', (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Harding Dashboard running on port ${PORT}`);
 });
