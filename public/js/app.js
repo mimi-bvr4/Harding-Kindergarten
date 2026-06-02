@@ -3,8 +3,6 @@
  * Componentized renderer. Each section is its own function.
  */
 
-const CALENDAR_URL = 'https://hardingacademy.myschoolapp.com/podium/feed/iCal.aspx?z=96wT5QnMrJrphQP5BInbTmAAJCsRcQpy%2bmDKcAacSR8eeFymiEdCFAWuYOhCPhXy4XjpFPFcjomN3uHn%2bWimYA%3d%3d';
-
 // ==================== DATA LOADING ====================
 
 async function loadDashboardData() {
@@ -21,9 +19,9 @@ async function loadDashboardData() {
         console.warn('API data load failed, using defaults');
     }
 
-    // Load calendar events from iCal feed
+    // Load calendar events via server proxy (no CORS issues)
     try {
-        const calendarEvents = await loadCalendar(CALENDAR_URL);
+        const calendarEvents = await loadCalendar();
         if (calendarEvents?.length > 0) {
             data.schoolEvents = calendarEvents;
         }

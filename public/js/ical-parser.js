@@ -1,13 +1,8 @@
 /**
  * iCal Feed Parser
  * Fetches and parses the Harding school calendar feed.
- * Falls back through multiple CORS proxies for resilience.
+ * Uses the server-side proxy at /api/calendar (no CORS issues).
  */
-
-const CORS_PROXIES = [
-    url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-    url => `https://corsproxy.io/?${encodeURIComponent(url)}`
-];
 
 // Event types to skip (sports, grade-specific, admin)
 const SKIP_PATTERNS = [
@@ -79,25 +74,19 @@ function parseICS(icsContent) {
         .sort((a, b) => a.date.localeCompare(b.date));
 }
 
-async function loadCalendar(url) {
-    // Try direct fetch first
+async function loadCalendar() {
     try {
-        const resp = await fetch(url);
-        if (resp.ok) return parseICS(await resp.text());
-    } catch (e) { /* CORS expected, fall through */ }
-
-    // Try each CORS proxy
-    for (const proxyFn of CORS_PROXIES) {
-        try {
-            const resp = await fetch(proxyFn(url));
-            if (resp.ok) {
-                const events = parseICS(await resp.text());
-                console.log(`Calendar loaded via proxy (${events.length} events)`);
-                return events;
-            }
-        } catch (e) { continue; }
+        const resp = await fetch('/api/calendar');
+        if (resp.ok) {
+            const icsText = await resp.text();
+            const events = parseICS(icsText);
+            console.log(`Calendar loaded (${events.length} events)`);
+            return events;
+        }
+        console.warn('Calendar API returned', resp.status);
+        return [];
+    } catch (e) {
+        console.warn('Calendar load failed:', e.message);
+        return [];
     }
-
-    console.warn('All calendar sources failed');
-    return [];
 }
