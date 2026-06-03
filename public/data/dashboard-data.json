@@ -1,21 +1,490 @@
 {
-    "lastUpdated": "2026-05-14T00:00:00",
-    "weeklyEmail": {
-        "week": "2026-2027 School Year Calendar",
-        "compassUrl": "",
-        "emailUrl": "",
-        "kindergartenExcerpt": "",
-        "highlights": [
-            "First day of classes: Wednesday, August 19, 2026",
-            "Parent/Teacher Conferences: October 12-13 & February 25-26",
-            "Major breaks: Fall Break, Thanksgiving, Winter Break, Spring Break",
-            "Early dismissal days: November 24, December 18, May 27",
-            "Graduation: Friday, May 28, 2027"
-        ],
-        "importantDates": [
-            "Aug 19 - First Day of Classes",
-            "Sep 7 - Labor Day (No School)",
-            "Oct 12-13 - Parent/Teacher Conferences (Student Holiday)"
-        ]
+  "lastUpdated": "2026-06-03T00:00:00",
+  "weeklyEmail": {
+    "week": "2026-2027 School Year Calendar",
+    "compassUrl": "",
+    "emailUrl": "",
+    "kindergartenExcerpt": "",
+    "highlights": [
+      "First day of classes: Wednesday, August 19, 2026",
+      "Parent/Teacher Conferences: October 12-13 & February 25-26",
+      "Major breaks: Fall Break, Thanksgiving, Winter Break, Spring Break",
+      "Early dismissal days: November 24, December 18, May 27",
+      "Graduation: Friday, May 28, 2027"
+    ],
+    "importantDates": [
+      "Aug 19 - First Day of Classes",
+      "Sep 7 - Labor Day (No School)",
+      "Oct 12-13 - Parent/Teacher Conferences (Student Holiday)"
+    ]
+  },
+  "classrooms": [
+    {
+      "id": "prek-a",
+      "grade": "PreK",
+      "label": "PreK A",
+      "shortLabel": "PreK A",
+      "color": "pink",
+      "icon": "fa-seedling",
+      "teacher": {
+        "name": "",
+        "email": "",
+        "room": ""
+      },
+      "weeklyExcerpt": "",
+      "resources": [
+        {
+          "label": "Compass Connection",
+          "url": "",
+          "icon": "fa-compass"
+        },
+        {
+          "label": "Weekly Dismissal Form",
+          "url": "https://docs.google.com/forms/d/e/1FAIpQLSf0ZxMKD-qzCMVHG98KHEINJuAcsnnvlIxsniv8aPx96s74cA/viewform",
+          "icon": "fa-car-side"
+        },
+        {
+          "label": "Lunch Menu",
+          "url": "",
+          "icon": "fa-utensils"
+        },
+        {
+          "label": "Dress Code",
+          "url": "",
+          "icon": "fa-shirt"
+        },
+        {
+          "label": "Supply List",
+          "url": "",
+          "icon": "fa-list-check"
+        }
+      ],
+      "dailySchedule": [
+        {
+          "time": "8:00 AM",
+          "activity": "Arrival / Carpool drop-off"
+        },
+        {
+          "time": "8:15 AM",
+          "activity": "Circle time"
+        },
+        {
+          "time": "9:00 AM",
+          "activity": "Wednesday late start begins (Wed only)"
+        },
+        {
+          "time": "9:15 AM",
+          "activity": "Free choice / centers"
+        },
+        {
+          "time": "10:15 AM",
+          "activity": "Snack & outdoor time"
+        },
+        {
+          "time": "11:15 AM",
+          "activity": "Specials or small group"
+        },
+        {
+          "time": "12:00 PM",
+          "activity": "Lunch"
+        },
+        {
+          "time": "12:45 PM",
+          "activity": "Rest / nap"
+        },
+        {
+          "time": "2:00 PM",
+          "activity": "Story time & afternoon centers"
+        },
+        {
+          "time": "3:00 PM",
+          "activity": "Dismissal"
+        }
+      ],
+      "showAndShareEnabled": false,
+      "placeholder": false,
+      "gradeKeywords": [
+        "prek",
+        "pre-k",
+        "preschool"
+      ]
+    },
+    {
+      "id": "prek-b",
+      "grade": "PreK",
+      "label": "PreK B",
+      "shortLabel": "PreK B",
+      "color": "rose",
+      "icon": "fa-seedling",
+      "teacher": {
+        "name": "",
+        "email": "",
+        "room": ""
+      },
+      "weeklyExcerpt": "",
+      "resources": [
+        {
+          "label": "Compass Connection",
+          "url": "",
+          "icon": "fa-compass"
+        },
+        {
+          "label": "Weekly Dismissal Form",
+          "url": "https://docs.google.com/forms/d/e/1FAIpQLSf0ZxMKD-qzCMVHG98KHEINJuAcsnnvlIxsniv8aPx96s74cA/viewform",
+          "icon": "fa-car-side"
+        },
+        {
+          "label": "Lunch Menu",
+          "url": "",
+          "icon": "fa-utensils"
+        },
+        {
+          "label": "Dress Code",
+          "url": "",
+          "icon": "fa-shirt"
+        },
+        {
+          "label": "Supply List",
+          "url": "",
+          "icon": "fa-list-check"
+        }
+      ],
+      "dailySchedule": [
+        {
+          "time": "8:00 AM",
+          "activity": "Arrival / Carpool drop-off"
+        },
+        {
+          "time": "8:15 AM",
+          "activity": "Circle time"
+        },
+        {
+          "time": "9:00 AM",
+          "activity": "Wednesday late start begins (Wed only)"
+        },
+        {
+          "time": "9:15 AM",
+          "activity": "Free choice / centers"
+        },
+        {
+          "time": "10:15 AM",
+          "activity": "Snack & outdoor time"
+        },
+        {
+          "time": "11:15 AM",
+          "activity": "Specials or small group"
+        },
+        {
+          "time": "12:00 PM",
+          "activity": "Lunch"
+        },
+        {
+          "time": "12:45 PM",
+          "activity": "Rest / nap"
+        },
+        {
+          "time": "2:00 PM",
+          "activity": "Story time & afternoon centers"
+        },
+        {
+          "time": "3:00 PM",
+          "activity": "Dismissal"
+        }
+      ],
+      "showAndShareEnabled": false,
+      "placeholder": false,
+      "gradeKeywords": [
+        "prek",
+        "pre-k",
+        "preschool"
+      ]
+    },
+    {
+      "id": "kinder-kivett",
+      "grade": "Kindergarten",
+      "label": "Kindergarten - Kivett",
+      "shortLabel": "K - Kivett",
+      "color": "purple",
+      "icon": "fa-graduation-cap",
+      "isFamily": true,
+      "teacher": {
+        "name": "",
+        "email": "",
+        "room": ""
+      },
+      "weeklyExcerpt": "",
+      "resources": [
+        {
+          "label": "Compass Connection",
+          "url": "",
+          "icon": "fa-compass"
+        },
+        {
+          "label": "Weekly Dismissal Form",
+          "url": "https://docs.google.com/forms/d/e/1FAIpQLSf0ZxMKD-qzCMVHG98KHEINJuAcsnnvlIxsniv8aPx96s74cA/viewform",
+          "icon": "fa-car-side"
+        },
+        {
+          "label": "Lunch Menu",
+          "url": "",
+          "icon": "fa-utensils"
+        },
+        {
+          "label": "Dress Code",
+          "url": "",
+          "icon": "fa-shirt"
+        },
+        {
+          "label": "Supply List",
+          "url": "",
+          "icon": "fa-list-check"
+        },
+        {
+          "label": "Reading/Cooking Signup",
+          "url": "https://www.signupgenius.com/go/10C0A4CADA62FA0FFC07-58545046-kivett#/",
+          "icon": "fa-book-open"
+        },
+        {
+          "label": "HPA Grade-Level Volunteer",
+          "url": "https://www.signupgenius.com/go/30E0945A9A828A57-57688501-grade#/",
+          "icon": "fa-hands-helping"
+        }
+      ],
+      "dailySchedule": [
+        {
+          "time": "7:45 AM",
+          "activity": "Arrival / Carpool drop-off"
+        },
+        {
+          "time": "8:00 AM",
+          "activity": "Morning meeting"
+        },
+        {
+          "time": "9:00 AM",
+          "activity": "Wednesday late start begins (Wed only)"
+        },
+        {
+          "time": "10:30 AM",
+          "activity": "Specials (Art, Music, PE, Library)"
+        },
+        {
+          "time": "11:30 AM",
+          "activity": "Lunch"
+        },
+        {
+          "time": "12:15 PM",
+          "activity": "Rest / Quiet time"
+        },
+        {
+          "time": "1:00 PM",
+          "activity": "Centers / small group"
+        },
+        {
+          "time": "3:00 PM",
+          "activity": "Dismissal"
+        }
+      ],
+      "showAndShareEnabled": true,
+      "placeholder": false,
+      "gradeKeywords": [
+        "kinder",
+        "kindergarten",
+        "kindergarteners"
+      ]
+    },
+    {
+      "id": "kinder-semrad",
+      "grade": "Kindergarten",
+      "label": "Kindergarten - Semrad",
+      "shortLabel": "K - Semrad",
+      "color": "blue",
+      "icon": "fa-graduation-cap",
+      "teacher": {
+        "name": "",
+        "email": "",
+        "room": ""
+      },
+      "weeklyExcerpt": "",
+      "resources": [
+        {
+          "label": "Compass Connection",
+          "url": "",
+          "icon": "fa-compass"
+        },
+        {
+          "label": "Weekly Dismissal Form",
+          "url": "https://docs.google.com/forms/d/e/1FAIpQLSf0ZxMKD-qzCMVHG98KHEINJuAcsnnvlIxsniv8aPx96s74cA/viewform",
+          "icon": "fa-car-side"
+        },
+        {
+          "label": "Lunch Menu",
+          "url": "",
+          "icon": "fa-utensils"
+        },
+        {
+          "label": "Dress Code",
+          "url": "",
+          "icon": "fa-shirt"
+        },
+        {
+          "label": "Supply List",
+          "url": "",
+          "icon": "fa-list-check"
+        },
+        {
+          "label": "HPA Grade-Level Volunteer",
+          "url": "https://www.signupgenius.com/go/30E0945A9A828A57-57688501-grade#/",
+          "icon": "fa-hands-helping"
+        }
+      ],
+      "dailySchedule": [
+        {
+          "time": "7:45 AM",
+          "activity": "Arrival / Carpool drop-off"
+        },
+        {
+          "time": "8:00 AM",
+          "activity": "Morning meeting"
+        },
+        {
+          "time": "9:00 AM",
+          "activity": "Wednesday late start begins (Wed only)"
+        },
+        {
+          "time": "10:30 AM",
+          "activity": "Specials (Art, Music, PE, Library)"
+        },
+        {
+          "time": "11:30 AM",
+          "activity": "Lunch"
+        },
+        {
+          "time": "12:15 PM",
+          "activity": "Rest / Quiet time"
+        },
+        {
+          "time": "1:00 PM",
+          "activity": "Centers / small group"
+        },
+        {
+          "time": "3:00 PM",
+          "activity": "Dismissal"
+        }
+      ],
+      "showAndShareEnabled": false,
+      "placeholder": false,
+      "gradeKeywords": [
+        "kinder",
+        "kindergarten",
+        "kindergarteners"
+      ]
+    },
+    {
+      "id": "kinder-3",
+      "grade": "Kindergarten",
+      "label": "Kindergarten - K#3",
+      "shortLabel": "K - #3",
+      "color": "teal",
+      "icon": "fa-graduation-cap",
+      "teacher": {
+        "name": "",
+        "email": "",
+        "room": ""
+      },
+      "weeklyExcerpt": "",
+      "resources": [
+        {
+          "label": "Compass Connection",
+          "url": "",
+          "icon": "fa-compass"
+        },
+        {
+          "label": "Weekly Dismissal Form",
+          "url": "https://docs.google.com/forms/d/e/1FAIpQLSf0ZxMKD-qzCMVHG98KHEINJuAcsnnvlIxsniv8aPx96s74cA/viewform",
+          "icon": "fa-car-side"
+        },
+        {
+          "label": "Lunch Menu",
+          "url": "",
+          "icon": "fa-utensils"
+        },
+        {
+          "label": "Dress Code",
+          "url": "",
+          "icon": "fa-shirt"
+        },
+        {
+          "label": "Supply List",
+          "url": "",
+          "icon": "fa-list-check"
+        },
+        {
+          "label": "HPA Grade-Level Volunteer",
+          "url": "https://www.signupgenius.com/go/30E0945A9A828A57-57688501-grade#/",
+          "icon": "fa-hands-helping"
+        }
+      ],
+      "dailySchedule": [
+        {
+          "time": "7:45 AM",
+          "activity": "Arrival / Carpool drop-off"
+        },
+        {
+          "time": "8:00 AM",
+          "activity": "Morning meeting"
+        },
+        {
+          "time": "9:00 AM",
+          "activity": "Wednesday late start begins (Wed only)"
+        },
+        {
+          "time": "10:30 AM",
+          "activity": "Specials (Art, Music, PE, Library)"
+        },
+        {
+          "time": "11:30 AM",
+          "activity": "Lunch"
+        },
+        {
+          "time": "12:15 PM",
+          "activity": "Rest / Quiet time"
+        },
+        {
+          "time": "1:00 PM",
+          "activity": "Centers / small group"
+        },
+        {
+          "time": "3:00 PM",
+          "activity": "Dismissal"
+        }
+      ],
+      "showAndShareEnabled": false,
+      "placeholder": false,
+      "gradeKeywords": [
+        "kinder",
+        "kindergarten",
+        "kindergarteners"
+      ]
     }
+  ],
+  "allSchoolKeywords": [
+    "all-school",
+    "all school",
+    "spirit",
+    "early dismissal",
+    "parent/teacher",
+    "conferences",
+    "holiday",
+    "break",
+    "graduation",
+    "labor day",
+    "thanksgiving",
+    "winter",
+    "spring break",
+    "mlk",
+    "memorial",
+    "last day of classes",
+    "first day of classes",
+    "school holiday"
+  ]
 }

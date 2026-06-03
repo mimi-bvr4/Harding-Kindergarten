@@ -7,160 +7,137 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.API_KEY || 'dev-key-change-me';
 const DATA_FILE = path.join(__dirname, 'public', 'data', 'dashboard-data.json');
-const SUGGESTIONS_FILE = path.join(__dirname, 'public', 'data', 'suggestions.json');
-
-// Safely create directories
-try {
-    const dataDir = path.join(__dirname, 'data');
-    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-} catch (e) {
-    console.warn('Could not create data dir:', e.message);
-}
 
 // Middleware
 app.use(cors());
-app.use(express.json({ limit: '1mb' }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(express.static('public'));
 
-// ==================== LIVE DATA (what parents see) ====================
+// ------- API ROUTES -------
 
+// GET current dashboard data
 app.get('/api/data', (req, res) => {
     try {
-        if (fs.existsSync(DATA_FILE)) {
-            res.json(JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')));
-        } else {
-            res.json({
-                lastUpdated: null,
-                weeklyEmail: { week: '', compassUrl: '', emailUrl: '', kindergartenExcerpt: '', highlights: [], importantDates: [] }
-            });
-        }
+        const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+        res.json(data);
     } catch (err) {
-        res.status(500).json({ error: 'Failed to read data' });
+        res.status(500).json({ error: 'Failed to read dashboard data' });
     }
 });
 
-// POST publish approved data (admin hits Publish)
+// POST update dashboard data (called by Apps Script or admin dashboard)
+// MERGE semantics so the classroom config in dashboard-data.json isn't wiped:
+//   - top-level fields in body overwrite the existing top-level fields
+//   - body.classroomExcerpts = { "<classroomId>": "excerpt text" } is folded
+//     into existing classrooms[i].weeklyExcerpt
+//   - body.classrooms (if supplied) replaces the entire array (rare, full sync)
 app.post('/api/data', (req, res) => {
-    if (req.headers['x-api-key'] !== API_KEY) return res.status(401).json({ error: 'Invalid API key' });
-
-    try {
-        const data = req.body;
-        data.lastUpdated = new Date().toISOString();
-        fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-        res.json({ success: true, lastUpdated: data.lastUpdated });
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to write data' });
+    const authKey = req.headers['x-api-key'];
+    if (authKey !== API_KEY) {
+        return res.status(401).json({ error: 'Invalid API key' });
     }
-});
-
-// ==================== SUGGESTIONS (pending review) ====================
-
-// GET pending suggestions
-app.get('/api/suggestions', (req, res) => {
-    try {
-        if (fs.existsSync(SUGGESTIONS_FILE)) {
-            res.json(JSON.parse(fs.readFileSync(SUGGESTIONS_FILE, 'utf8')));
-        } else {
-            res.json({ suggestions: [], scannedAt: null });
-        }
-    } catch (err) {
-        res.json({ suggestions: [], scannedAt: null });
-    }
-});
-
-// POST new suggestions (Claude pushes extracted email content here)
-app.post('/api/suggestions', (req, res) => {
-    if (req.headers['x-api-key'] !== API_KEY) return res.status(401).json({ error: 'Invalid API key' });
 
     try {
-        const incoming = req.body;
-        incoming.scannedAt = new Date().toISOString();
+        const incoming = req.body || {};
+        let current = {};
+        try { current = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); } catch (_) {}
 
-        // Tag each suggestion with an ID and default status
-        if (incoming.suggestions) {
-            incoming.suggestions = incoming.suggestions.map((s, i) => ({
-                id: Date.now() + '_' + i,
-                ...s,
-                approved: true  // default checked, user unchecks what they don't want
-            }));
+        const merged = { ...current };
+
+        // Fold any top-level keys (excluding classroomExcerpts, which we route below)
+        for (const k of Object.keys(incoming)) {
+            if (k === 'classroomExcerpts') continue;
+            if (k === 'weeklyEmail' && current.weeklyEmail) {
+                merged.weeklyEmail = { ...current.weeklyEmail, ...incoming.weeklyEmail };
+            } else {
+                merged[k] = incoming[k];
+            }
         }
 
-        fs.writeFileSync(SUGGESTIONS_FILE, JSON.stringify(incoming, null, 2));
-        res.json({ success: true, count: incoming.suggestions?.length || 0 });
+        // Apply per-classroom excerpts to classrooms[i].weeklyExcerpt
+        if (incoming.classroomExcerpts && typeof incoming.classroomExcerpts === 'object') {
+            const classrooms = Array.isArray(merged.classrooms) ? merged.classrooms : [];
+            for (const c of classrooms) {
+                if (Object.prototype.hasOwnProperty.call(incoming.classroomExcerpts, c.id)) {
+                    c.weeklyExcerpt = incoming.classroomExcerpts[c.id] || '';
+                }
+            }
+            merged.classrooms = classrooms;
+        }
+
+        merged.lastUpdated = new Date().toISOString();
+        fs.writeFileSync(DATA_FILE, JSON.stringify(merged, null, 2));
+        res.json({ success: true, lastUpdated: merged.lastUpdated });
     } catch (err) {
-        res.status(500).json({ error: 'Failed to save suggestions' });
+        console.error('POST /api/data failed:', err);
+        res.status(500).json({ error: 'Failed to write dashboard data' });
     }
 });
 
-// DELETE clear suggestions after publishing
-app.delete('/api/suggestions', (req, res) => {
-    if (req.headers['x-api-key'] !== API_KEY) return res.status(401).json({ error: 'Invalid API key' });
-
-    try {
-        if (fs.existsSync(SUGGESTIONS_FILE)) fs.unlinkSync(SUGGESTIONS_FILE);
-        res.json({ success: true });
-    } catch (err) {
-        res.json({ success: true }); // fine if already gone
-    }
-});
-
-// ==================== SMS QUEUE (future) ====================
-
+// GET SMS queue (future: suggested notifications)
 app.get('/api/sms/queue', (req, res) => {
-    res.json({ pending: [], sent: [] });
-});
-
-app.post('/api/sms/suggest', (req, res) => {
-    if (req.headers['x-api-key'] !== API_KEY) return res.status(401).json({ error: 'Invalid API key' });
-    res.json({ success: true, message: 'SMS queue not yet implemented' });
-});
-
-// ==================== CALENDAR PROXY ====================
-// Fetches the school iCal feed server-side — no CORS proxy needed
-
-const ICAL_URL = 'https://hardingacademy.myschoolapp.com/podium/feed/iCal.aspx?z=96wT5QnMrJrphQP5BInbTmAAJCsRcQpy%2bmDKcAacSR8eeFymiEdCFAWuYOhCPhXy4XjpFPFcjomN3uHn%2bWimYA%3d%3d';
-
-let calendarCache = { data: null, fetchedAt: 0 };
-const CACHE_TTL = 60 * 60 * 1000; // 1 hour
-
-app.get('/api/calendar', async (req, res) => {
-    const now = Date.now();
-
-    // Return cached if fresh
-    if (calendarCache.data && (now - calendarCache.fetchedAt) < CACHE_TTL) {
-        return res.type('text/calendar').send(calendarCache.data);
+    const queueFile = path.join(__dirname, 'data', 'sms-queue.json');
+    try {
+        if (fs.existsSync(queueFile)) {
+            const queue = JSON.parse(fs.readFileSync(queueFile, 'utf8'));
+            res.json(queue);
+        } else {
+            res.json({ pending: [], sent: [] });
+        }
+    } catch (err) {
+        res.json({ pending: [], sent: [] });
     }
+});
+
+// POST add SMS suggestion (future: called by email scanner)
+app.post('/api/sms/suggest', (req, res) => {
+    const authKey = req.headers['x-api-key'];
+    if (authKey !== API_KEY) {
+        return res.status(401).json({ error: 'Invalid API key' });
+    }
+
+    const queueDir = path.join(__dirname, 'data');
+    const queueFile = path.join(queueDir, 'sms-queue.json');
 
     try {
-        const response = await fetch(ICAL_URL);
-        if (!response.ok) throw new Error('Feed returned ' + response.status);
+        if (!fs.existsSync(queueDir)) fs.mkdirSync(queueDir, { recursive: true });
 
-        const icsText = await response.text();
-        calendarCache = { data: icsText, fetchedAt: now };
-        res.type('text/calendar').send(icsText);
-    } catch (err) {
-        console.error('Calendar fetch error:', err.message);
-        // Return stale cache if available
-        if (calendarCache.data) {
-            return res.type('text/calendar').send(calendarCache.data);
+        let queue = { pending: [], sent: [] };
+        if (fs.existsSync(queueFile)) {
+            queue = JSON.parse(fs.readFileSync(queueFile, 'utf8'));
         }
-        res.status(502).json({ error: 'Failed to fetch calendar feed' });
+
+        const suggestion = {
+            id: Date.now().toString(),
+            message: req.body.message,
+            suggestedSendTime: req.body.suggestedSendTime || null,
+            sourceEmail: req.body.sourceEmail || null,
+            priority: req.body.priority || 'standard',
+            status: 'pending',
+            createdAt: new Date().toISOString()
+        };
+
+        queue.pending.push(suggestion);
+        fs.writeFileSync(queueFile, JSON.stringify(queue, null, 2));
+
+        res.json({ success: true, suggestion });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to add suggestion' });
     }
 });
 
-// ==================== HEALTH ====================
-
+// Health check (Railway uses this)
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', uptime: process.uptime() });
 });
 
-// Catch-all
+// Catch-all: serve index.html for any non-API route
 app.get('*', (req, res) => {
-    if (req.path.startsWith('/api')) return;
-    if (path.extname(req.path)) return res.status(404).send('Not found');
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    if (!req.path.startsWith('/api')) {
+        res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    }
 });
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
     console.log(`Harding Dashboard running on port ${PORT}`);
 });
