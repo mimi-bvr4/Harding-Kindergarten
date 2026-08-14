@@ -5,7 +5,6 @@
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
   "announcement": "",
   "disclaimer": "This is not official school communication. It's a parent-built page — one mom organizing her own family's week and sharing it with anyone who finds it useful. Everything here is reposted in good faith, but the school's own email and the Harding app are always the source of truth.",
-
   "dismissalForm": {
     "show": true,
     "title": "Weekly Dismissal Form",
@@ -15,7 +14,6 @@
     "dueNote": "Due Monday 9:00 AM",
     "footnote": "No sign-in needed. You'll need your child's homeroom teacher's last name."
   },
-
   "orientation": {
     "show": true,
     "headline": "PreK Orientation Day",
@@ -38,43 +36,136 @@
       {
         "name": "Pre-K 1",
         "slots": [
-          { "time": "8:00 – 8:20 AM", "students": ["Charlie Braddy", "Lia Boyd", "Laurel Starnes", "Pierce Pettit", "Charlotte McNabb"] },
-          { "time": "8:30 – 8:50 AM", "students": ["Charlie Branstetter", "Etta Allen", "Oliver Davis", "Quinley Yastrzemski"] },
-          { "time": "10:00 – 10:20 AM", "students": ["Archie Adams", "Brooks Li", "Scarlett Matz", "Coe Kelley"] },
-          { "time": "10:30 – 10:50 AM", "students": ["Evvie Pack", "Field McPherson", "London Thompson", "Penelope Johnson", "Phinney Troy"] }
+          {
+            "time": "8:00 – 8:20 AM",
+            "students": [
+              "Charlie Braddy",
+              "Lia Boyd",
+              "Laurel Starnes",
+              "Pierce Pettit",
+              "Charlotte McNabb"
+            ]
+          },
+          {
+            "time": "8:30 – 8:50 AM",
+            "students": [
+              "Charlie Branstetter",
+              "Etta Allen",
+              "Oliver Davis",
+              "Quinley Yastrzemski"
+            ]
+          },
+          {
+            "time": "10:00 – 10:20 AM",
+            "students": [
+              "Archie Adams",
+              "Brooks Li",
+              "Scarlett Matz",
+              "Coe Kelley"
+            ]
+          },
+          {
+            "time": "10:30 – 10:50 AM",
+            "students": [
+              "Evvie Pack",
+              "Field McPherson",
+              "London Thompson",
+              "Penelope Johnson",
+              "Phinney Troy"
+            ]
+          }
         ]
       },
       {
         "name": "Pre-K 2",
         "slots": [
-          { "time": "8:00 – 8:20 AM", "students": ["Archie Akbari", "Elijah Glotta", "Scottie Snyder", "Virginia McNabb", "Phoebe Woods"] },
-          { "time": "8:30 – 8:50 AM", "students": ["Vivienne Riggs", "Nora Fecht", "James Pilkerton", "Cecily Poppler"] },
-          { "time": "10:00 – 10:20 AM", "students": ["Edie Beaver", "London Li", "Genevieve Santapuram", "Jace Aujla"] },
-          { "time": "10:30 – 10:50 AM", "students": ["Kai McAfee", "Jack Barge", "Kennedy Carty", "Margo Chatfield", "Sam Frank"] }
+          {
+            "time": "8:00 – 8:20 AM",
+            "students": [
+              "Archie Akbari",
+              "Elijah Glotta",
+              "Scottie Snyder",
+              "Virginia McNabb",
+              "Phoebe Woods"
+            ]
+          },
+          {
+            "time": "8:30 – 8:50 AM",
+            "students": [
+              "Vivienne Riggs",
+              "Nora Fecht",
+              "James Pilkerton",
+              "Cecily Poppler"
+            ]
+          },
+          {
+            "time": "10:00 – 10:20 AM",
+            "students": [
+              "Edie Beaver",
+              "London Li",
+              "Genevieve Santapuram",
+              "Jace Aujla"
+            ]
+          },
+          {
+            "time": "10:30 – 10:50 AM",
+            "students": [
+              "Kai McAfee",
+              "Jack Barge",
+              "Kennedy Carty",
+              "Margo Chatfield",
+              "Sam Frank"
+            ]
+          }
         ]
       }
     ],
     "conflictNote": "Time doesn't work for your family? Contact Anne Zuberer at 615-957-8040 and we'll find one that does."
   },
-
   "keyDates": [
-    { "date": "2026-08-17", "label": "PreK Orientation" },
-    { "date": "2026-08-19", "label": "School begins — noon dismissal in front of the new building (through August 25)" },
-    { "date": "2026-08-26", "label": "First 3:00 PM dismissal · Pursuit becomes available for PreK" },
-    { "date": "2026-09-07", "label": "Labor Day — school holiday" }
+    {
+      "date": "2026-08-17",
+      "label": "PreK Orientation"
+    },
+    {
+      "date": "2026-08-19",
+      "label": "School begins — noon dismissal in front of the new building (through August 25)"
+    },
+    {
+      "date": "2026-08-26",
+      "label": "First 3:00 PM dismissal · Pursuit becomes available for PreK"
+    },
+    {
+      "date": "2026-09-07",
+      "label": "Labor Day — school holiday"
+    }
   ],
-
   "infoSections": [
     {
       "id": "classroom",
       "icon": "fa-school",
       "title": "In the Classroom",
       "items": [
-        { "title": "Water bottles", "body": "We drink a lot of water in PreK and we love the earth. Please send a filled reusable water bottle each day, labeled with your child's name. Our classrooms have a filling station, and we use the bottles at snack and lunch." },
-        { "title": "Velcro shoes", "body": "Growing self-help skills is a big part of the PreK year. Please send your child in Velcro shoes they can manage themselves. We're on the playground daily and in P.E., so choose athletic footwear that moves easily and safely." },
-        { "title": "Under wraps", "body": "On Orientation Day you'll find our classrooms all wrapped up. Over the first few days, children discover the materials in a guided way — it builds excitement about our supplies while we teach constructive use, cooperation, and care for our space." },
-        { "title": "A comfort item", "body": "Sometimes you just need a cozy blanket or stuffed animal nearby. If that helps your child settle in, send it in the school tote bag. It lives in the bag during the day, and they can visit it during free play." },
-        { "title": "Tote bags and lunch boxes", "body": "PreK provides a Harding tote bag — they work much better at this age. If you've already bought a backpack, save it for kindergarten. We eat lunch in our classrooms on full days, so please send a lunch with reusable utensils and a water bottle." }
+        {
+          "title": "Water bottles",
+          "body": "We drink a lot of water in PreK and we love the earth. Please send a filled reusable water bottle each day, labeled with your child's name. Our classrooms have a filling station, and we use the bottles at snack and lunch."
+        },
+        {
+          "title": "Velcro shoes",
+          "body": "Growing self-help skills is a big part of the PreK year. Please send your child in Velcro shoes they can manage themselves. We're on the playground daily and in P.E., so choose athletic footwear that moves easily and safely."
+        },
+        {
+          "title": "Under wraps",
+          "body": "On Orientation Day you'll find our classrooms all wrapped up. Over the first few days, children discover the materials in a guided way — it builds excitement about our supplies while we teach constructive use, cooperation, and care for our space."
+        },
+        {
+          "title": "A comfort item",
+          "body": "Sometimes you just need a cozy blanket or stuffed animal nearby. If that helps your child settle in, send it in the school tote bag. It lives in the bag during the day, and they can visit it during free play."
+        },
+        {
+          "title": "Tote bags and lunch boxes",
+          "body": "PreK provides a Harding tote bag — they work much better at this age. If you've already bought a backpack, save it for kindergarten. We eat lunch in our classrooms on full days, so please send a lunch with reusable utensils and a water bottle."
+        }
       ]
     },
     {
@@ -82,11 +173,26 @@
       "icon": "fa-apple-whole",
       "title": "Snack & Cooking Curriculum",
       "items": [
-        { "title": "How it works", "body": "A digital monthly snack calendar goes out with sign-ups for Mondays and Fridays. On Tuesday, Wednesday, and Thursday teachers provide Harding-supplied snacks, with a special focus on grains on Wednesdays. Signing up is completely voluntary — and hopefully fun." },
-        { "title": "Moo Mondays", "body": "Hard cheese, bulk yogurt (no tubes or individually packaged cups), hard-boiled eggs, cottage cheese, coconut-milk yogurt, kefir, pimento cheese." },
-        { "title": "Fruit Fridays", "body": "Whole fresh fruit — bunches of bananas, a box of clementines, small apples." },
-        { "title": "Why bulk", "body": "We're glad to cut up a large block of cheese or scoop out yogurt servings. It eliminates individual packaging and meets our goal of reducing the waste we produce." },
-        { "title": "Food allergies", "body": "If there are allergies in the classroom we'll share those details before the snack curriculum begins, and let you know which foods to avoid to keep everyone safe." }
+        {
+          "title": "How it works",
+          "body": "A digital monthly snack calendar goes out with sign-ups for Mondays and Fridays. On Tuesday, Wednesday, and Thursday teachers provide Harding-supplied snacks, with a special focus on grains on Wednesdays. Signing up is completely voluntary — and hopefully fun."
+        },
+        {
+          "title": "Moo Mondays",
+          "body": "Hard cheese, bulk yogurt (no tubes or individually packaged cups), hard-boiled eggs, cottage cheese, coconut-milk yogurt, kefir, pimento cheese."
+        },
+        {
+          "title": "Fruit Fridays",
+          "body": "Whole fresh fruit — bunches of bananas, a box of clementines, small apples."
+        },
+        {
+          "title": "Why bulk",
+          "body": "We're glad to cut up a large block of cheese or scoop out yogurt servings. It eliminates individual packaging and meets our goal of reducing the waste we produce."
+        },
+        {
+          "title": "Food allergies",
+          "body": "If there are allergies in the classroom we'll share those details before the snack curriculum begins, and let you know which foods to avoid to keep everyone safe."
+        }
       ]
     },
     {
@@ -94,8 +200,14 @@
       "icon": "fa-recycle",
       "title": "Greening the Classroom",
       "items": [
-        { "title": "Sustainable rooms", "body": "We recycle, reuse, and reduce wherever we can — fabric napkins and reusable water bottles at snack and lunch." },
-        { "title": "Green art — send it in!", "body": "We love recycled materials in our Free Art Center and structured projects. Interesting cardboard, old game or puzzle pieces, baby food jars, cast-off jewelry, newspaper, paper towel rolls — just about anything. When in doubt, send it in. We'll use it." }
+        {
+          "title": "Sustainable rooms",
+          "body": "We recycle, reuse, and reduce wherever we can — fabric napkins and reusable water bottles at snack and lunch."
+        },
+        {
+          "title": "Green art — send it in!",
+          "body": "We love recycled materials in our Free Art Center and structured projects. Interesting cardboard, old game or puzzle pieces, baby food jars, cast-off jewelry, newspaper, paper towel rolls — just about anything. When in doubt, send it in. We'll use it."
+        }
       ]
     },
     {
@@ -103,7 +215,10 @@
       "icon": "fa-tree",
       "title": "The Natural Outdoor Playspace",
       "items": [
-        { "title": "We go outside in all weather", "body": "The NOP is a large part of the PreK curriculum, which means we often learn outside. We observe nature, build with natural materials, cooperate, and practice risk-taking. Rain boots and a hooded rain jacket stay in the classroom all year so we can stay dry every day." }
+        {
+          "title": "We go outside in all weather",
+          "body": "The NOP is a large part of the PreK curriculum, which means we often learn outside. We observe nature, build with natural materials, cooperate, and practice risk-taking. Rain boots and a hooded rain jacket stay in the classroom all year so we can stay dry every day."
+        }
       ]
     },
     {
@@ -111,26 +226,57 @@
       "icon": "fa-seedling",
       "title": "The First Six Weeks",
       "items": [
-        { "title": "Getting to know each other", "body": "We spend the first six weeks getting to know one another as unique individuals, as members of a family, and as a classroom community." },
-        { "title": "Building the community", "body": "Daily Morning Meetings and fun activities. This month we'll complete a \"Who Am I?\" photo project, a self-portrait in paint, and a family drawing." },
-        { "title": "Rules and routines", "body": "Together we create our classroom rules and play plenty of name-learning games, learn new routines, and start exploring the Harding campus." },
-        { "title": "Toward the end of the month", "body": "We introduce the Estimation Jar, Heggerty phonemic awareness activities, Everyday Math, and Handwriting Without Tears." }
+        {
+          "title": "Getting to know each other",
+          "body": "We spend the first six weeks getting to know one another as unique individuals, as members of a family, and as a classroom community."
+        },
+        {
+          "title": "Building the community",
+          "body": "Daily Morning Meetings and fun activities. This month we'll complete a \"Who Am I?\" photo project, a self-portrait in paint, and a family drawing."
+        },
+        {
+          "title": "Rules and routines",
+          "body": "Together we create our classroom rules and play plenty of name-learning games, learn new routines, and start exploring the Harding campus."
+        },
+        {
+          "title": "Toward the end of the month",
+          "body": "We introduce the Estimation Jar, Heggerty phonemic awareness activities, Everyday Math, and Handwriting Without Tears."
+        }
       ]
     }
   ],
-
   "team": {
     "title": "Your PreK Team",
     "note": "Please don't hesitate to reach out with any questions, comments, or concerns.",
     "people": [
-      { "name": "Anne Zuberer", "role": "Director of Primary Education", "email": "zuberera@hardingacademy.us", "phone": "615-957-8040" },
-      { "name": "Ann Walker Huttchson", "role": "Teacher", "email": "Huttchsona@hardingacademy.us" },
-      { "name": "Megan Collins", "role": "Teacher", "email": "Collinsm@hardingacademy.us" },
-      { "name": "Lauren Bidez", "role": "Teacher", "email": "Bidezl@hardingacademy.us" },
-      { "name": "Greg Nye", "role": "Teacher", "email": "Nyeg@hardingacademy.us" }
+      {
+        "name": "Anne Zuberer",
+        "role": "Director of Primary Education",
+        "email": "zuberera@hardingacademy.us",
+        "phone": "615-957-8040"
+      },
+      {
+        "name": "Ann Walker Huttchson",
+        "role": "Teacher",
+        "email": "Huttchsona@hardingacademy.us"
+      },
+      {
+        "name": "Megan Collins",
+        "role": "Teacher",
+        "email": "Collinsm@hardingacademy.us"
+      },
+      {
+        "name": "Lauren Bidez",
+        "role": "Teacher",
+        "email": "Bidezl@hardingacademy.us"
+      },
+      {
+        "name": "Greg Nye",
+        "role": "Teacher",
+        "email": "Nyeg@hardingacademy.us"
+      }
     ]
   },
-
   "soccer": {
     "show": true,
     "headline": "PreK Soccer — Coach Ryan's Team",
@@ -145,8 +291,16 @@
     "signupLabel": "",
     "signupTip": "",
     "links": [
-      { "label": "Game-day schedule", "url": "https://fpcnashville.org/ministry/soccer", "icon": "fa-calendar-days" },
-      { "label": "About the league", "url": "https://fpcnashville.org/ministry/soccer", "icon": "fa-circle-info" }
+      {
+        "label": "Game-day schedule",
+        "url": "https://fpcnashville.org/ministry/soccer",
+        "icon": "fa-calendar-days"
+      },
+      {
+        "label": "About the league",
+        "url": "https://fpcnashville.org/ministry/soccer",
+        "icon": "fa-circle-info"
+      }
     ],
     "notes": [
       "Want to help coach? Extra hands are welcome — just reach out to Ryan."
@@ -154,7 +308,6 @@
     "coachName": "Coach Ryan Pack (Evvie's dad)",
     "coachPhone": "(865) 719-6669"
   },
-
   "popsicles": {
     "show": false,
     "headline": "Popsicle Hang Outs",
@@ -163,11 +316,9 @@
     "rsvpLabel": "Add Your Kiddo · Suggest a Date",
     "dates": []
   },
-
   "documents": [],
   "schoolLinks": [],
   "allSchoolKeywords": [],
-
   "weeklyEmail": {
     "week": "",
     "compassUrl": "",
@@ -176,7 +327,6 @@
     "highlights": [],
     "importantDates": []
   },
-
   "classrooms": [
     {
       "id": "prek",
@@ -186,58 +336,21 @@
       "color": "gold",
       "icon": "fa-seedling",
       "hidden": true,
-      "teacher": { "name": "Anne Zuberer", "email": "zuberera@hardingacademy.us", "room": "" },
+      "teacher": {
+        "name": "Anne Zuberer",
+        "email": "zuberera@hardingacademy.us",
+        "room": ""
+      },
       "weeklyExcerpt": "",
       "resources": [],
       "dailySchedule": [],
       "showAndShareEnabled": false,
-      "gradeKeywords": ["prek", "pre-k", "pre k", "primary"]
-    },
-    {
-      "id": "kinder-kivett",
-      "grade": "Kindergarten",
-      "label": "Kindergarten — Kivett",
-      "shortLabel": "K · Kivett",
-      "color": "blue",
-      "icon": "fa-chalkboard-user",
-      "archived": true,
-      "isFamily": true,
-      "teacher": { "name": "", "email": "", "room": "" },
-      "weeklyExcerpt": "",
-      "resources": [],
-      "dailySchedule": [],
-      "showAndShareEnabled": true,
-      "gradeKeywords": ["kindergarten", "kinder"]
-    },
-    {
-      "id": "kinder-semrad",
-      "grade": "Kindergarten",
-      "label": "Kindergarten — Semrad",
-      "shortLabel": "K · Semrad",
-      "color": "green",
-      "icon": "fa-chalkboard-user",
-      "archived": true,
-      "teacher": { "name": "", "email": "", "room": "" },
-      "weeklyExcerpt": "",
-      "resources": [],
-      "dailySchedule": [],
-      "showAndShareEnabled": false,
-      "gradeKeywords": ["kindergarten", "kinder"]
-    },
-    {
-      "id": "kinder-3",
-      "grade": "Kindergarten",
-      "label": "Kindergarten — K#3",
-      "shortLabel": "K · #3",
-      "color": "purple",
-      "icon": "fa-chalkboard-user",
-      "archived": true,
-      "teacher": { "name": "", "email": "", "room": "" },
-      "weeklyExcerpt": "",
-      "resources": [],
-      "dailySchedule": [],
-      "showAndShareEnabled": false,
-      "gradeKeywords": ["kindergarten", "kinder"]
+      "gradeKeywords": [
+        "prek",
+        "pre-k",
+        "pre k",
+        "primary"
+      ]
     }
   ]
 }

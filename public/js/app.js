@@ -1,13 +1,10 @@
 /**
  * Harding PreK Parent Dashboard — v5
  *
- * One general PreK program page. The Kindergarten classrooms from earlier
- * versions are archived, not deleted — they stay reachable at #/kindergarten.
+ * One general PreK program page, tabbed rather than one long scroll.
  *
  * Routes:
- *   #/              → PreK program home
- *   #/kindergarten  → archived Kindergarten index
- *   #/c/<id>        → a single archived classroom
+ *   #/  #/orientation  #/week  #/info  #/activities  #/team
  */
 
 const CALENDAR_URL = 'https://hardingacademy.myschoolapp.com/podium/feed/iCal.aspx?z=96wT5QnMrJrphQP5BInbTmAAJCsRcQpy%2bmDKcAacSR8eeFymiEdCFAWuYOhCPhXy4XjpFPFcjomN3uHn%2bWimYA%3d%3d';
@@ -122,7 +119,6 @@ function renderNav(data) {
         </a>`;
 
     const wk = data.weeklyEmail || {};
-    const archived = (data.classrooms || []).filter(c => c.archived);
 
     document.getElementById('navItems').innerHTML = `
         ${item('#/', 'fa-house', 'Home', 'Everything for PreK')}
@@ -132,8 +128,6 @@ function renderNav(data) {
         ${hasActivities(data) ? item('#/activities', 'fa-futbol', 'Sports & Activities', 'Outside the classroom') : ''}
         ${item('/handbook.html', 'fa-book-open', 'Family Handbook', 'Search the 2026-27 handbook', true)}
         ${wk.emailUrl ? item(wk.emailUrl, 'fa-envelope-open-text', "This Week's Email", 'Open the full school email', true) : ''}
-        ${archived.length ? `<div class="nav-section-label">Archive</div>
-            ${item('#/kindergarten', 'fa-box-archive', 'Kindergarten', 'Previous classroom pages')}` : ''}
     `;
 
     document.getElementById('navLastUpdated').textContent =
@@ -758,59 +752,7 @@ function renderActivitiesPage(data) {
     `);
 }
 
-function renderKindergartenIndex(data) {
-    setTopbar('Kindergarten', 'Archive');
-    const archived = (data.classrooms || []).filter(c => c.archived);
-    return `
-    <div style="padding:16px;display:flex;flex-direction:column;gap:14px" class="page-enter">
-        <div class="archived-note">
-            <i class="fas fa-box-archive" style="margin-top:2px"></i>
-            <span>These are the Kindergarten classroom pages from the earlier version of this dashboard.
-            They're kept here for reference — the PreK program page is the one being updated this year.</span>
-        </div>
-        ${archived.map(c => `
-        <a href="#/c/${esc(c.id)}" data-route="#/c/${esc(c.id)}" class="doc-card touch-row" style="padding:15px">
-            <span class="doc-card-icon doc-tint-blue"><i class="fas ${esc(c.icon || 'fa-chalkboard-user')}"></i></span>
-            <span style="flex:1;min-width:0">
-                <span style="display:block;font-weight:700;font-size:14.5px;color:#1E293B">${esc(c.label)}</span>
-                <span style="display:block;font-size:12px;color:#94A3B8;margin-top:2px">
-                    ${esc(c.teacher?.name || 'No teacher listed')}</span>
-            </span>
-            <i class="fas fa-chevron-right" style="color:#CBD5E1;font-size:13px"></i>
-        </a>`).join('') || '<p style="color:#94A3B8;font-size:14px">Nothing archived.</p>'}
-        <a href="#/" data-route="#/" class="back-home touch-row"><i class="fas fa-arrow-left"></i> Back to PreK</a>
-    </div>`;
-}
 
-function renderClassroomPage(data, id) {
-    const c = (data.classrooms || []).find(x => x.id === id);
-    if (!c) return renderNotFound();
-    setTopbar(c.shortLabel || c.label, c.grade || '');
-    return `
-    <div style="padding:16px;display:flex;flex-direction:column;gap:14px" class="page-enter">
-        <div class="archived-note">
-            <i class="fas fa-box-archive" style="margin-top:2px"></i>
-            <span>Archived page — kept for reference, not updated this year.</span>
-        </div>
-        <section class="section-card">
-            <div class="section-header">
-                <span class="icon-pill"><i class="fas ${esc(c.icon || 'fa-chalkboard-user')}"></i></span>
-                <span>${esc(c.label)}</span>
-            </div>
-            ${c.teacher?.name ? `<div class="row"><span class="ic"><i class="fas fa-user"></i></span>
-                <div><div class="row-label">Teacher</div><div class="row-value">${esc(c.teacher.name)}</div></div></div>` : ''}
-            ${c.teacher?.room ? `<div class="row"><span class="ic"><i class="fas fa-door-closed"></i></span>
-                <div><div class="row-label">Room</div><div class="row-value">${esc(c.teacher.room)}</div></div></div>` : ''}
-            ${c.weeklyExcerpt ? `<div style="margin-top:14px;font-size:14px;line-height:1.6;color:#334155;
-                white-space:pre-line">${esc(c.weeklyExcerpt)}</div>` : ''}
-            ${!c.teacher?.name && !c.weeklyExcerpt
-                ? '<p style="font-size:14px;color:#94A3B8;margin:0">Nothing was saved on this page.</p>' : ''}
-        </section>
-        ${renderDocuments(data, c.id, `${c.shortLabel || c.label} Documents`)}
-        <a href="#/kindergarten" data-route="#/kindergarten" class="back-home touch-row">
-            <i class="fas fa-arrow-left"></i> Back to Kindergarten</a>
-    </div>`;
-}
 
 function renderNotFound() {
     setTopbar('Not Found', '');
@@ -827,8 +769,6 @@ function renderNotFound() {
 
 function currentRoute() {
     const hash = (location.hash || '#/').replace(/^#/, '');
-    if (hash.startsWith('/c/')) return { name: 'classroom', id: decodeURIComponent(hash.slice(3)) };
-    if (hash.startsWith('/kindergarten')) return { name: 'kindergarten' };
     if (hash.startsWith('/activities'))   return { name: 'activities' };
     if (hash.startsWith('/orientation'))  return { name: 'orientation' };
     if (hash.startsWith('/week'))         return { name: 'week' };
@@ -849,8 +789,6 @@ function renderApp(opts = {}) {
     const root = document.getElementById('root');
 
     const R = {
-        classroom:    () => renderClassroomPage(APP.data, route.id),
-        kindergarten: () => renderKindergartenIndex(APP.data),
         activities:   () => renderActivitiesPage(APP.data),
         orientation:  () => renderOrientationPage(APP.data),
         week:         () => renderWeekPage(APP.data),
