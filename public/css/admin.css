@@ -1,0 +1,362 @@
+/* =================================================================
+   Harding Staff Admin — designed to be friendly for everyone:
+   large type, high contrast, big buttons, plain language.
+   ================================================================= */
+
+:root {
+    --navy: #012169;
+    --navy-700: #0A3A7F;
+    --navy-900: #001340;
+    --gold: #FFC72C;
+    --green: #15803d;
+    --green-bg: #f0fdf4;
+    --red: #b91c1c;
+    --red-bg: #fef2f2;
+    --bg: #f3f5fa;
+    --line: #dde3ee;
+    --ink: #1a2333;
+    --ink-soft: #54627d;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html { font-size: 17px; }
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+}
+
+.hidden { display: none !important; }
+
+h1, h2, h3 { line-height: 1.25; letter-spacing: -0.01em; }
+
+/* =================== SIGN IN =================== */
+
+.login-wrap {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.5rem;
+    background:
+        radial-gradient(100% 90% at 100% 0%, rgba(255,199,44,0.10), transparent 50%),
+        linear-gradient(150deg, var(--navy) 0%, var(--navy-700) 55%, var(--navy-900) 100%);
+}
+
+.login-card {
+    background: #fff;
+    border-radius: 22px;
+    padding: 2.25rem 2rem;
+    width: 100%; max-width: 430px;
+    box-shadow: 0 24px 60px -18px rgba(0,10,40,0.5);
+    text-align: center;
+}
+.login-logo { width: 84px; height: auto; margin: 0 auto 0.75rem; }
+.login-card h1 { font-size: 1.7rem; font-weight: 800; margin: 0; color: var(--navy-900); }
+.login-sub { color: var(--ink-soft); margin: 0.35rem 0 1.75rem; font-size: 1rem; }
+.login-help { color: var(--ink-soft); font-size: 0.95rem; margin-top: 1.5rem; }
+
+.field-label {
+    display: block;
+    text-align: left;
+    font-weight: 700;
+    font-size: 1rem;
+    margin: 0 0 0.4rem 0.15rem;
+    color: var(--ink);
+}
+
+.big-input, .big-textarea, .big-select {
+    width: 100%;
+    font-family: inherit;
+    font-size: 1.15rem;
+    padding: 0.9rem 1rem;
+    border: 2px solid var(--line);
+    border-radius: 14px;
+    background: #fbfcfe;
+    color: var(--ink);
+    outline: none;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+.big-input:focus, .big-textarea:focus, .big-select:focus {
+    border-color: var(--navy-700);
+    box-shadow: 0 0 0 4px rgba(10,58,127,0.12);
+    background: #fff;
+}
+.big-textarea { min-height: 220px; resize: vertical; line-height: 1.6; }
+
+/* =================== BUTTONS =================== */
+
+.btn {
+    font-family: inherit;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 14px;
+    padding: 0.95rem 1.5rem;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+    transition: transform .08s ease, box-shadow .15s ease, background .15s ease;
+    text-decoration: none;
+}
+.btn:active { transform: scale(0.985); }
+.btn:disabled { opacity: 0.55; cursor: default; }
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-700) 100%);
+    color: #fff;
+    box-shadow: 0 8px 20px -8px rgba(1,33,105,0.5);
+}
+.btn-primary:hover { box-shadow: 0 10px 24px -8px rgba(1,33,105,0.6); }
+
+.btn-green { background: var(--green); color: #fff; box-shadow: 0 8px 20px -8px rgba(21,128,61,0.5); }
+.btn-quiet { background: #eef1f7; color: var(--ink); }
+.btn-quiet:hover { background: #e4e9f2; }
+.btn-danger-quiet { background: var(--red-bg); color: var(--red); }
+.btn-block { width: 100%; margin-top: 1.1rem; }
+.btn-big { font-size: 1.2rem; padding: 1.1rem 1.7rem; }
+
+/* =================== TOP BAR =================== */
+
+.admin-topbar {
+    position: sticky; top: 0; z-index: 20;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-700) 80%);
+    color: #fff;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.7rem 1rem;
+    border-bottom: 3px solid var(--gold);
+}
+.topbar-home {
+    display: flex; align-items: center; gap: 0.6rem;
+    background: none; border: none; color: #fff; cursor: pointer;
+    font-family: inherit; font-size: 1.05rem; font-weight: 800;
+    padding: 0.35rem 0.5rem; border-radius: 10px;
+}
+.topbar-home:hover { background: rgba(255,255,255,0.1); }
+.topbar-home img { width: 30px; height: 30px; object-fit: contain; }
+.topbar-actions { display: flex; gap: 0.4rem; }
+.topbar-link {
+    background: rgba(255,255,255,0.1);
+    border: none; color: #fff; cursor: pointer;
+    font-family: inherit; font-size: 0.95rem; font-weight: 600;
+    padding: 0.5rem 0.85rem; border-radius: 10px;
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    text-decoration: none;
+}
+.topbar-link:hover { background: rgba(255,255,255,0.2); }
+@media (max-width: 560px) { .topbar-link span { display: none; } }
+
+/* =================== MAIN LAYOUT =================== */
+
+.admin-main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 1.5rem 1.1rem 5rem;
+}
+
+.page-title { font-size: 1.55rem; font-weight: 800; margin: 0.5rem 0 0.25rem; color: var(--navy-900); }
+.page-sub { color: var(--ink-soft); margin: 0 0 1.5rem; font-size: 1.05rem; }
+
+.back-link {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: none; border: none; cursor: pointer;
+    font-family: inherit; font-size: 1rem; font-weight: 700;
+    color: var(--navy-700);
+    padding: 0.4rem 0.6rem 0.4rem 0; border-radius: 10px;
+}
+.back-link:hover { text-decoration: underline; }
+
+/* =================== HOME MENU CARDS =================== */
+
+.menu-grid { display: grid; gap: 1rem; margin-top: 1.25rem; }
+
+.menu-card {
+    display: flex; align-items: center; gap: 1.1rem;
+    background: #fff;
+    border: 2px solid var(--line);
+    border-radius: 20px;
+    padding: 1.35rem 1.25rem;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    width: 100%;
+    transition: border-color .15s ease, box-shadow .15s ease, transform .08s ease;
+}
+.menu-card:hover { border-color: var(--navy-700); box-shadow: 0 12px 28px -14px rgba(1,33,105,0.35); }
+.menu-card:active { transform: scale(0.99); }
+.menu-card .emoji {
+    width: 62px; height: 62px; flex-shrink: 0;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.75rem;
+}
+.menu-card h2 { font-size: 1.25rem; font-weight: 800; margin: 0; color: var(--ink); }
+.menu-card p { margin: 0.2rem 0 0; color: var(--ink-soft); font-size: 1rem; }
+.menu-card .go { margin-left: auto; color: var(--ink-soft); font-size: 1.1rem; flex-shrink: 0; }
+
+.tint-blue  { background: #e8f0fe; color: var(--navy-700); }
+.tint-gold  { background: #fff6dd; color: #92600a; }
+.tint-green { background: #e8f8ee; color: var(--green); }
+.tint-purple{ background: #f3ecfe; color: #6d28d9; }
+
+/* =================== PICK A CLASSROOM =================== */
+
+.class-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+@media (max-width: 520px) { .class-grid { grid-template-columns: 1fr; } }
+
+.class-btn {
+    background: #fff;
+    border: 2px solid var(--line);
+    border-radius: 16px;
+    padding: 1.1rem 1rem;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+.class-btn:hover { border-color: var(--navy-700); box-shadow: 0 10px 24px -14px rgba(1,33,105,0.35); }
+.class-btn .name { font-weight: 800; font-size: 1.1rem; color: var(--ink); }
+.class-btn .teacher { color: var(--ink-soft); font-size: 0.95rem; margin-top: 0.15rem; }
+.class-btn.school-wide { grid-column: 1 / -1; background: #fffaf0; border-color: #f4d27a; }
+
+/* =================== PANELS / SECTIONS =================== */
+
+.panel {
+    background: #fff;
+    border: 2px solid var(--line);
+    border-radius: 20px;
+    padding: 1.4rem 1.3rem;
+    margin-bottom: 1.1rem;
+}
+.panel h3 { margin: 0 0 0.35rem; font-size: 1.2rem; font-weight: 800; }
+.panel .hint { color: var(--ink-soft); font-size: 0.98rem; margin: 0 0 1rem; }
+
+.save-row { display: flex; align-items: center; gap: 0.9rem; margin-top: 1.1rem; flex-wrap: wrap; }
+.saved-when { color: var(--ink-soft); font-size: 0.95rem; }
+
+/* =================== LINK LIST =================== */
+
+.link-row {
+    display: flex; align-items: center; gap: 0.9rem;
+    border: 2px solid var(--line);
+    border-radius: 14px;
+    padding: 0.8rem 0.9rem;
+    margin-bottom: 0.7rem;
+    background: #fbfcfe;
+}
+.link-row .link-icon {
+    width: 42px; height: 42px; flex-shrink: 0;
+    border-radius: 12px;
+    background: #e8f0fe; color: var(--navy-700);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.05rem;
+}
+.link-row .link-main { flex: 1; min-width: 0; }
+.link-row .link-label { font-weight: 700; font-size: 1.02rem; }
+.link-row .link-url { color: var(--ink-soft); font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.link-row .link-url.missing { color: var(--red); font-style: italic; }
+
+.icon-btn {
+    width: 44px; height: 44px; flex-shrink: 0;
+    border-radius: 12px; border: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    background: #eef1f7; color: var(--ink-soft);
+    transition: background .15s ease;
+}
+.icon-btn:hover { background: #e0e6f0; color: var(--ink); }
+.icon-btn.danger:hover { background: var(--red-bg); color: var(--red); }
+
+/* =================== UPLOAD =================== */
+
+.upload-zone {
+    border: 3px dashed #b9c4da;
+    border-radius: 18px;
+    background: #fbfcfe;
+    padding: 2.2rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+}
+.upload-zone:hover, .upload-zone.dragover { border-color: var(--navy-700); background: #f0f5ff; }
+.upload-zone i { font-size: 2.3rem; color: var(--navy-700); margin-bottom: 0.6rem; display: block; }
+.upload-zone .zone-title { font-weight: 800; font-size: 1.15rem; }
+.upload-zone .zone-sub { color: var(--ink-soft); font-size: 0.98rem; margin-top: 0.25rem; }
+
+.doc-row {
+    display: flex; align-items: center; gap: 0.9rem;
+    border: 2px solid var(--line);
+    border-radius: 14px;
+    padding: 0.8rem 0.9rem;
+    margin-bottom: 0.7rem;
+    background: #fff;
+}
+.doc-row .doc-icon {
+    width: 46px; height: 46px; flex-shrink: 0;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    background: #fdeeee; color: #c2410c;
+}
+.doc-row .doc-main { flex: 1; min-width: 0; }
+.doc-row .doc-label { font-weight: 700; font-size: 1.02rem; }
+.doc-row .doc-meta { color: var(--ink-soft); font-size: 0.85rem; }
+
+/* =================== MESSAGES =================== */
+
+.error-msg {
+    background: var(--red-bg);
+    color: var(--red);
+    border: 2px solid #fecaca;
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    font-size: 1rem;
+}
+
+.toast {
+    position: fixed;
+    left: 50%; bottom: 28px;
+    transform: translateX(-50%);
+    z-index: 100;
+    background: var(--green);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.05rem;
+    padding: 1rem 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 16px 40px -10px rgba(0,0,0,0.45);
+    display: flex; align-items: center; gap: 0.6rem;
+    max-width: min(92vw, 480px);
+    animation: toastIn .25s ease-out;
+}
+.toast.error { background: var(--red); }
+@keyframes toastIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* Live preview of a note */
+.note-preview {
+    border: 2px solid var(--line);
+    border-radius: 14px;
+    background: #fbfcfe;
+    padding: 1rem;
+    white-space: pre-wrap;
+    color: var(--ink);
+    font-size: 1rem;
+}
+
+.help-box {
+    background: #fffaeb;
+    border: 2px solid #fde68a;
+    border-radius: 16px;
+    padding: 1rem 1.1rem;
+    color: #713f12;
+    font-size: 0.98rem;
+    margin-top: 1.5rem;
+}
+.help-box b { color: #5a3209; }

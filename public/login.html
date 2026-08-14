@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#012169">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="/img/favicon.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<title>Sign In · Harding Academy Parent Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root { --navy:#012169; --navy-deep:#00133f; --gold:#f2a900; }
+    * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    body {
+        font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+        min-height:100vh; min-height:100dvh;
+        background:linear-gradient(160deg,var(--navy) 0%,var(--navy-deep) 100%);
+        display:flex; align-items:center; justify-content:center;
+        padding:24px 20px calc(24px + env(safe-area-inset-bottom));
+        color:#fff;
+    }
+    .card {
+        width:100%; max-width:400px; background:#fff; color:#1a2233;
+        border-radius:22px; padding:36px 26px 30px;
+        box-shadow:0 24px 60px rgba(0,0,0,.35); text-align:center;
+    }
+    .logo { width:74px; height:auto; margin:0 auto 16px; display:block; }
+    h1 { font-size:1.4rem; font-weight:800; color:var(--navy); letter-spacing:-.02em; }
+    .sub { font-size:.9rem; color:#5b6577; margin-top:6px; line-height:1.45; }
+    label { display:block; text-align:left; font-size:.78rem; font-weight:700;
+            text-transform:uppercase; letter-spacing:.06em; color:#6b7484; margin:26px 0 8px; }
+    input {
+        width:100%; font-family:inherit; font-size:1.05rem; padding:15px 16px;
+        border:2px solid #dde2ea; border-radius:14px; background:#f7f9fc; color:#1a2233;
+        transition:border-color .15s, background .15s;
+    }
+    input:focus { outline:none; border-color:var(--navy); background:#fff; }
+    button {
+        width:100%; margin-top:16px; font-family:inherit; font-size:1.02rem; font-weight:700;
+        padding:15px 16px; border:0; border-radius:14px; background:var(--navy); color:#fff;
+        cursor:pointer; transition:transform .12s, opacity .15s;
+    }
+    button:active { transform:scale(.985); }
+    button[disabled] { opacity:.6; cursor:default; }
+    .err {
+        margin-top:14px; font-size:.88rem; font-weight:600; color:#b3261e;
+        background:#fdecea; border-radius:12px; padding:11px 13px; text-align:left;
+    }
+    .hidden { display:none; }
+    .help { margin-top:22px; font-size:.8rem; color:#8a92a1; line-height:1.5; }
+    .footer { margin-top:22px; font-size:.76rem; color:rgba(255,255,255,.6); text-align:center; }
+</style>
+</head>
+<body>
+<main class="card">
+    <img src="/img/hawk-head.png" alt="Harding Hawks" class="logo">
+    <h1>Harding Parent Dashboard</h1>
+    <p class="sub">This dashboard contains school and classroom information.<br>Please enter the family password to continue.</p>
+
+    <form id="form" autocomplete="on">
+        <label for="pw">Password</label>
+        <input type="password" id="pw" name="password" placeholder="Type the password"
+               autocomplete="current-password" autocapitalize="off" autocorrect="off"
+               spellcheck="false" required>
+        <button type="submit" id="btn">Sign In</button>
+    </form>
+
+    <div id="err" class="err hidden"></div>
+    <p class="help">Stay signed in for 60 days on this device.<br>Don't have the password? Ask the front office.</p>
+</main>
+
+<script>
+(function () {
+    var form = document.getElementById('form');
+    var pw   = document.getElementById('pw');
+    var btn  = document.getElementById('btn');
+    var err  = document.getElementById('err');
+
+    function nextUrl() {
+        var m = /[?&]next=([^&]+)/.exec(location.search);
+        if (!m) return '/';
+        try {
+            var d = decodeURIComponent(m[1]);
+            // Only ever redirect somewhere on this site.
+            return (d.charAt(0) === '/' && d.charAt(1) !== '/') ? d : '/';
+        } catch (e) { return '/'; }
+    }
+
+    function fail(msg) {
+        err.textContent = msg;
+        err.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+        pw.select();
+    }
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        err.classList.add('hidden');
+        btn.disabled = true;
+        btn.textContent = 'Signing in…';
+
+        fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: pw.value })
+        })
+        .then(function (r) { return r.json().then(function (j) { return { s: r.status, j: j }; }); })
+        .then(function (res) {
+            if (res.s !== 200) return fail(res.j.error || 'That password isn\'t right.');
+            // Staff who signed in with the admin password get their admin token
+            // handed straight to the admin page — no second sign-in.
+            if (res.j.adminToken) {
+                try { localStorage.setItem('harding-admin-token', res.j.adminToken); } catch (e) {}
+            }
+            location.replace(nextUrl());
+        })
+        .catch(function () { fail('Could not reach the server. Please try again.'); });
+    });
+
+    pw.focus();
+})();
+</script>
+</body>
+</html>

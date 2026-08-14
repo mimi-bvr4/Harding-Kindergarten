@@ -17,7 +17,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/dashboard.css?v=4">
 </head>
 <body>
     <!-- Top app bar -->
@@ -58,9 +58,14 @@
             </div>
         </div>
         <div id="navItems" class="py-2 flex-1"></div>
-        <div class="px-5 py-3 border-t border-slate-100 text-[11px] text-slate-500">
-            <div class="font-semibold text-slate-700">Last updated</div>
-            <div id="navLastUpdated" class="text-slate-500">—</div>
+        <div class="px-5 py-3 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between gap-2">
+            <div>
+                <div class="font-semibold text-slate-700">Last updated</div>
+                <div id="navLastUpdated" class="text-slate-500">—</div>
+            </div>
+            <a href="/admin" class="text-slate-400 hover:text-slate-600 font-semibold whitespace-nowrap">
+                <i class="fas fa-lock text-[10px] mr-1"></i>Staff
+            </a>
         </div>
     </nav>
 
@@ -75,9 +80,9 @@
         </div>
     </main>
 
-    <script src="/js/utils.js"></script>
-    <script src="/js/show-and-share.js"></script>
-    <script src="/js/ical-parser.js"></script>
-    <script src="/js/app.js"></script>
+    <script src="/js/utils.js?v=4"></script>
+    <script src="/js/show-and-share.js?v=4"></script>
+    <script src="/js/ical-parser.js?v=4"></script>
+    <script src="/js/app.js?v=4"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 {
   "name": "harding-parent-dashboard",
-  "version": "2.0.0",
-  "description": "Harding Academy Parent Dashboard - Kivett Family",
+  "version": "5.0.0",
+  "description": "Harding Academy Parent Dashboard — whole-site password gate, staff admin page, GitHub sync",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "express": "^4.18.2",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "multer": "^1.4.5-lts.1"
   },
   "engines": {
     "node": ">=18.0.0"

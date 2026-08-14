@@ -3,251 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Harding Dashboard - Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="theme-color" content="#012169">
+    <link rel="icon" type="image/png" href="/img/favicon.png">
+    <title>Staff Admin · Harding Parent Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-    </style>
+    <link rel="stylesheet" href="/css/admin.css">
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <div class="max-w-4xl mx-auto px-4 py-8">
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-xl p-6 mb-8 shadow-lg">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-2xl font-bold">Dashboard Admin</h1>
-                    <p class="text-blue-200 mt-1">Update the parent dashboard content</p>
-                </div>
-                <a href="/" class="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition text-sm">
-                    <i class="fas fa-eye mr-2"></i>View Dashboard
-                </a>
-            </div>
-        </div>
+<body>
 
-        <!-- API Key -->
-        <div class="bg-white rounded-xl shadow p-6 mb-6">
-            <h2 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                <i class="fas fa-key text-yellow-600"></i> API Key
-            </h2>
-            <input type="password" id="apiKey" placeholder="Enter your API key"
-                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <p class="text-xs text-gray-500 mt-1">Required to save changes. This is the API_KEY you set in Railway.</p>
-        </div>
-
-        <!-- Status Banner -->
-        <div id="statusBanner" class="hidden mb-6 p-4 rounded-xl font-medium text-center"></div>
-
-        <!-- Week Label -->
-        <div class="bg-white rounded-xl shadow p-6 mb-6">
-            <h2 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                <i class="fas fa-calendar-week text-blue-600"></i> Week Label
-            </h2>
-            <input type="text" id="weekLabel" placeholder="e.g., Week of June 2, 2026"
-                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-        </div>
-
-        <!-- Links -->
-        <div class="bg-white rounded-xl shadow p-6 mb-6">
-            <h2 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                <i class="fas fa-link text-green-600"></i> Links
-            </h2>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Compass Connection URL</label>
-                    <input type="url" id="compassUrl" placeholder="Paste the Compass Connection email link"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Email URL</label>
-                    <input type="url" id="emailUrl" placeholder="Paste the full newsletter email link"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-            </div>
-        </div>
-
-        <!-- Kindergarten Excerpt -->
-        <div class="bg-white rounded-xl shadow p-6 mb-6">
-            <h2 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                <i class="fas fa-graduation-cap text-purple-600"></i> Kindergarten This Week
-            </h2>
-            <textarea id="kindergartenExcerpt" rows="5" placeholder="Paste the kindergarten section from the weekly email..."
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-            <button onclick="clearField('kindergartenExcerpt')" class="mt-2 text-xs text-red-500 hover:text-red-700">
-                <i class="fas fa-trash mr-1"></i>Clear
+    <!-- ============ SIGN IN SCREEN ============ -->
+    <div id="loginScreen" class="login-wrap hidden">
+        <div class="login-card">
+            <img src="/img/hawk-head.png" alt="Harding Hawks" class="login-logo">
+            <h1>Staff Sign In</h1>
+            <p class="login-sub">Harding Academy Parent Dashboard</p>
+            <label class="field-label" for="passwordInput">Password</label>
+            <input type="password" id="passwordInput" class="big-input" placeholder="Type the staff password"
+                   autocomplete="current-password" autocapitalize="off">
+            <button id="loginBtn" class="btn btn-primary btn-block">
+                <i class="fas fa-arrow-right-to-bracket"></i> Sign In
             </button>
+            <div id="loginError" class="error-msg hidden"></div>
+            <p class="login-help">Don't know the password? Ask the front office.</p>
         </div>
-
-        <!-- Highlights -->
-        <div class="bg-white rounded-xl shadow p-6 mb-6">
-            <h2 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                <i class="fas fa-star text-yellow-500"></i> Highlights
-            </h2>
-            <div id="highlightsContainer" class="space-y-2"></div>
-            <button onclick="addHighlight()" class="mt-3 px-4 py-2 bg-yellow-50 hover:bg-yellow-100 text-yellow-700 rounded-lg border border-yellow-300 text-sm">
-                <i class="fas fa-plus mr-1"></i>Add Highlight
-            </button>
-        </div>
-
-        <!-- Important Dates -->
-        <div class="bg-white rounded-xl shadow p-6 mb-6">
-            <h2 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                <i class="fas fa-calendar-check text-amber-600"></i> Important Dates
-            </h2>
-            <div id="datesContainer" class="space-y-2"></div>
-            <button onclick="addDate()" class="mt-3 px-4 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg border border-amber-300 text-sm">
-                <i class="fas fa-plus mr-1"></i>Add Date
-            </button>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="flex gap-4">
-            <button onclick="saveData()" class="flex-1 px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-lg shadow-lg transition">
-                <i class="fas fa-cloud-arrow-up mr-2"></i>Save & Publish
-            </button>
-            <button onclick="loadCurrentData()" class="px-6 py-4 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl font-medium transition">
-                <i class="fas fa-rotate mr-2"></i>Reload
-            </button>
-        </div>
-
-        <p class="text-center text-gray-400 text-xs mt-6">
-            Changes publish instantly to the parent dashboard.
-        </p>
     </div>
 
-    <script>
-        // --- Dynamic List Management ---
+    <!-- ============ ADMIN APP ============ -->
+    <div id="adminApp" class="hidden">
+        <header class="admin-topbar">
+            <button id="homeBtn" class="topbar-home" title="Back to the main menu">
+                <img src="/img/hawk-head-white.png" alt="">
+                <span>Dashboard Admin</span>
+            </button>
+            <div class="topbar-actions">
+                <a href="/" target="_blank" class="topbar-link"><i class="fas fa-eye"></i> <span>See parent view</span></a>
+                <button id="logoutBtn" class="topbar-link"><i class="fas fa-right-from-bracket"></i> <span>Sign out</span></button>
+            </div>
+        </header>
 
-        function addHighlight(value = '') {
-            const container = document.getElementById('highlightsContainer');
-            const div = document.createElement('div');
-            div.className = 'flex gap-2';
-            div.innerHTML = `
-                <input type="text" value="${escapeHtml(value)}" placeholder="Enter a highlight..."
-                       class="highlight-input flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
-                <button onclick="this.parentElement.remove()" class="px-3 py-2 text-red-400 hover:text-red-600">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-            container.appendChild(div);
-        }
+        <main id="adminRoot" class="admin-main"></main>
+    </div>
 
-        function addDate(value = '') {
-            const container = document.getElementById('datesContainer');
-            const div = document.createElement('div');
-            div.className = 'flex gap-2';
-            div.innerHTML = `
-                <input type="text" value="${escapeHtml(value)}" placeholder="e.g., May 21 - Last Day of School"
-                       class="date-input flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
-                <button onclick="this.parentElement.remove()" class="px-3 py-2 text-red-400 hover:text-red-600">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-            container.appendChild(div);
-        }
+    <!-- Big friendly toast -->
+    <div id="toast" class="toast hidden"></div>
 
-        function clearField(fieldId) {
-            if (confirm('Clear this field?')) {
-                document.getElementById(fieldId).value = '';
-            }
-        }
-
-        function escapeHtml(str) {
-            return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        }
-
-        // --- Data Operations ---
-
-        async function loadCurrentData() {
-            try {
-                const resp = await fetch('/api/data');
-                const data = await resp.json();
-
-                document.getElementById('weekLabel').value = data.weeklyEmail?.week || '';
-                document.getElementById('compassUrl').value = data.weeklyEmail?.compassUrl || '';
-                document.getElementById('emailUrl').value = data.weeklyEmail?.emailUrl || '';
-                document.getElementById('kindergartenExcerpt').value = data.weeklyEmail?.kindergartenExcerpt || '';
-
-                // Clear and rebuild highlights
-                document.getElementById('highlightsContainer').innerHTML = '';
-                (data.weeklyEmail?.highlights || []).forEach(h => addHighlight(h));
-
-                // Clear and rebuild dates
-                document.getElementById('datesContainer').innerHTML = '';
-                (data.weeklyEmail?.importantDates || []).forEach(d => addDate(d));
-
-                showStatus('Data loaded', 'success');
-            } catch (err) {
-                showStatus('Failed to load data: ' + err.message, 'error');
-            }
-        }
-
-        async function saveData() {
-            const apiKey = document.getElementById('apiKey').value.trim();
-            if (!apiKey) {
-                showStatus('Enter your API key first', 'error');
-                return;
-            }
-
-            const highlights = [...document.querySelectorAll('.highlight-input')]
-                .map(el => el.value.trim())
-                .filter(v => v);
-
-            const importantDates = [...document.querySelectorAll('.date-input')]
-                .map(el => el.value.trim())
-                .filter(v => v);
-
-            const data = {
-                weeklyEmail: {
-                    week: document.getElementById('weekLabel').value.trim(),
-                    compassUrl: document.getElementById('compassUrl').value.trim(),
-                    emailUrl: document.getElementById('emailUrl').value.trim(),
-                    kindergartenExcerpt: document.getElementById('kindergartenExcerpt').value.trim(),
-                    highlights: highlights,
-                    importantDates: importantDates
-                }
-            };
-
-            try {
-                const resp = await fetch('/api/data', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-API-Key': apiKey
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await resp.json();
-
-                if (resp.ok) {
-                    showStatus('Published! Dashboard updated at ' + new Date().toLocaleTimeString(), 'success');
-                } else {
-                    showStatus('Error: ' + (result.error || 'Unknown error'), 'error');
-                }
-            } catch (err) {
-                showStatus('Failed to save: ' + err.message, 'error');
-            }
-        }
-
-        function showStatus(message, type) {
-            const banner = document.getElementById('statusBanner');
-            banner.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
-            if (type === 'success') {
-                banner.classList.add('bg-green-100', 'text-green-800');
-            } else {
-                banner.classList.add('bg-red-100', 'text-red-800');
-            }
-            banner.textContent = message;
-            banner.classList.remove('hidden');
-
-            if (type === 'success') {
-                setTimeout(() => banner.classList.add('hidden'), 5000);
-            }
-        }
-
-        // Load current data on page load
-        loadCurrentData();
-    </script>
+    <script src="/js/admin.js"></script>
 </body>
 </html>

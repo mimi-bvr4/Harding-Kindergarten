@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-03T00:00:00",
+  "lastUpdated": "2026-06-10T17:19:13.683Z",
   "weeklyEmail": {
     "week": "2026-2027 School Year Calendar",
     "compassUrl": "",
@@ -486,5 +486,8 @@
     "last day of classes",
     "first day of classes",
     "school holiday"
-  ]
+  ],
+  "documents": [],
+  "schoolLinks": [],
+  "announcement": ""
 }
