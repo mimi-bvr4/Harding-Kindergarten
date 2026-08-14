@@ -12,7 +12,7 @@
     "blurb": "Where your child goes after school each day, Monday through Friday — and who picks them up. One form per child, every week.",
     "opensNote": "Opens Friday evening",
     "dueNote": "Due Monday 9:00 AM",
-    "footnote": "No sign-in needed. You'll need your child's homeroom teacher's last name."
+    "footnote": "No sign-in needed. The form asks for your child's homeroom teacher's last name."
   },
   "orientation": {
     "show": true,
@@ -41,7 +41,7 @@
             "students": [
               "Charlie Braddy",
               "Lia Boyd",
-              "Laurel Starnes",
+              "Lolly Starnes",
               "Pierce Pettit",
               "Charlotte McNabb"
             ]
@@ -70,10 +70,14 @@
               "Evvie Pack",
               "Field McPherson",
               "London Thompson",
-              "Penelope Johnson",
+              "Penny Johnson",
               "Phinney Troy"
             ]
           }
+        ],
+        "teachers": [
+          "Ann Walker Huttchson",
+          "Megan Collins"
         ]
       },
       {
@@ -114,13 +118,45 @@
               "Jack Barge",
               "Kennedy Carty",
               "Margo Chatfield",
-              "Sam Frank"
+              "Sammie Frank"
             ]
           }
+        ],
+        "teachers": [
+          "Lauren Bidez",
+          "Gregory Nye"
         ]
       }
     ],
-    "conflictNote": "Time doesn't work for your family? Contact Anne Zuberer at 615-957-8040 and we'll find one that does."
+    "conflictNote": "Time doesn't work for your family? Contact Anne Zuberer at 615-957-8040 and we'll find one that does.",
+    "aliases": {
+      "Sammie Frank": [
+        "Samantha Frank",
+        "Samantha",
+        "Sam Frank",
+        "Sam"
+      ],
+      "Lolly Starnes": [
+        "Laurel Starnes",
+        "Laurel"
+      ],
+      "Penny Johnson": [
+        "Penelope Johnson",
+        "Penelope"
+      ],
+      "Lia Boyd": [
+        "Emilia Boyd",
+        "Emilia"
+      ],
+      "Evvie Pack": [
+        "Evelyn Pack",
+        "Evelyn"
+      ],
+      "Genevieve Santapuram": [
+        "Geneviève Santapuram",
+        "Geneviève"
+      ]
+    }
   },
   "keyDates": [
     {
@@ -271,7 +307,7 @@
         "email": "Bidezl@hardingacademy.us"
       },
       {
-        "name": "Greg Nye",
+        "name": "Gregory Nye",
         "role": "Teacher",
         "email": "Nyeg@hardingacademy.us"
       }

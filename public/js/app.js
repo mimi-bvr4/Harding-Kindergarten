@@ -224,10 +224,21 @@ function renderOrientation(data) {
     const q = APP.slotQuery.trim().toLowerCase();
     const activeRoom = Math.min(APP.room, o.rooms.length - 1);
 
+    // Families search the name they use, not the one on the roster. A child
+    // shown as "Sammie Frank" must still be found by "Samantha" or "Sam".
+    const aliases = o.aliases || {};
+    // Accent-insensitive: "Genevieve" must find "Geneviève" and vice versa.
+    const fold = (t) => String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const needle = fold(q);
+    const matchesName = (name) => {
+        if (fold(name).includes(needle)) return true;
+        return (aliases[name] || []).some(a => fold(a).includes(needle));
+    };
+
     // A parent's first move is typing their child's name. Search must span
     // BOTH rooms — they don't know which room their child is in yet.
-    const slotCard = (s, roomName, showRoom) => {
-        const mine = q && (s.students || []).some(n => n.toLowerCase().includes(q));
+    const slotCard = (s, roomName, showRoom, roomTeachers) => {
+        const mine = q && (s.students || []).some(n => matchesName(n));
         const meridiem = (/([AP])M/i.exec(s.time) || [, 'A'])[1].toUpperCase() + 'M';
         const startTime = (s.time.split(/[–-]/)[0] || '').replace(/\s*[AP]M/i, '').trim();
         return `
@@ -242,9 +253,11 @@ function renderOrientation(data) {
                     ${showRoom ? `<span style="font-size:11px;font-weight:800;color:#B45309;
                         text-transform:uppercase;letter-spacing:.07em">${esc(roomName)}</span>` : ''}
                 </div>
+                ${showRoom && roomTeachers?.length ? `<div style="font-size:12px;color:#64748B;margin-top:3px">
+                    <i class="fas fa-chalkboard-user" style="margin-right:5px;color:#CBD5E1"></i>${esc(roomTeachers.join(' · '))}</div>` : ''}
                 <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
                     ${(s.students || []).map(n => `<span class="name-chip ${
-                        q && n.toLowerCase().includes(q) ? 'hit' : ''}">${esc(n)}</span>`).join('')}
+                        q && matchesName(n) ? 'hit' : ''}">${esc(n)}</span>`).join('')}
                 </div>
             </div>
         </div>`;
@@ -254,13 +267,14 @@ function renderOrientation(data) {
     if (q) {
         const matches = [];
         o.rooms.forEach(r => (r.slots || []).forEach(s => {
-            if ((s.students || []).some(n => n.toLowerCase().includes(q))) {
-                matches.push(slotCard(s, r.name, true));
+            if ((s.students || []).some(n => matchesName(n))) {
+                matches.push(slotCard(s, r.name, true, r.teachers));
             }
         }));
         slots = matches.join('');
     } else {
-        slots = (o.rooms[activeRoom].slots || []).map(s => slotCard(s, o.rooms[activeRoom].name, false)).join('');
+        const r = o.rooms[activeRoom];
+        slots = (r.slots || []).map(s => slotCard(s, r.name, false, r.teachers)).join('');
     }
 
     return `
@@ -282,6 +296,12 @@ function renderOrientation(data) {
                 ${o.rooms.map((r, i) => `<button class="room-tab ${i === activeRoom ? 'active' : ''}"
                     data-room="${i}">${esc(r.name)}</button>`).join('')}
             </div>`}
+            ${!q && (o.rooms[activeRoom].teachers || []).length ? `
+            <div style="margin-top:11px;font-size:13px;color:#475569">
+                <i class="fas fa-chalkboard-user" style="margin-right:6px;color:#94A3B8"></i>
+                <span style="font-weight:700">${esc(o.rooms[activeRoom].teachers.join(' · '))}</span>
+                <span style="color:#94A3B8"> — the last name the dismissal form asks for</span>
+            </div>` : ''}
             <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
                 ${slots || `<p style="font-size:14px;color:#94A3B8;margin:6px 0">
                     No child matching &ldquo;${esc(APP.slotQuery)}&rdquo; — check the spelling,
