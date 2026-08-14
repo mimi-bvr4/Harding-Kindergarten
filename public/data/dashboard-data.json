@@ -4,6 +4,17 @@
   "programSubtitle": "Harding Academy",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
   "announcement": "",
+  "disclaimer": "This is not official school communication. It's a parent-built page — one mom organizing her own family's week and sharing it with anyone who finds it useful. Everything here is reposted in good faith, but the school's own email and the Harding app are always the source of truth.",
+
+  "dismissalForm": {
+    "show": true,
+    "title": "Weekly Dismissal Form",
+    "url": "https://docs.google.com/forms/d/e/1FAIpQLSf0ZxMKD-qzCMVHG98KHEINJuAcsnnvlIxsniv8aPx96s74cA/viewform",
+    "blurb": "Where your child goes after school each day, Monday through Friday — and who picks them up. One form per child, every week.",
+    "opensNote": "Opens Friday evening",
+    "dueNote": "Due Monday 9:00 AM",
+    "footnote": "No sign-in needed. You'll need your child's homeroom teacher's last name."
+  },
 
   "orientation": {
     "show": true,
@@ -123,24 +134,22 @@
   "soccer": {
     "show": true,
     "headline": "PreK Soccer — Coach Ryan's Team",
-    "blurb": "Coach Ryan Pack (Evvie's dad) is putting together a PreK 5U co-ed team this fall through First Presbyterian's Upward league — a low-pressure intro to soccer and a fun way for the kids (and parents) to connect outside the classroom. Last year PreK had enough kids for two teams.",
+    "blurb": "Coach Ryan Pack (Evvie's dad) is coaching the PreK 5U co-ed team this fall through First Presbyterian's Upward league — a low-pressure intro to soccer and a fun way for the kids (and parents) to connect outside the classroom.",
     "highlight": "",
     "season": "Fall 2026",
     "deadline": "",
     "grades": "PreK 5U, co-ed",
     "practices": "About one weekday a week, likely at Parmer Park",
     "games": "See the First Presbyterian game-day schedule",
-    "signupUrl": "https://registration.upward.org/UPW90840",
-    "signupLabel": "Register",
-    "signupTip": "List Ryan Pack as your coach so the kids land on the same team.",
+    "signupUrl": "",
+    "signupLabel": "",
+    "signupTip": "",
     "links": [
       { "label": "Game-day schedule", "url": "https://fpcnashville.org/ministry/soccer", "icon": "fa-calendar-days" },
       { "label": "About the league", "url": "https://fpcnashville.org/ministry/soccer", "icon": "fa-circle-info" }
     ],
     "notes": [
-      "Players should turn 5 by August 1, 2026. Still 4 on that date? They can play up — it's allowed.",
-      "Want to help coach? Extra hands are welcome — just reach out to Ryan.",
-      "Already signed up? Send Ryan a quick note so he knows you're on the team."
+      "Want to help coach? Extra hands are welcome — just reach out to Ryan."
     ],
     "coachName": "Coach Ryan Pack (Evvie's dad)",
     "coachPhone": "(865) 719-6669"

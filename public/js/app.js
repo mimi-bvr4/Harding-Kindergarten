@@ -23,17 +23,20 @@ async function loadDashboardData() {
         classrooms: [], schoolEvents: [], announcement: '',
         weeklyEmail: {}, orientation: {}, soccer: {}, popsicles: {}, team: {}
     };
+    // Hard timeout: a hung request must never leave parents staring at the
+    // loading hawk. If /api/data doesn't answer in 8s we render what we have.
     try {
-        const resp = await fetch('/api/data');
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), 8000);
+        const resp = await fetch('/api/data', { signal: ctrl.signal });
+        clearTimeout(t);
         if (resp.ok) data = { ...data, ...(await resp.json()) };
-    } catch (e) { console.warn('Data load failed, using defaults'); }
+    } catch (e) { console.warn('Data load failed, using defaults:', e.name); }
 
-    try {
-        if (typeof loadCalendar === 'function') {
-            const events = await loadCalendar(CALENDAR_URL);
-            if (events?.length) data.schoolEvents = events;
-        }
-    } catch (e) { console.warn('Calendar unavailable:', e.message); }
+    // NOTE: the school iCal feed is deliberately NOT awaited here. Nothing on
+    // the PreK page renders school events, and awaiting that feed on a cold
+    // container held first paint for several seconds. If a section ever needs
+    // it, load it in the background and re-render — don't block the page.
 
     return data;
 }
@@ -123,6 +126,10 @@ function renderNav(data) {
 
     document.getElementById('navItems').innerHTML = `
         ${item('#/', 'fa-house', 'Home', 'Everything for PreK')}
+        ${data.dismissalForm?.show && data.dismissalForm?.url
+            ? item(data.dismissalForm.url, 'fa-car-side', 'Dismissal Form',
+                   dismissalState(data)?.status || 'Weekly, due Monday 9 AM', true) : ''}
+        ${hasActivities(data) ? item('#/activities', 'fa-futbol', 'Sports & Activities', 'Outside the classroom') : ''}
         ${item('/handbook.html', 'fa-book-open', 'Family Handbook', 'Search the 2026-27 handbook', true)}
         ${wk.emailUrl ? item(wk.emailUrl, 'fa-envelope-open-text', "This Week's Email", 'Open the full school email', true) : ''}
         ${archived.length ? `<div class="nav-section-label">Archive</div>
@@ -329,6 +336,83 @@ function renderKeyDates(data) {
             </div>`;
         }).join('')}
     </section>`;
+}
+
+/**
+ * The dismissal form is the one thing a parent touches every single week.
+ * It opens Friday evening and is due Monday 9 AM, so the card changes state
+ * with the clock: loud and gold while the window is open, quiet the rest of
+ * the week. renderHome places it near the top only when it's actually live.
+ */
+function dismissalState(data) {
+    const f = data.dismissalForm || {};
+    if (!f.show || !f.url) return null;
+    const now = new Date();
+    const day = now.getDay();          // 0 Sun … 6 Sat
+    const hr  = now.getHours();
+
+    const open = (day === 5 && hr >= 17) || day === 6 || day === 0 || (day === 1 && hr < 9);
+    const urgent = day === 0 || (day === 1 && hr < 9);
+
+    let status;
+    if (day === 1 && hr < 9)      status = `Due today at 9:00 AM`;
+    else if (day === 0)           status = `Due tomorrow at 9:00 AM`;
+    else if (open)                status = `Open now · ${f.dueNote || 'due Monday 9:00 AM'}`;
+    else                          status = f.opensNote || 'Opens Friday evening';
+
+    return { form: f, open, urgent, status };
+}
+
+function renderDismissal(data, variant) {
+    const st = dismissalState(data);
+    if (!st) return '';
+    const { form: f, open, urgent, status } = st;
+
+    if (variant === 'tile') {
+        return `
+        <a href="${esc(f.url)}" target="_blank" rel="noopener" class="feature-tile touch-row">
+            <span class="feature-icon"><i class="fas fa-car-side"></i></span>
+            <span style="flex:1;min-width:0;position:relative;z-index:1">
+                <span class="display" style="display:block;font-size:17px;font-weight:600">${esc(f.title)}</span>
+                <span style="display:block;font-size:12.5px;color:#BFDBFE;margin-top:3px">${esc(status)}</span>
+            </span>
+            <i class="fas fa-arrow-up-right-from-square" style="opacity:.5;position:relative;z-index:1"></i>
+        </a>`;
+    }
+
+    return `
+    <section class="section-card" ${urgent ? 'style="border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,158,11,.18)"' : ''}>
+        <div class="section-header">
+            <span class="icon-pill ${open ? 'gold' : ''}"><i class="fas fa-car-side"></i></span>
+            <span>${esc(f.title)}</span>
+            ${open ? `<span style="margin-left:auto" class="today-pill">${urgent ? 'DUE' : 'OPEN'}</span>` : ''}
+        </div>
+        <p style="font-size:14px;line-height:1.6;color:#475569;margin:0 0 6px">${esc(f.blurb || '')}</p>
+        <p style="font-size:13.5px;font-weight:800;color:${urgent ? '#B45309' : '#64748B'};margin:0">
+            <i class="fas fa-clock" style="margin-right:6px"></i>${esc(status)}</p>
+        <a href="${esc(f.url)}" target="_blank" rel="noopener"
+           class="cta ${open ? 'cta-gold' : 'cta-navy'} cta-block" style="margin-top:15px">
+            <i class="fas fa-pen-to-square"></i> Fill out this week's form
+        </a>
+        ${f.footnote ? `<p style="font-size:12.5px;color:#94A3B8;margin:10px 0 0;text-align:center;line-height:1.5">
+            ${esc(f.footnote)}</p>` : ''}
+    </section>`;
+}
+
+/**
+ * This site is NOT official school communication. It's a parent-built tool.
+ * That has to be stated where people actually see it — not buried — because
+ * the school colors and the reposted newsletter content otherwise read as
+ * an official channel.
+ */
+function renderDisclaimer(data) {
+    const d = data.disclaimer;
+    if (!d) return '';
+    return `
+    <div class="archived-note" style="margin-top:4px">
+        <i class="fas fa-circle-info" style="margin-top:2px"></i>
+        <span>${esc(d)}</span>
+    </div>`;
 }
 
 function renderHandbookTile() {
@@ -539,31 +623,139 @@ function renderSchoolLinks(data) {
 
 // ==================== PAGES ====================
 
-function renderHome(data) {
-    setTopbar(data.programName || 'Harding PreK', data.programSubtitle || 'Harding Academy');
+/**
+ * Tabs, not one long scroll. Each tab is its own short screen and its own
+ * hash, so a link to #/info still lands where you meant.
+ */
+function tabsFor(data) {
+    const o = data.orientation || {};
+    const orientationLive = o.show && (o.rooms || []).length &&
+        !(o.dateISO && (daysFromToday(o.dateISO) ?? 0) < 0);
+    return [
+        { hash: '#/',           label: 'Today',   icon: 'fa-house' },
+        orientationLive
+            ? { hash: '#/orientation', label: 'Orientation', icon: 'fa-door-open', dot: true } : null,
+        { hash: '#/week',       label: 'This Week', icon: 'fa-calendar-week' },
+        { hash: '#/info',       label: 'Info',    icon: 'fa-circle-info' },
+        hasActivities(data)
+            ? { hash: '#/activities', label: 'Sports', icon: 'fa-futbol' } : null,
+        { hash: '#/team',       label: 'Team',    icon: 'fa-people-group' }
+    ].filter(Boolean);
+}
+
+function renderTabBar(data, active) {
+    return `<nav class="tabbar" id="tabbar">
+        ${tabsFor(data).map(t => `
+        <a href="${t.hash}" data-route="${t.hash}" class="tab ${t.hash === active ? 'active' : ''}">
+            <i class="fas ${t.icon}"></i>${esc(t.label)}${t.dot && t.hash !== active ? '<span class="dot"></span>' : ''}
+        </a>`).join('')}
+    </nav>`;
+}
+
+function page(data, active, inner) {
     return `
     ${renderAnnouncement(data)}
+    ${renderTabBar(data, active)}
     <div style="padding:16px;display:flex;flex-direction:column;gap:18px" class="page-enter">
+        ${inner}
+        ${renderDisclaimer(data)}
+        <div class="footer-note">
+            Updated ${data.lastUpdated
+                ? new Date(data.lastUpdated).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}
+        </div>
+    </div>`;
+}
+
+function renderHome(data) {
+    setTopbar(data.programName || 'Harding PreK', 'Today');
+    const orientationLive = tabsFor(data).some(t => t.hash === '#/orientation');
+    return page(data, '#/', `
         ${renderHero(data)}
         ${data.welcome ? `<div class="note-box" style="margin:0">
             <div class="n"><i class="fas fa-star"></i><span style="font-weight:600">${esc(data.welcome)}</span></div>
         </div>` : ''}
-        ${renderOrientation(data)}
-        ${renderWeeklyEmail(data)}
+        ${renderDismissal(data, 'card')}
+        ${orientationLive ? `
+        <a href="#/orientation" data-route="#/orientation" class="feature-tile touch-row"
+           style="background:linear-gradient(135deg,#B45309,var(--gold))">
+            <span class="feature-icon"><i class="fas fa-door-open"></i></span>
+            <span style="flex:1;min-width:0;position:relative;z-index:1">
+                <span class="display" style="display:block;font-size:17px;font-weight:600">Orientation Day</span>
+                <span style="display:block;font-size:12.5px;color:#FEF3C7;margin-top:3px">
+                    ${esc(data.orientation.date || '')} · find your time slot</span>
+            </span>
+            <i class="fas fa-chevron-right" style="opacity:.6;position:relative;z-index:1"></i>
+        </a>` : ''}
         ${renderKeyDates(data)}
+    `);
+}
+
+function renderOrientationPage(data) {
+    setTopbar('Orientation', data.orientation?.date || 'Harding PreK');
+    return page(data, '#/orientation', renderOrientation(data) ||
+        '<div class="archived-note"><i class="fas fa-door-open" style="margin-top:2px"></i>' +
+        '<span>Orientation has passed. See Today for what\'s next.</span></div>');
+}
+
+function renderWeekPage(data) {
+    setTopbar('This Week', 'Harding PreK');
+    return page(data, '#/week', `
+        ${renderWeeklyEmail(data) || `<div class="archived-note">
+            <i class="fas fa-envelope-open-text" style="margin-top:2px"></i>
+            <span>This week's PreK note hasn't been posted yet.</span></div>`}
+        ${renderDismissal(data, 'card')}
+        ${renderKeyDates(data)}
+    `);
+}
+
+function renderInfoPage(data) {
+    setTopbar('Info', 'Harding PreK');
+    return page(data, '#/info', `
         ${renderHandbookTile()}
         ${renderDocuments(data, 'school', 'Documents & Forms')}
         ${renderSchoolLinks(data)}
         ${renderInfoSections(data)}
+    `);
+}
+
+function renderTeamPage(data) {
+    setTopbar('Team', 'Harding PreK');
+    return page(data, '#/team', renderTeam(data));
+}
+
+function hasActivities(data) {
+    return !!(data.soccer?.show || data.popsicles?.show);
+}
+
+function renderActivitiesTile(data) {
+    if (!hasActivities(data)) return '';
+    const bits = [];
+    if (data.soccer?.show) bits.push('Soccer');
+    if (data.popsicles?.show) bits.push('Get-togethers');
+    return `
+    <a href="#/activities" data-route="#/activities" class="feature-tile touch-row"
+       style="background:linear-gradient(135deg,var(--green),#0F6B33)">
+        <span class="feature-icon"><i class="fas fa-futbol"></i></span>
+        <span style="flex:1;min-width:0;position:relative;z-index:1">
+            <span class="display" style="display:block;font-size:17px;font-weight:600">Sports &amp; Activities</span>
+            <span style="display:block;font-size:12.5px;color:#D1FAE5;margin-top:3px">
+                ${esc(bits.join(' · '))} outside the classroom</span>
+        </span>
+        <i class="fas fa-chevron-right" style="opacity:.5;position:relative;z-index:1"></i>
+    </a>`;
+}
+
+function renderActivitiesPage(data) {
+    setTopbar('Sports & Activities', 'Harding PreK');
+    return page(data, '#/activities', `
         ${renderSoccer(data)}
         ${renderPopsicles(data)}
-        ${renderTeam(data)}
-        <div class="footer-note">
-            <img src="/img/hawk-head.png" alt="" style="width:26px;margin:0 auto 7px;opacity:.55;display:block">
-            Go Hawks · Updated ${data.lastUpdated
-                ? new Date(data.lastUpdated).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}
-        </div>
-    </div>`;
+        ${!hasActivities(data) ? `<div class="archived-note">
+            <i class="fas fa-futbol" style="margin-top:2px"></i>
+            <span>Nothing running right now. Check back — this is where soccer,
+            play dates, and anything else outside the classroom will live.</span>
+        </div>` : ''}
+    `);
 }
 
 function renderKindergartenIndex(data) {
@@ -637,6 +829,11 @@ function currentRoute() {
     const hash = (location.hash || '#/').replace(/^#/, '');
     if (hash.startsWith('/c/')) return { name: 'classroom', id: decodeURIComponent(hash.slice(3)) };
     if (hash.startsWith('/kindergarten')) return { name: 'kindergarten' };
+    if (hash.startsWith('/activities'))   return { name: 'activities' };
+    if (hash.startsWith('/orientation'))  return { name: 'orientation' };
+    if (hash.startsWith('/week'))         return { name: 'week' };
+    if (hash.startsWith('/info'))         return { name: 'info' };
+    if (hash.startsWith('/team'))         return { name: 'team' };
     return { name: 'home' };
 }
 
@@ -651,9 +848,21 @@ function renderApp(opts = {}) {
     const route = currentRoute();
     const root = document.getElementById('root');
 
-    root.innerHTML = route.name === 'classroom'    ? renderClassroomPage(APP.data, route.id)
-                   : route.name === 'kindergarten' ? renderKindergartenIndex(APP.data)
-                   : renderHome(APP.data);
+    const R = {
+        classroom:    () => renderClassroomPage(APP.data, route.id),
+        kindergarten: () => renderKindergartenIndex(APP.data),
+        activities:   () => renderActivitiesPage(APP.data),
+        orientation:  () => renderOrientationPage(APP.data),
+        week:         () => renderWeekPage(APP.data),
+        info:         () => renderInfoPage(APP.data),
+        team:         () => renderTeamPage(APP.data),
+        home:         () => renderHome(APP.data)
+    };
+    root.innerHTML = (R[route.name] || R.home)();
+
+    // Keep the active tab visible when it's off the right edge of the strip.
+    const activeTab = root.querySelector('.tab.active');
+    if (activeTab) activeTab.scrollIntoView({ block: 'nearest', inline: 'center' });
 
     if (opts.keepScroll) {
         const el = document.getElementById('slotSearch');
