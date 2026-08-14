@@ -15,7 +15,7 @@ const APP = { data: null, room: 0, slotQuery: '' };
 
 async function loadDashboardData() {
     let data = {
-        programName: 'Harding PreK', programSubtitle: 'Harding Academy',
+        programName: 'Harding PreK', programSubtitle: 'A parent-built page',
         keyDates: [], infoSections: [], documents: [], schoolLinks: [],
         classrooms: [], schoolEvents: [], announcement: '',
         weeklyEmail: {}, orientation: {}, soccer: {}, popsicles: {}, team: {}
