@@ -1,493 +1,234 @@
 {
-  "lastUpdated": "2026-06-10T17:19:13.683Z",
-  "weeklyEmail": {
-    "week": "2026-2027 School Year Calendar",
-    "compassUrl": "",
-    "emailUrl": "",
-    "kindergartenExcerpt": "",
-    "highlights": [
-      "First day of classes: Wednesday, August 19, 2026",
-      "Parent/Teacher Conferences: October 12-13 & February 25-26",
-      "Major breaks: Fall Break, Thanksgiving, Winter Break, Spring Break",
-      "Early dismissal days: November 24, December 18, May 27",
-      "Graduation: Friday, May 28, 2027"
+  "lastUpdated": "2026-08-14T12:00:00.000Z",
+  "programName": "Harding PreK",
+  "programSubtitle": "Harding Academy",
+  "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
+  "announcement": "",
+
+  "orientation": {
+    "show": true,
+    "headline": "PreK Orientation Day",
+    "date": "Monday, August 17, 2026",
+    "dateISO": "2026-08-17",
+    "blurb": "A short visit so your child can meet the teachers, join a Morning Meeting, and get comfortable in their new classroom. We meet in four groups for 20 minutes each — please arrive at the start of your time and enter through the main entrance to the WSL building.",
+    "notes": [
+      "Park wherever you can find a space, and enter through the main entrance to the new (WSL) building.",
+      "Please bring one adult per household so the classroom doesn't get overwhelming. Need to bring more? Email Anne Zuberer and she'll make it work.",
+      "Mention the \"wrapping up of the classroom\" to your child ahead of time — the rooms are wrapped, so they won't be handling materials yet.",
+      "New parent orientation runs 9:00–10:00 AM in the Upper Pursuit Room (WSL Building). It's optional, and all PreK slots are scheduled around it."
     ],
-    "importantDates": [
-      "Aug 19 - First Day of Classes",
-      "Sep 7 - Labor Day (No School)",
-      "Oct 12-13 - Parent/Teacher Conferences (Student Holiday)"
-    ]
-  },
-  "classrooms": [
-    {
-      "id": "prek-a",
-      "grade": "PreK",
-      "label": "PreK A",
-      "shortLabel": "PreK A",
-      "color": "pink",
-      "icon": "fa-seedling",
-      "teacher": {
-        "name": "",
-        "email": "",
-        "room": ""
+    "bringList": [
+      "Complete change of clothing, including socks, in a labeled Ziploc bag",
+      "A photo of your family — one for each household",
+      "A 4x6 baby photo of your child",
+      "Rain boots and a hooded rain jacket that can stay in the classroom all year"
+    ],
+    "rooms": [
+      {
+        "name": "Pre-K 1",
+        "slots": [
+          { "time": "8:00 – 8:20 AM", "students": ["Charlie Braddy", "Lia Boyd", "Laurel Starnes", "Pierce Pettit", "Charlotte McNabb"] },
+          { "time": "8:30 – 8:50 AM", "students": ["Charlie Branstetter", "Etta Allen", "Oliver Davis", "Quinley Yastrzemski"] },
+          { "time": "10:00 – 10:20 AM", "students": ["Archie Adams", "Brooks Li", "Scarlett Matz", "Coe Kelley"] },
+          { "time": "10:30 – 10:50 AM", "students": ["Evvie Pack", "Field McPherson", "London Thompson", "Penelope Johnson", "Phinney Troy"] }
+        ]
       },
-      "weeklyExcerpt": "",
-      "resources": [
-        {
-          "label": "Compass Connection",
-          "url": "",
-          "icon": "fa-compass"
-        },
-        {
-          "label": "Weekly Dismissal Form",
-          "url": "https://docs.google.com/forms/d/e/1FAIpQLSf0ZxMKD-qzCMVHG98KHEINJuAcsnnvlIxsniv8aPx96s74cA/viewform",
-          "icon": "fa-car-side"
-        },
-        {
-          "label": "Lunch Menu",
-          "url": "",
-          "icon": "fa-utensils"
-        },
-        {
-          "label": "Dress Code",
-          "url": "",
-          "icon": "fa-shirt"
-        },
-        {
-          "label": "Supply List",
-          "url": "",
-          "icon": "fa-list-check"
-        }
-      ],
-      "dailySchedule": [
-        {
-          "time": "8:00 AM",
-          "activity": "Arrival / Carpool drop-off"
-        },
-        {
-          "time": "8:15 AM",
-          "activity": "Circle time"
-        },
-        {
-          "time": "9:00 AM",
-          "activity": "Wednesday late start begins (Wed only)"
-        },
-        {
-          "time": "9:15 AM",
-          "activity": "Free choice / centers"
-        },
-        {
-          "time": "10:15 AM",
-          "activity": "Snack & outdoor time"
-        },
-        {
-          "time": "11:15 AM",
-          "activity": "Specials or small group"
-        },
-        {
-          "time": "12:00 PM",
-          "activity": "Lunch"
-        },
-        {
-          "time": "12:45 PM",
-          "activity": "Rest / nap"
-        },
-        {
-          "time": "2:00 PM",
-          "activity": "Story time & afternoon centers"
-        },
-        {
-          "time": "3:00 PM",
-          "activity": "Dismissal"
-        }
-      ],
-      "showAndShareEnabled": false,
-      "placeholder": false,
-      "gradeKeywords": [
-        "prek",
-        "pre-k",
-        "preschool"
+      {
+        "name": "Pre-K 2",
+        "slots": [
+          { "time": "8:00 – 8:20 AM", "students": ["Archie Akbari", "Elijah Glotta", "Scottie Snyder", "Virginia McNabb", "Phoebe Woods"] },
+          { "time": "8:30 – 8:50 AM", "students": ["Vivienne Riggs", "Nora Fecht", "James Pilkerton", "Cecily Poppler"] },
+          { "time": "10:00 – 10:20 AM", "students": ["Edie Beaver", "London Li", "Genevieve Santapuram", "Jace Aujla"] },
+          { "time": "10:30 – 10:50 AM", "students": ["Kai McAfee", "Jack Barge", "Kennedy Carty", "Margo Chatfield", "Sam Frank"] }
+        ]
+      }
+    ],
+    "conflictNote": "Time doesn't work for your family? Contact Anne Zuberer at 615-957-8040 and we'll find one that does."
+  },
+
+  "keyDates": [
+    { "date": "2026-08-17", "label": "PreK Orientation" },
+    { "date": "2026-08-19", "label": "School begins — noon dismissal in front of the new building (through August 25)" },
+    { "date": "2026-08-26", "label": "First 3:00 PM dismissal · Pursuit becomes available for PreK" },
+    { "date": "2026-09-07", "label": "Labor Day — school holiday" }
+  ],
+
+  "infoSections": [
+    {
+      "id": "classroom",
+      "icon": "fa-school",
+      "title": "In the Classroom",
+      "items": [
+        { "title": "Water bottles", "body": "We drink a lot of water in PreK and we love the earth. Please send a filled reusable water bottle each day, labeled with your child's name. Our classrooms have a filling station, and we use the bottles at snack and lunch." },
+        { "title": "Velcro shoes", "body": "Growing self-help skills is a big part of the PreK year. Please send your child in Velcro shoes they can manage themselves. We're on the playground daily and in P.E., so choose athletic footwear that moves easily and safely." },
+        { "title": "Under wraps", "body": "On Orientation Day you'll find our classrooms all wrapped up. Over the first few days, children discover the materials in a guided way — it builds excitement about our supplies while we teach constructive use, cooperation, and care for our space." },
+        { "title": "A comfort item", "body": "Sometimes you just need a cozy blanket or stuffed animal nearby. If that helps your child settle in, send it in the school tote bag. It lives in the bag during the day, and they can visit it during free play." },
+        { "title": "Tote bags and lunch boxes", "body": "PreK provides a Harding tote bag — they work much better at this age. If you've already bought a backpack, save it for kindergarten. We eat lunch in our classrooms on full days, so please send a lunch with reusable utensils and a water bottle." }
       ]
     },
     {
-      "id": "prek-b",
-      "grade": "PreK",
-      "label": "PreK B",
-      "shortLabel": "PreK B",
-      "color": "rose",
-      "icon": "fa-seedling",
-      "teacher": {
-        "name": "",
-        "email": "",
-        "room": ""
-      },
-      "weeklyExcerpt": "",
-      "resources": [
-        {
-          "label": "Compass Connection",
-          "url": "",
-          "icon": "fa-compass"
-        },
-        {
-          "label": "Weekly Dismissal Form",
-          "url": "https://docs.google.com/forms/d/e/1FAIpQLSf0ZxMKD-qzCMVHG98KHEINJuAcsnnvlIxsniv8aPx96s74cA/viewform",
-          "icon": "fa-car-side"
-        },
-        {
-          "label": "Lunch Menu",
-          "url": "",
-          "icon": "fa-utensils"
-        },
-        {
-          "label": "Dress Code",
-          "url": "",
-          "icon": "fa-shirt"
-        },
-        {
-          "label": "Supply List",
-          "url": "",
-          "icon": "fa-list-check"
-        }
-      ],
-      "dailySchedule": [
-        {
-          "time": "8:00 AM",
-          "activity": "Arrival / Carpool drop-off"
-        },
-        {
-          "time": "8:15 AM",
-          "activity": "Circle time"
-        },
-        {
-          "time": "9:00 AM",
-          "activity": "Wednesday late start begins (Wed only)"
-        },
-        {
-          "time": "9:15 AM",
-          "activity": "Free choice / centers"
-        },
-        {
-          "time": "10:15 AM",
-          "activity": "Snack & outdoor time"
-        },
-        {
-          "time": "11:15 AM",
-          "activity": "Specials or small group"
-        },
-        {
-          "time": "12:00 PM",
-          "activity": "Lunch"
-        },
-        {
-          "time": "12:45 PM",
-          "activity": "Rest / nap"
-        },
-        {
-          "time": "2:00 PM",
-          "activity": "Story time & afternoon centers"
-        },
-        {
-          "time": "3:00 PM",
-          "activity": "Dismissal"
-        }
-      ],
-      "showAndShareEnabled": false,
-      "placeholder": false,
-      "gradeKeywords": [
-        "prek",
-        "pre-k",
-        "preschool"
+      "id": "snack",
+      "icon": "fa-apple-whole",
+      "title": "Snack & Cooking Curriculum",
+      "items": [
+        { "title": "How it works", "body": "A digital monthly snack calendar goes out with sign-ups for Mondays and Fridays. On Tuesday, Wednesday, and Thursday teachers provide Harding-supplied snacks, with a special focus on grains on Wednesdays. Signing up is completely voluntary — and hopefully fun." },
+        { "title": "Moo Mondays", "body": "Hard cheese, bulk yogurt (no tubes or individually packaged cups), hard-boiled eggs, cottage cheese, coconut-milk yogurt, kefir, pimento cheese." },
+        { "title": "Fruit Fridays", "body": "Whole fresh fruit — bunches of bananas, a box of clementines, small apples." },
+        { "title": "Why bulk", "body": "We're glad to cut up a large block of cheese or scoop out yogurt servings. It eliminates individual packaging and meets our goal of reducing the waste we produce." },
+        { "title": "Food allergies", "body": "If there are allergies in the classroom we'll share those details before the snack curriculum begins, and let you know which foods to avoid to keep everyone safe." }
       ]
+    },
+    {
+      "id": "green",
+      "icon": "fa-recycle",
+      "title": "Greening the Classroom",
+      "items": [
+        { "title": "Sustainable rooms", "body": "We recycle, reuse, and reduce wherever we can — fabric napkins and reusable water bottles at snack and lunch." },
+        { "title": "Green art — send it in!", "body": "We love recycled materials in our Free Art Center and structured projects. Interesting cardboard, old game or puzzle pieces, baby food jars, cast-off jewelry, newspaper, paper towel rolls — just about anything. When in doubt, send it in. We'll use it." }
+      ]
+    },
+    {
+      "id": "outdoors",
+      "icon": "fa-tree",
+      "title": "The Natural Outdoor Playspace",
+      "items": [
+        { "title": "We go outside in all weather", "body": "The NOP is a large part of the PreK curriculum, which means we often learn outside. We observe nature, build with natural materials, cooperate, and practice risk-taking. Rain boots and a hooded rain jacket stay in the classroom all year so we can stay dry every day." }
+      ]
+    },
+    {
+      "id": "sixweeks",
+      "icon": "fa-seedling",
+      "title": "The First Six Weeks",
+      "items": [
+        { "title": "Getting to know each other", "body": "We spend the first six weeks getting to know one another as unique individuals, as members of a family, and as a classroom community." },
+        { "title": "Building the community", "body": "Daily Morning Meetings and fun activities. This month we'll complete a \"Who Am I?\" photo project, a self-portrait in paint, and a family drawing." },
+        { "title": "Rules and routines", "body": "Together we create our classroom rules and play plenty of name-learning games, learn new routines, and start exploring the Harding campus." },
+        { "title": "Toward the end of the month", "body": "We introduce the Estimation Jar, Heggerty phonemic awareness activities, Everyday Math, and Handwriting Without Tears." }
+      ]
+    }
+  ],
+
+  "team": {
+    "title": "Your PreK Team",
+    "note": "Please don't hesitate to reach out with any questions, comments, or concerns.",
+    "people": [
+      { "name": "Anne Zuberer", "role": "Director of Primary Education", "email": "zuberera@hardingacademy.us", "phone": "615-957-8040" },
+      { "name": "Ann Walker Huttchson", "role": "Teacher", "email": "Huttchsona@hardingacademy.us" },
+      { "name": "Megan Collins", "role": "Teacher", "email": "Collinsm@hardingacademy.us" },
+      { "name": "Lauren Bidez", "role": "Teacher", "email": "Bidezl@hardingacademy.us" },
+      { "name": "Greg Nye", "role": "Teacher", "email": "Nyeg@hardingacademy.us" }
+    ]
+  },
+
+  "soccer": {
+    "show": true,
+    "headline": "PreK Soccer — Coach Ryan's Team",
+    "blurb": "Coach Ryan Pack (Evvie's dad) is putting together a PreK 5U co-ed team this fall through First Presbyterian's Upward league — a low-pressure intro to soccer and a fun way for the kids (and parents) to connect outside the classroom. Last year PreK had enough kids for two teams.",
+    "highlight": "",
+    "season": "Fall 2026",
+    "deadline": "",
+    "grades": "PreK 5U, co-ed",
+    "practices": "About one weekday a week, likely at Parmer Park",
+    "games": "See the First Presbyterian game-day schedule",
+    "signupUrl": "https://registration.upward.org/UPW90840",
+    "signupLabel": "Register",
+    "signupTip": "List Ryan Pack as your coach so the kids land on the same team.",
+    "links": [
+      { "label": "Game-day schedule", "url": "https://fpcnashville.org/ministry/soccer", "icon": "fa-calendar-days" },
+      { "label": "About the league", "url": "https://fpcnashville.org/ministry/soccer", "icon": "fa-circle-info" }
+    ],
+    "notes": [
+      "Players should turn 5 by August 1, 2026. Still 4 on that date? They can play up — it's allowed.",
+      "Want to help coach? Extra hands are welcome — just reach out to Ryan.",
+      "Already signed up? Send Ryan a quick note so he knows you're on the team."
+    ],
+    "coachName": "Coach Ryan Pack (Evvie's dad)",
+    "coachPhone": "(865) 719-6669"
+  },
+
+  "popsicles": {
+    "show": false,
+    "headline": "Popsicle Hang Outs",
+    "blurb": "Casual, weekly-ish hangs at Parmer Park (weather permitting). No RSVP needed — just show up. Add your kiddo to the list so we know who's coming, or suggest the next date.",
+    "rsvpUrl": "https://docs.google.com/spreadsheets/d/1_KDCcfUH5YiUDeAE7MGY84LFRn8u9RLF0Cg4jioTvtY/edit",
+    "rsvpLabel": "Add Your Kiddo · Suggest a Date",
+    "dates": []
+  },
+
+  "documents": [],
+  "schoolLinks": [],
+  "allSchoolKeywords": [],
+
+  "weeklyEmail": {
+    "week": "",
+    "compassUrl": "",
+    "emailUrl": "https://hardingacademy.myschoolapp.com/podium/push/default.aspx?i=722694&s=287&snd=3b1fc14e-fd6b-49cf-9133-b3c1fa9075a0",
+    "kindergartenExcerpt": "",
+    "highlights": [],
+    "importantDates": []
+  },
+
+  "classrooms": [
+    {
+      "id": "prek",
+      "grade": "PreK",
+      "label": "Harding PreK",
+      "shortLabel": "PreK",
+      "color": "gold",
+      "icon": "fa-seedling",
+      "hidden": true,
+      "teacher": { "name": "Anne Zuberer", "email": "zuberera@hardingacademy.us", "room": "" },
+      "weeklyExcerpt": "",
+      "resources": [],
+      "dailySchedule": [],
+      "showAndShareEnabled": false,
+      "gradeKeywords": ["prek", "pre-k", "pre k", "primary"]
     },
     {
       "id": "kinder-kivett",
       "grade": "Kindergarten",
-      "label": "Kindergarten - Kivett",
-      "shortLabel": "K - Kivett",
-      "color": "purple",
-      "icon": "fa-graduation-cap",
+      "label": "Kindergarten — Kivett",
+      "shortLabel": "K · Kivett",
+      "color": "blue",
+      "icon": "fa-chalkboard-user",
+      "archived": true,
       "isFamily": true,
-      "teacher": {
-        "name": "",
-        "email": "",
-        "room": ""
-      },
+      "teacher": { "name": "", "email": "", "room": "" },
       "weeklyExcerpt": "",
-      "resources": [
-        {
-          "label": "Compass Connection",
-          "url": "",
-          "icon": "fa-compass"
-        },
-        {
-          "label": "Weekly Dismissal Form",
-          "url": "https://docs.google.com/forms/d/e/1FAIpQLSf0ZxMKD-qzCMVHG98KHEINJuAcsnnvlIxsniv8aPx96s74cA/viewform",
-          "icon": "fa-car-side"
-        },
-        {
-          "label": "Lunch Menu",
-          "url": "",
-          "icon": "fa-utensils"
-        },
-        {
-          "label": "Dress Code",
-          "url": "",
-          "icon": "fa-shirt"
-        },
-        {
-          "label": "Supply List",
-          "url": "",
-          "icon": "fa-list-check"
-        },
-        {
-          "label": "Reading/Cooking Signup",
-          "url": "https://www.signupgenius.com/go/10C0A4CADA62FA0FFC07-58545046-kivett#/",
-          "icon": "fa-book-open"
-        },
-        {
-          "label": "HPA Grade-Level Volunteer",
-          "url": "https://www.signupgenius.com/go/30E0945A9A828A57-57688501-grade#/",
-          "icon": "fa-hands-helping"
-        }
-      ],
-      "dailySchedule": [
-        {
-          "time": "7:45 AM",
-          "activity": "Arrival / Carpool drop-off"
-        },
-        {
-          "time": "8:00 AM",
-          "activity": "Morning meeting"
-        },
-        {
-          "time": "9:00 AM",
-          "activity": "Wednesday late start begins (Wed only)"
-        },
-        {
-          "time": "10:30 AM",
-          "activity": "Specials (Art, Music, PE, Library)"
-        },
-        {
-          "time": "11:30 AM",
-          "activity": "Lunch"
-        },
-        {
-          "time": "12:15 PM",
-          "activity": "Rest / Quiet time"
-        },
-        {
-          "time": "1:00 PM",
-          "activity": "Centers / small group"
-        },
-        {
-          "time": "3:00 PM",
-          "activity": "Dismissal"
-        }
-      ],
+      "resources": [],
+      "dailySchedule": [],
       "showAndShareEnabled": true,
-      "placeholder": false,
-      "gradeKeywords": [
-        "kinder",
-        "kindergarten",
-        "kindergarteners"
-      ]
+      "gradeKeywords": ["kindergarten", "kinder"]
     },
     {
       "id": "kinder-semrad",
       "grade": "Kindergarten",
-      "label": "Kindergarten - Semrad",
-      "shortLabel": "K - Semrad",
-      "color": "blue",
-      "icon": "fa-graduation-cap",
-      "teacher": {
-        "name": "",
-        "email": "",
-        "room": ""
-      },
+      "label": "Kindergarten — Semrad",
+      "shortLabel": "K · Semrad",
+      "color": "green",
+      "icon": "fa-chalkboard-user",
+      "archived": true,
+      "teacher": { "name": "", "email": "", "room": "" },
       "weeklyExcerpt": "",
-      "resources": [
-        {
-          "label": "Compass Connection",
-          "url": "",
-          "icon": "fa-compass"
-        },
-        {
-          "label": "Weekly Dismissal Form",
-          "url": "https://docs.google.com/forms/d/e/1FAIpQLSf0ZxMKD-qzCMVHG98KHEINJuAcsnnvlIxsniv8aPx96s74cA/viewform",
-          "icon": "fa-car-side"
-        },
-        {
-          "label": "Lunch Menu",
-          "url": "",
-          "icon": "fa-utensils"
-        },
-        {
-          "label": "Dress Code",
-          "url": "",
-          "icon": "fa-shirt"
-        },
-        {
-          "label": "Supply List",
-          "url": "",
-          "icon": "fa-list-check"
-        },
-        {
-          "label": "HPA Grade-Level Volunteer",
-          "url": "https://www.signupgenius.com/go/30E0945A9A828A57-57688501-grade#/",
-          "icon": "fa-hands-helping"
-        }
-      ],
-      "dailySchedule": [
-        {
-          "time": "7:45 AM",
-          "activity": "Arrival / Carpool drop-off"
-        },
-        {
-          "time": "8:00 AM",
-          "activity": "Morning meeting"
-        },
-        {
-          "time": "9:00 AM",
-          "activity": "Wednesday late start begins (Wed only)"
-        },
-        {
-          "time": "10:30 AM",
-          "activity": "Specials (Art, Music, PE, Library)"
-        },
-        {
-          "time": "11:30 AM",
-          "activity": "Lunch"
-        },
-        {
-          "time": "12:15 PM",
-          "activity": "Rest / Quiet time"
-        },
-        {
-          "time": "1:00 PM",
-          "activity": "Centers / small group"
-        },
-        {
-          "time": "3:00 PM",
-          "activity": "Dismissal"
-        }
-      ],
+      "resources": [],
+      "dailySchedule": [],
       "showAndShareEnabled": false,
-      "placeholder": false,
-      "gradeKeywords": [
-        "kinder",
-        "kindergarten",
-        "kindergarteners"
-      ]
+      "gradeKeywords": ["kindergarten", "kinder"]
     },
     {
       "id": "kinder-3",
       "grade": "Kindergarten",
-      "label": "Kindergarten - K#3",
-      "shortLabel": "K - #3",
-      "color": "teal",
-      "icon": "fa-graduation-cap",
-      "teacher": {
-        "name": "",
-        "email": "",
-        "room": ""
-      },
+      "label": "Kindergarten — K#3",
+      "shortLabel": "K · #3",
+      "color": "purple",
+      "icon": "fa-chalkboard-user",
+      "archived": true,
+      "teacher": { "name": "", "email": "", "room": "" },
       "weeklyExcerpt": "",
-      "resources": [
-        {
-          "label": "Compass Connection",
-          "url": "",
-          "icon": "fa-compass"
-        },
-        {
-          "label": "Weekly Dismissal Form",
-          "url": "https://docs.google.com/forms/d/e/1FAIpQLSf0ZxMKD-qzCMVHG98KHEINJuAcsnnvlIxsniv8aPx96s74cA/viewform",
-          "icon": "fa-car-side"
-        },
-        {
-          "label": "Lunch Menu",
-          "url": "",
-          "icon": "fa-utensils"
-        },
-        {
-          "label": "Dress Code",
-          "url": "",
-          "icon": "fa-shirt"
-        },
-        {
-          "label": "Supply List",
-          "url": "",
-          "icon": "fa-list-check"
-        },
-        {
-          "label": "HPA Grade-Level Volunteer",
-          "url": "https://www.signupgenius.com/go/30E0945A9A828A57-57688501-grade#/",
-          "icon": "fa-hands-helping"
-        }
-      ],
-      "dailySchedule": [
-        {
-          "time": "7:45 AM",
-          "activity": "Arrival / Carpool drop-off"
-        },
-        {
-          "time": "8:00 AM",
-          "activity": "Morning meeting"
-        },
-        {
-          "time": "9:00 AM",
-          "activity": "Wednesday late start begins (Wed only)"
-        },
-        {
-          "time": "10:30 AM",
-          "activity": "Specials (Art, Music, PE, Library)"
-        },
-        {
-          "time": "11:30 AM",
-          "activity": "Lunch"
-        },
-        {
-          "time": "12:15 PM",
-          "activity": "Rest / Quiet time"
-        },
-        {
-          "time": "1:00 PM",
-          "activity": "Centers / small group"
-        },
-        {
-          "time": "3:00 PM",
-          "activity": "Dismissal"
-        }
-      ],
+      "resources": [],
+      "dailySchedule": [],
       "showAndShareEnabled": false,
-      "placeholder": false,
-      "gradeKeywords": [
-        "kinder",
-        "kindergarten",
-        "kindergarteners"
-      ]
+      "gradeKeywords": ["kindergarten", "kinder"]
     }
-  ],
-  "allSchoolKeywords": [
-    "all-school",
-    "all school",
-    "spirit",
-    "early dismissal",
-    "parent/teacher",
-    "conferences",
-    "holiday",
-    "break",
-    "graduation",
-    "labor day",
-    "thanksgiving",
-    "winter",
-    "spring break",
-    "mlk",
-    "memorial",
-    "last day of classes",
-    "first day of classes",
-    "school holiday"
-  ],
-  "documents": [],
-  "schoolLinks": [],
-  "announcement": ""
+  ]
 }

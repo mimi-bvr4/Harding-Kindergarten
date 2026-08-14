@@ -1,174 +1,102 @@
 /**
- * Harding Academy Parent Dashboard — v4
- * Mobile-first, multi-page (hash-routed) with hamburger nav.
+ * Harding PreK Parent Dashboard — v5
+ *
+ * One general PreK program page. The Kindergarten classrooms from earlier
+ * versions are archived, not deleted — they stay reachable at #/kindergarten.
  *
  * Routes:
- *   #/          → landing
- *   #/c/<id>    → classroom page (e.g. #/c/kinder-kivett)
+ *   #/              → PreK program home
+ *   #/kindergarten  → archived Kindergarten index
+ *   #/c/<id>        → a single archived classroom
  */
 
 const CALENDAR_URL = 'https://hardingacademy.myschoolapp.com/podium/feed/iCal.aspx?z=96wT5QnMrJrphQP5BInbTmAAJCsRcQpy%2bmDKcAacSR8eeFymiEdCFAWuYOhCPhXy4XjpFPFcjomN3uHn%2bWimYA%3d%3d';
 
-// ==================== DATA LOADING ====================
+const APP = { data: null, room: 0, slotQuery: '' };
+
+// ==================== DATA ====================
 
 async function loadDashboardData() {
     let data = {
-        weeklyEmail: { week: '', kindergartenExcerpt: '', highlights: [], importantDates: [] },
-        schoolEvents: [],
-        classrooms: [],
-        documents: [],
-        schoolLinks: [],
-        announcement: ''
+        programName: 'Harding PreK', programSubtitle: 'Harding Academy',
+        keyDates: [], infoSections: [], documents: [], schoolLinks: [],
+        classrooms: [], schoolEvents: [], announcement: '',
+        weeklyEmail: {}, orientation: {}, soccer: {}, popsicles: {}, team: {}
     };
     try {
         const resp = await fetch('/api/data');
-        if (resp.ok) {
-            const apiData = await resp.json();
-            data = { ...data, ...apiData };
-        }
-    } catch (e) { console.warn('API data load failed, using defaults'); }
+        if (resp.ok) data = { ...data, ...(await resp.json()) };
+    } catch (e) { console.warn('Data load failed, using defaults'); }
 
     try {
-        const calendarEvents = await loadCalendar(CALENDAR_URL);
-        if (calendarEvents?.length > 0) data.schoolEvents = calendarEvents;
-    } catch (e) { console.error('Calendar load failed:', e); }
+        if (typeof loadCalendar === 'function') {
+            const events = await loadCalendar(CALENDAR_URL);
+            if (events?.length) data.schoolEvents = events;
+        }
+    } catch (e) { console.warn('Calendar unavailable:', e.message); }
 
     return data;
 }
 
-// ==================== EVENT FILTERING ====================
+// ==================== SMALL HELPERS ====================
 
-function isEventForClassroom(event, classroom, ctx = {}) {
-    const title = (event.title || '').toLowerCase();
-    const my  = (classroom?.gradeKeywords || []).map(s => s.toLowerCase());
-    const all = (ctx.allSchoolKeywords || []).map(s => (s || '').toLowerCase());
-    const other = (ctx.otherGradeKeywords || []).map(s => s.toLowerCase());
-    if (!my.length) return true;
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-    if (my.some(k => k && title.includes(k))) return true;
-    if (other.some(k => k && title.includes(k))) return false;
-    if (all.some(k => k && title.includes(k))) return true;
-    return false;
+const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+function startOfToday() { const d = new Date(); d.setHours(0,0,0,0); return d; }
+
+function parseISO(s) {
+    if (!s) return null;
+    const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s);
+    if (!m) return null;
+    return new Date(+m[1], +m[2] - 1, +m[3]);
 }
 
-function buildEventFilterContext(data, classroom) {
-    const mine = new Set((classroom?.gradeKeywords || []).map(s => s.toLowerCase()));
-    const otherGradeKeywords = [];
-    for (const c of (data.classrooms || [])) {
-        for (const k of (c.gradeKeywords || [])) {
-            if (!mine.has(k.toLowerCase())) otherGradeKeywords.push(k);
-        }
-    }
-    return { allSchoolKeywords: data.allSchoolKeywords || [], otherGradeKeywords };
+function daysFromToday(iso) {
+    const d = parseISO(iso);
+    if (!d) return null;
+    return Math.round((d - startOfToday()) / 86400000);
 }
 
-function relevantEvents(data, classroom) {
-    const upcoming = (data.schoolEvents || []).filter(isUpcoming);
-    if (!classroom) return upcoming;
-    const ctx = buildEventFilterContext(data, classroom);
-    return upcoming.filter(e => isEventForClassroom(e, classroom, ctx));
+function whenLabel(iso) {
+    const n = daysFromToday(iso);
+    if (n === null) return '';
+    if (n === 0) return 'Today';
+    if (n === 1) return 'Tomorrow';
+    if (n < 0)  return `${Math.abs(n)} day${Math.abs(n) === 1 ? '' : 's'} ago`;
+    if (n < 7)  return `In ${n} days`;
+    return `In ${Math.round(n / 7)} week${Math.round(n / 7) === 1 ? '' : 's'}`;
 }
 
-function nextShowAndShare(data, classroom) {
-    if (!classroom?.showAndShareEnabled) return null;
-    if (typeof SHOW_AND_SHARE_SCHEDULE === 'undefined') return null;
-    const todayStr = toDateStr(today());
-    const upcoming = SHOW_AND_SHARE_SCHEDULE
-        .filter(s => s.date >= todayStr)
-        .sort((a, b) => a.date.localeCompare(b.date));
-    return upcoming[0] || null;
+function greeting() {
+    const h = new Date().getHours();
+    return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
 }
 
-function nextThingForTile(data, classroom) {
-    const sas = nextShowAndShare(data, classroom);
-    const ev  = relevantEvents(data, classroom)[0];
-    if (sas && ev) {
-        return sas.date <= ev.date
-            ? { kind: 'sas', date: sas.date, label: sas.student + ' brings Show & Share' }
-            : { kind: 'event', date: ev.date, label: ev.title };
-    }
-    if (sas) return { kind: 'sas', date: sas.date, label: sas.student + ' brings Show & Share' };
-    if (ev)  return { kind: 'event', date: ev.date, label: ev.title };
-    return null;
+function initials(name) {
+    return String(name || '').trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase();
 }
 
-// ==================== DOCUMENTS / LINKS HELPERS ====================
-
-function docsFor(data, audience) {
-    return (data.documents || []).filter(d => d.audience === audience);
-}
-
-const DOC_ICONS = {
-    pdf: 'fa-file-pdf', doc: 'fa-file-word', docx: 'fa-file-word',
-    xls: 'fa-file-excel', xlsx: 'fa-file-excel',
-    ppt: 'fa-file-powerpoint', pptx: 'fa-file-powerpoint',
-    png: 'fa-file-image', jpg: 'fa-file-image', jpeg: 'fa-file-image',
-    gif: 'fa-file-image', webp: 'fa-file-image', txt: 'fa-file-lines'
-};
-const DOC_TINTS = {
-    pdf: 'doc-tint-red', doc: 'doc-tint-blue', docx: 'doc-tint-blue',
-    xls: 'doc-tint-green', xlsx: 'doc-tint-green',
-    ppt: 'doc-tint-orange', pptx: 'doc-tint-orange'
-};
-function docIcon(type) { return DOC_ICONS[type] || 'fa-file'; }
-function docTint(type) { return DOC_TINTS[type] || 'doc-tint-slate'; }
-
-function isNewDoc(d) {
-    const t = Date.parse(d.uploadedAt || 0);
-    return t && (Date.now() - t) < 1000 * 60 * 60 * 24 * 7; // < 7 days old
-}
-
-// ==================== ROUTER ====================
-
-const ROUTES = { landing: 'landing', classroom: 'classroom' };
-
-function currentRoute() {
-    const hash = (location.hash || '#/').replace(/^#/, '');
-    if (hash.startsWith('/c/')) {
-        return { name: ROUTES.classroom, classroomId: decodeURIComponent(hash.slice(3)) };
-    }
-    return { name: ROUTES.landing };
-}
-
-function navigate(hash) {
-    if (location.hash === hash) renderApp();
-    else location.hash = hash;
-}
-
-// ==================== STATE ====================
-
-const APP = { data: null };
-
-// ==================== NAV (hamburger drawer) ====================
+// ==================== NAV ====================
 
 function setupNav() {
-    const menuBtn = document.getElementById('menuBtn');
-    const closeBtn = document.getElementById('navCloseBtn');
-    const scrim = document.getElementById('navScrim');
     const drawer = document.getElementById('navDrawer');
-    const refresh = document.getElementById('refreshBtn');
+    const scrim  = document.getElementById('navScrim');
+    const open = () => { drawer.classList.add('open'); scrim.classList.remove('hidden');
+                         requestAnimationFrame(() => scrim.classList.add('show')); };
+    const close = () => { drawer.classList.remove('open'); scrim.classList.remove('show');
+                          setTimeout(() => scrim.classList.add('hidden'), 200); };
 
-    const open = () => {
-        drawer.classList.add('open');
-        scrim.classList.remove('hidden');
-        requestAnimationFrame(() => scrim.classList.add('show'));
-    };
-    const close = () => {
-        drawer.classList.remove('open');
-        scrim.classList.remove('show');
-        setTimeout(() => scrim.classList.add('hidden'), 200);
-    };
-
-    menuBtn?.addEventListener('click', open);
-    closeBtn?.addEventListener('click', close);
+    document.getElementById('menuBtn')?.addEventListener('click', open);
+    document.getElementById('navCloseBtn')?.addEventListener('click', close);
     scrim?.addEventListener('click', close);
-    refresh?.addEventListener('click', () => location.reload());
-
-    document.addEventListener('keydown', (e) => {
+    document.getElementById('refreshBtn')?.addEventListener('click', () => location.reload());
+    document.addEventListener('keydown', e => {
         if (e.key === 'Escape' && drawer.classList.contains('open')) close();
     });
-
-    document.getElementById('navItems').addEventListener('click', (e) => {
+    document.getElementById('navItems').addEventListener('click', e => {
         const link = e.target.closest('[data-route]');
         if (!link) return;
         e.preventDefault();
@@ -178,38 +106,32 @@ function setupNav() {
 }
 
 function renderNav(data) {
-    const isActive = (hash) => location.hash === hash || (hash === '#/' && !location.hash);
-    const classrooms = data.classrooms || [];
-    const preK = classrooms.filter(c => c.grade === 'PreK');
-    const kinder = classrooms.filter(c => c.grade === 'Kindergarten');
-
-    const item = (hash, icon, label, sub = '') => `
-        <a href="${hash}" data-route="${hash}" class="nav-item touch-row ${isActive(hash) ? 'active' : ''}">
+    const active = h => location.hash === h || (h === '#/' && !location.hash);
+    const item = (hash, icon, label, sub, external) => `
+        <a href="${hash}" ${external ? 'target="_blank" rel="noopener"' : `data-route="${hash}"`}
+           class="nav-item touch-row ${active(hash) ? 'active' : ''}">
             <span class="icon"><i class="fas ${icon}"></i></span>
-            <span class="flex-1">
+            <span style="flex:1">
                 <div>${label}</div>
-                ${sub ? `<div class="text-[11px] text-slate-500 font-normal">${sub}</div>` : ''}
+                ${sub ? `<div style="font-size:11px;color:#94A3B8;font-weight:500">${sub}</div>` : ''}
             </span>
-            ${isActive(hash) ? '<i class="fas fa-chevron-right text-[11px] text-blue-500"></i>' : ''}
+            ${external ? '<i class="fas fa-arrow-up-right-from-square" style="font-size:10px;color:#CBD5E1"></i>' : ''}
         </a>`;
 
-    const classroomItem = (c) => item(
-        `#/c/${c.id}`,
-        c.icon || 'fa-chalkboard-user',
-        c.label + (c.isFamily ? ' <span class="family-badge">Family</span>' : ''),
-        c.teacher?.name || ''
-    );
+    const wk = data.weeklyEmail || {};
+    const archived = (data.classrooms || []).filter(c => c.archived);
 
     document.getElementById('navItems').innerHTML = `
-        ${item('#/', 'fa-house', 'Home', 'Today & quick links')}
-        <div class="nav-section-label">PreK</div>
-        ${preK.map(classroomItem).join('') || '<div class="px-5 py-2 text-xs text-slate-400">None configured</div>'}
-        <div class="nav-section-label">Kindergarten</div>
-        ${kinder.map(classroomItem).join('') || '<div class="px-5 py-2 text-xs text-slate-400">None configured</div>'}
+        ${item('#/', 'fa-house', 'Home', 'Everything for PreK')}
+        ${item('/handbook.html', 'fa-book-open', 'Family Handbook', 'Search the 2026-27 handbook', true)}
+        ${wk.emailUrl ? item(wk.emailUrl, 'fa-envelope-open-text', "This Week's Email", 'Open the full school email', true) : ''}
+        ${archived.length ? `<div class="nav-section-label">Archive</div>
+            ${item('#/kindergarten', 'fa-box-archive', 'Kindergarten', 'Previous classroom pages')}` : ''}
     `;
 
     document.getElementById('navLastUpdated').textContent =
-        data.lastUpdated ? new Date(data.lastUpdated).toLocaleString() : '—';
+        data.lastUpdated ? new Date(data.lastUpdated).toLocaleDateString('en-US',
+            { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
 }
 
 function setTopbar(title, subtitle) {
@@ -217,420 +139,582 @@ function setTopbar(title, subtitle) {
     document.getElementById('pageSubtitle').textContent = subtitle || '';
 }
 
-// ==================== SHARED RENDER COMPONENTS ====================
+// ==================== SECTIONS ====================
 
 function renderAnnouncement(data) {
     if (!data.announcement) return '';
-    return `
-    <div class="announce-banner">
-        <i class="fas fa-bullhorn"></i>
-        <span>${data.announcement}</span>
-    </div>`;
+    return `<div class="announce-banner"><i class="fas fa-bullhorn" style="margin-top:2px"></i>
+            <span>${esc(data.announcement)}</span></div>`;
 }
 
-function todayChips(data) {
+function nextKeyDate(data) {
+    return (data.keyDates || [])
+        .filter(d => (daysFromToday(d.date) ?? -1) >= 0)
+        .sort((a, b) => a.date.localeCompare(b.date))[0] || null;
+}
+
+function renderHero(data) {
     const now = new Date();
-    const dayOfWeek = now.getDay();
-    const isWednesday = dayOfWeek === 3;
-    const isFriday = dayOfWeek === 5;
-    const todaysEvent = (data.schoolEvents || []).find(e => isToday(e.date));
-    const chips = [];
-    if (todaysEvent) chips.push(`<span class="hero-chip"><i class="fas ${eventIcon(todaysEvent.type)}"></i>${todaysEvent.title}</span>`);
-    if (isWednesday) chips.push(`<span class="hero-chip"><i class="fas fa-clock"></i>Late Start · 9:00 AM</span>`);
-    if (isFriday) chips.push(`<span class="hero-chip"><i class="fas fa-shirt"></i>Spirit Day</span>`);
-    return chips;
+    const nx = nextKeyDate(data);
+    const n = nx ? daysFromToday(nx.date) : null;
+    return `
+    <div class="today-hero">
+        <div style="position:relative;z-index:1">
+            <div class="hero-eyebrow">${greeting()}</div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:4px">
+                <div>
+                    <div class="display" style="font-size:26px;font-weight:600;line-height:1.05">
+                        ${now.toLocaleDateString('en-US', { weekday: 'long' })}</div>
+                    <div style="font-size:13.5px;color:#BFDBFE;margin-top:5px">
+                        ${now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
+                </div>
+                <div class="hero-daynum">${now.getDate()}</div>
+            </div>
+            ${nx ? `<div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:14px">
+                <span class="hero-chip"><i class="fas fa-calendar-day"></i>${esc(whenLabel(nx.date))} · ${esc(nx.label.split('—')[0].trim())}</span>
+            </div>` : ''}
+        </div>
+    </div>
+    ${nx && n !== null && n <= 14 ? `
+    <div class="countdown">
+        <div>
+            <div class="countdown-num">${n === 0 ? '·' : n}</div>
+            <div class="countdown-label" style="text-align:center">${n === 0 ? 'today' : n === 1 ? 'day' : 'days'}</div>
+        </div>
+        <div style="flex:1;min-width:0">
+            <div style="font-weight:800;font-size:15px;line-height:1.25">${esc(nx.label)}</div>
+            <div style="font-size:12px;opacity:.9;margin-top:2px">
+                ${parseISO(nx.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</div>
+        </div>
+    </div>` : ''}`;
 }
 
-function greeting() {
-    const h = new Date().getHours();
-    if (h < 12) return 'Good morning';
-    if (h < 17) return 'Good afternoon';
-    return 'Good evening';
+function renderWeeklyEmail(data) {
+    const wk = data.weeklyEmail || {};
+    const prek = (data.classrooms || []).find(c => c.id === 'prek');
+    const excerpt = prek?.weeklyExcerpt || wk.prekExcerpt || '';
+    if (!excerpt && !wk.emailUrl) return '';
+    return `
+    <section class="section-card">
+        <div class="section-header">
+            <span class="icon-pill"><i class="fas fa-envelope-open-text"></i></span>
+            <span>This Week from School</span>
+            ${wk.week ? `<span style="margin-left:auto;font-size:10px;font-weight:800;color:#94A3B8;
+                          text-transform:uppercase;letter-spacing:.09em">${esc(wk.week)}</span>` : ''}
+        </div>
+        ${excerpt
+            ? `<div style="font-size:14.5px;line-height:1.65;color:#334155;white-space:pre-line">${esc(excerpt)}</div>`
+            : `<p style="font-size:14px;color:#94A3B8;margin:0">This week's PreK note hasn't been posted yet.</p>`}
+        ${wk.emailUrl ? `
+        <a href="${esc(wk.emailUrl)}" target="_blank" rel="noopener"
+           class="cta cta-navy cta-block" style="margin-top:15px">
+            <i class="fas fa-arrow-up-right-from-square"></i> Read the full school email
+        </a>` : ''}
+    </section>`;
 }
 
-function renderShowAndShareItem(item) {
-    const isTodayItem = isToday(item.date);
-    const day = shortDay(item.date);
-    const md = monthDay(item.date);
-    let bg, border, text, icon;
+function renderOrientation(data) {
+    const o = data.orientation || {};
+    if (!o.show || !(o.rooms || []).length) return '';
+    // Retires itself the day after orientation so nobody has to remember to
+    // switch it off. Set orientation.show to false to hide it sooner.
+    if (o.dateISO && (daysFromToday(o.dateISO) ?? 0) < 0) return '';
 
-    if (isTodayItem) {
-        bg = 'bg-amber-50'; border = 'border-amber-400 ring-2 ring-amber-300'; text = 'text-amber-900';
-        icon = item.isHoliday ? 'fa-calendar-xmark text-rose-600' : item.hasStudent ? 'fa-star text-amber-600' : 'fa-minus-circle text-slate-400';
-    } else if (item.isHoliday) {
-        bg = 'bg-rose-50'; border = 'border-rose-200'; text = 'text-rose-900'; icon = 'fa-calendar-xmark text-rose-500';
-    } else if (item.hasStudent) {
-        bg = 'bg-slate-50'; border = 'border-slate-200'; text = 'text-slate-800'; icon = 'fa-star text-blue-600';
+    const q = APP.slotQuery.trim().toLowerCase();
+    const activeRoom = Math.min(APP.room, o.rooms.length - 1);
+
+    // A parent's first move is typing their child's name. Search must span
+    // BOTH rooms — they don't know which room their child is in yet.
+    const slotCard = (s, roomName, showRoom) => {
+        const mine = q && (s.students || []).some(n => n.toLowerCase().includes(q));
+        const meridiem = (/([AP])M/i.exec(s.time) || [, 'A'])[1].toUpperCase() + 'M';
+        const startTime = (s.time.split(/[–-]/)[0] || '').replace(/\s*[AP]M/i, '').trim();
+        return `
+        <div class="slot-card ${mine ? 'is-mine' : ''}">
+            <div class="slot-time">
+                <div class="t">${esc(meridiem)}</div>
+                <div class="n">${esc(startTime)}</div>
+            </div>
+            <div style="flex:1;min-width:0">
+                <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+                    <span style="font-weight:800;font-size:14.5px">${esc(s.time)}</span>
+                    ${showRoom ? `<span style="font-size:11px;font-weight:800;color:#B45309;
+                        text-transform:uppercase;letter-spacing:.07em">${esc(roomName)}</span>` : ''}
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
+                    ${(s.students || []).map(n => `<span class="name-chip ${
+                        q && n.toLowerCase().includes(q) ? 'hit' : ''}">${esc(n)}</span>`).join('')}
+                </div>
+            </div>
+        </div>`;
+    };
+
+    let slots;
+    if (q) {
+        const matches = [];
+        o.rooms.forEach(r => (r.slots || []).forEach(s => {
+            if ((s.students || []).some(n => n.toLowerCase().includes(q))) {
+                matches.push(slotCard(s, r.name, true));
+            }
+        }));
+        slots = matches.join('');
     } else {
-        bg = 'bg-white'; border = 'border-slate-100'; text = 'text-slate-400'; icon = 'fa-minus-circle text-slate-300';
+        slots = (o.rooms[activeRoom].slots || []).map(s => slotCard(s, o.rooms[activeRoom].name, false)).join('');
     }
 
     return `
-    <div class="p-2.5 rounded-xl border ${bg} ${border} touch-row">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="text-center min-w-[40px]">
-                    <div class="text-[10px] font-bold uppercase tracking-wider ${isTodayItem ? 'text-amber-700' : 'text-slate-500'}">${day}</div>
-                    <div class="text-xs font-bold ${isTodayItem ? 'text-amber-900' : 'text-slate-700'}">${md}</div>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="fas ${icon} text-sm"></i>
-                    <span class="text-sm font-semibold ${text}">${item.studentName}</span>
-                </div>
-            </div>
-            ${isTodayItem ? '<span class="today-pill">TODAY</span>' : ''}
+    <section class="section-card">
+        <div class="section-header">
+            <span class="icon-pill gold"><i class="fas fa-door-open"></i></span>
+            <span>${esc(o.headline || 'Orientation')}</span>
         </div>
-    </div>`;
+
+        <div style="font-weight:800;font-size:15px;color:var(--navy)">${esc(o.date || '')}</div>
+        <p style="font-size:14px;line-height:1.6;color:#475569;margin:8px 0 0">${esc(o.blurb || '')}</p>
+
+        <div style="margin-top:18px">
+            <div class="home-section-title" style="margin-left:0">Find your time</div>
+            <input id="slotSearch" class="slot-search" type="search" autocomplete="off"
+                   placeholder="Type your child's name…" value="${esc(APP.slotQuery)}">
+            ${q ? '' : `
+            <div style="display:flex;gap:8px;margin-top:10px">
+                ${o.rooms.map((r, i) => `<button class="room-tab ${i === activeRoom ? 'active' : ''}"
+                    data-room="${i}">${esc(r.name)}</button>`).join('')}
+            </div>`}
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
+                ${slots || `<p style="font-size:14px;color:#94A3B8;margin:6px 0">
+                    No child matching &ldquo;${esc(APP.slotQuery)}&rdquo; — check the spelling,
+                    or clear the box to see every group.</p>`}
+            </div>
+        </div>
+
+        ${(o.bringList || []).length ? `
+        <div style="margin-top:20px">
+            <div class="home-section-title" style="margin-left:0">Please bring</div>
+            <ul class="bullet-list">${o.bringList.map(b => `<li>${esc(b)}</li>`).join('')}</ul>
+        </div>` : ''}
+
+        ${(o.notes || []).length ? `
+        <div class="note-box">
+            ${o.notes.map(n => `<div class="n"><i class="fas fa-circle-info"></i><span>${esc(n)}</span></div>`).join('')}
+        </div>` : ''}
+
+        ${o.conflictNote ? `<p style="font-size:13px;color:#64748B;margin:14px 0 0;line-height:1.55">
+            <i class="fas fa-phone" style="color:#94A3B8;margin-right:6px"></i>${esc(o.conflictNote)}</p>` : ''}
+    </section>`;
 }
 
-function renderShowAndShare(data) {
-    const now = new Date();
-    const week = getCurrentWeekShowAndShare(data.schoolEvents);
+function renderKeyDates(data) {
+    const dates = (data.keyDates || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+    if (!dates.length) return '';
     return `
     <section class="section-card">
         <div class="section-header">
-            <span class="icon-pill"><i class="fas fa-star"></i></span>
-            <span>Show &amp; Share — This Week</span>
+            <span class="icon-pill"><i class="fas fa-calendar-check"></i></span>
+            <span>Key Dates</span>
         </div>
-        <div class="space-y-2">${week.map(renderShowAndShareItem).join('')}</div>
-        <p class="text-[10px] text-slate-400 mt-3 text-center uppercase tracking-wider">
-            ${now.getDay() === 5 && now.getHours() >= 17 ? 'Showing next week' : 'Updates Fri 5 PM'}
-        </p>
+        ${dates.map(d => {
+            const dt = parseISO(d.date);
+            const n = daysFromToday(d.date);
+            return `
+            <div class="date-row ${n !== null && n < 0 ? 'past' : ''}">
+                <div class="date-badge ${n !== null && n >= 0 && n <= 7 ? 'soon' : ''}">
+                    <div class="m">${dt ? MONTHS[dt.getMonth()] : '·'}</div>
+                    <div class="d">${dt ? dt.getDate() : '–'}</div>
+                </div>
+                <div style="flex:1;min-width:0;padding-top:3px">
+                    <div style="font-size:14.5px;font-weight:700;color:#1E293B;line-height:1.4">${esc(d.label)}</div>
+                    <div style="font-size:11.5px;color:#94A3B8;margin-top:2px">${esc(whenLabel(d.date))}</div>
+                </div>
+            </div>`;
+        }).join('')}
     </section>`;
 }
 
-function renderEventCard(event) {
-    const todayFlag = isToday(event.date);
-    const d = normalizeDate(event.date);
+function renderHandbookTile() {
     return `
-    <div class="event-row ${todayFlag ? 'event-today' : ''}">
-        <div class="event-date">
-            <div class="event-month">${d ? d.toLocaleDateString('en-US', { month: 'short' }) : ''}</div>
-            <div class="event-day">${d ? d.getDate() : ''}</div>
-            <div class="event-dow">${shortDay(event.date)}</div>
-        </div>
-        <div class="flex-1 min-w-0 py-0.5">
-            <div class="flex items-center gap-2">
-                <h3 class="font-bold text-sm text-slate-800 leading-snug">${event.title}</h3>
-            </div>
-            <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-slate-500 mt-0.5">
-                <span class="flex items-center gap-1"><i class="fas ${eventIcon(event.type)} text-[10px]"></i>${daysUntil(event.date)}</span>
-                ${event.location ? `<span class="flex items-center gap-1"><i class="fas fa-location-dot text-[10px]"></i>${event.location}</span>` : ''}
-            </div>
-        </div>
-        ${todayFlag ? '<span class="today-pill self-center">TODAY</span>' : ''}
-    </div>`;
+    <a href="/handbook.html" class="feature-tile touch-row">
+        <span class="feature-icon"><i class="fas fa-book-open"></i></span>
+        <span style="flex:1;min-width:0;position:relative;z-index:1">
+            <span class="display" style="display:block;font-size:17px;font-weight:600">Family Handbook</span>
+            <span style="display:block;font-size:12.5px;color:#BFDBFE;margin-top:3px">
+                Search 2026-27 — carpool, uniforms, snow days, illness</span>
+        </span>
+        <i class="fas fa-chevron-right" style="opacity:.5;position:relative;z-index:1"></i>
+    </a>`;
 }
 
-function renderUpcomingEvents(data, opts = {}) {
-    const limit = opts.limit ?? 6;
-    const classroom = opts.classroom || null;
-    const events = (classroom ? relevantEvents(data, classroom) : (data.schoolEvents || []).filter(isUpcoming))
-                    .slice(0, limit);
-    const title = classroom ? `Coming Up for ${classroom.shortLabel || classroom.label}` : 'Coming Up at School';
+function renderInfoSections(data) {
+    return (data.infoSections || []).map(sec => `
+    <section class="section-card">
+        <div class="section-header">
+            <span class="icon-pill gold"><i class="fas ${esc(sec.icon || 'fa-circle-info')}"></i></span>
+            <span>${esc(sec.title)}</span>
+        </div>
+        ${(sec.items || []).map((it, i) => `
+        <div class="info-item" data-info="${esc(sec.id)}-${i}">
+            <button class="info-q" type="button">
+                <i class="fas fa-chevron-right"></i><span>${esc(it.title)}</span>
+            </button>
+            <div class="info-a">${esc(it.body)}</div>
+        </div>`).join('')}
+    </section>`).join('');
+}
+
+function renderSoccer(data) {
+    const s = data.soccer || {};
+    if (!s.show) return '';
+    const rows = [
+        ['fa-calendar-day', 'Season', s.season],
+        ['fa-hourglass-half', 'Register by', s.deadline],
+        ['fa-child-reaching', 'Age group', s.grades],
+        ['fa-location-dot', 'Practices', s.practices],
+        ['fa-futbol', 'Games', s.games]
+    ].filter(r => r[2]);
+
     return `
     <section class="section-card">
         <div class="section-header">
-            <span class="icon-pill"><i class="fas fa-calendar-days"></i></span>
-            <span>${title}</span>
+            <span class="icon-pill green"><i class="fas fa-futbol"></i></span>
+            <span>${esc(s.headline || 'Soccer')}</span>
         </div>
-        ${events.length ? `<div class="space-y-2">${events.map(renderEventCard).join('')}</div>`
-                       : `<p class="text-sm text-slate-500">Nothing scheduled${classroom ? ' for this class' : ''} — check back soon.</p>`}
+        <p style="font-size:14px;line-height:1.6;color:#475569;margin:0 0 14px">${esc(s.blurb || '')}</p>
+        ${s.highlight ? `<div style="background:linear-gradient(135deg,var(--green),var(--green-2));color:#fff;
+            border-radius:16px;padding:12px 14px;font-weight:700;font-size:14px;margin-bottom:14px">
+            <i class="fas fa-bolt" style="margin-right:7px"></i>${esc(s.highlight)}</div>` : ''}
+        ${rows.map(r => `
+        <div class="row">
+            <span class="ic"><i class="fas ${r[0]}"></i></span>
+            <div><div class="row-label">${r[1]}</div><div class="row-value">${esc(r[2])}</div></div>
+        </div>`).join('')}
+        ${s.signupUrl ? `<a href="${esc(s.signupUrl)}" target="_blank" rel="noopener"
+            class="cta cta-green cta-block" style="margin-top:16px">
+            <i class="fas fa-pen-to-square"></i>${esc(s.signupLabel || 'Register')}</a>` : ''}
+        ${s.signupTip ? `<p style="font-size:13px;color:#64748B;margin:10px 0 0;text-align:center">
+            ${esc(s.signupTip)}</p>` : ''}
+        ${(s.links || []).length ? `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
+            ${s.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener"
+                style="display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:999px;
+                       font-size:13px;font-weight:700;color:#475569;background:#F1F5F9;text-decoration:none">
+                <i class="fas ${esc(l.icon || 'fa-link')}" style="color:#94A3B8"></i>${esc(l.label)}</a>`).join('')}
+        </div>` : ''}
+        ${(s.notes || []).length ? `<div class="note-box">
+            ${s.notes.map(n => `<div class="n"><i class="fas fa-circle-info"></i><span>${esc(n)}</span></div>`).join('')}
+        </div>` : ''}
+        ${s.coachName ? `<p style="font-size:13.5px;color:#475569;margin:16px 0 0;padding-top:14px;
+            border-top:1px solid #F1F5F9">
+            <i class="fas fa-user" style="color:#94A3B8;margin-right:6px"></i>
+            <span style="font-weight:700">${esc(s.coachName)}</span>
+            ${s.coachPhone ? ` · <a href="tel:${esc(s.coachPhone.replace(/[^\d+]/g, ''))}"
+                style="font-weight:700;color:var(--green);text-decoration:none">${esc(s.coachPhone)}</a>` : ''}
+        </p>` : ''}
     </section>`;
 }
 
-function renderImportantDates(data) {
-    if (!data.weeklyEmail.importantDates?.length) return '';
+function renderPopsicles(data) {
+    const p = data.popsicles || {};
+    if (!p.show) return '';
     return `
-    <section class="section-card dates-card">
-        <div class="section-header" style="color:#78350f;">
-            <span class="icon-pill" style="background:#fde68a;color:#92400e;"><i class="fas fa-calendar-check"></i></span>
-            <span>Important Dates</span>
+    <section class="section-card">
+        <div class="section-header">
+            <span class="icon-pill gold"><i class="fas fa-ice-cream"></i></span>
+            <span>${esc(p.headline || 'Get Together')}</span>
         </div>
-        <ul class="space-y-1.5">
-            ${data.weeklyEmail.importantDates.map(d => `
-                <li class="flex items-start gap-2 text-sm text-amber-950">
-                    <span class="text-amber-500 mt-0.5 font-bold">·</span><span class="flex-1">${d}</span>
-                </li>`).join('')}
-        </ul>
+        <p style="font-size:14px;line-height:1.6;color:#475569;margin:0 0 14px">${esc(p.blurb || '')}</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+        ${(p.dates || []).map(d => {
+            const dt = parseISO(d.date) || null;
+            return `
+            <div class="slot-card">
+                <div class="slot-time">
+                    <div class="t">${dt ? MONTHS[dt.getMonth()] : '·'}</div>
+                    <div class="n">${dt ? dt.getDate() : '–'}</div>
+                </div>
+                <div style="flex:1;min-width:0">
+                    <div style="font-weight:800;font-size:14.5px">${esc(d.label || d.date || '')}</div>
+                    <div style="font-size:13px;color:#64748B;margin-top:3px">
+                        ${[d.time, d.location].filter(Boolean).map(esc).join(' · ')}</div>
+                    ${d.note ? `<div style="margin-top:8px;font-size:13px;font-weight:600;color:#78350F;
+                        background:#FEF3C7;border:1px solid #FDE68A;border-radius:11px;padding:8px 11px">
+                        ${esc(d.note)}</div>` : ''}
+                    ${d.bringing ? `<div style="margin-top:8px;font-size:13px;color:#64748B">
+                        <i class="fas fa-ice-cream" style="color:var(--gold);margin-right:6px"></i>${esc(d.bringing)}</div>` : ''}
+                    ${(d.attending || []).length ? `<div style="margin-top:10px">
+                        <div class="row-label" style="margin-bottom:6px">Coming so far · ${d.attending.length}</div>
+                        <div style="display:flex;flex-wrap:wrap;gap:6px">
+                            ${d.attending.map(n => `<span class="name-chip">${esc(n)}</span>`).join('')}</div>
+                    </div>` : ''}
+                </div>
+            </div>`;
+        }).join('')}
+        </div>
+        ${p.rsvpUrl ? `<a href="${esc(p.rsvpUrl)}" target="_blank" rel="noopener"
+            class="cta cta-gold cta-block" style="margin-top:16px">
+            <i class="fas fa-envelope-open-text"></i>${esc(p.rsvpLabel || 'RSVP')}</a>` : ''}
     </section>`;
 }
 
-function renderDocuments(data, audience, opts = {}) {
-    const docs = docsFor(data, audience);
+function renderTeam(data) {
+    const t = data.team || {};
+    if (!(t.people || []).length) return '';
+    return `
+    <section class="section-card">
+        <div class="section-header">
+            <span class="icon-pill"><i class="fas fa-people-group"></i></span>
+            <span>${esc(t.title || 'Your PreK Team')}</span>
+        </div>
+        ${t.note ? `<p style="font-size:14px;color:#475569;margin:0 0 12px;line-height:1.55">${esc(t.note)}</p>` : ''}
+        ${t.people.map(p => `
+        <a class="person-row touch-row" href="mailto:${esc(p.email)}">
+            <span class="person-avatar">${esc(initials(p.name))}</span>
+            <span style="flex:1;min-width:0">
+                <span style="display:block;font-weight:700;font-size:14.5px;color:#1E293B">${esc(p.name)}</span>
+                <span style="display:block;font-size:12px;color:#94A3B8;margin-top:1px">${esc(p.role || '')}</span>
+            </span>
+            <i class="fas fa-envelope" style="color:#CBD5E1;font-size:14px"></i>
+        </a>`).join('')}
+        ${t.people.find(p => p.phone) ? `<p style="font-size:13px;color:#64748B;margin:14px 0 0">
+            <i class="fas fa-phone" style="color:#94A3B8;margin-right:6px"></i>
+            ${esc(t.people.find(p => p.phone).name)} · ${esc(t.people.find(p => p.phone).phone)}</p>` : ''}
+    </section>`;
+}
+
+// ---- documents & links (unchanged behaviour, restyled) ----
+
+const DOC_ICONS = { pdf:'fa-file-pdf', doc:'fa-file-word', docx:'fa-file-word', xls:'fa-file-excel',
+    xlsx:'fa-file-excel', ppt:'fa-file-powerpoint', pptx:'fa-file-powerpoint', png:'fa-file-image',
+    jpg:'fa-file-image', jpeg:'fa-file-image', gif:'fa-file-image', webp:'fa-file-image', txt:'fa-file-lines' };
+const DOC_TINTS = { pdf:'doc-tint-red', doc:'doc-tint-blue', docx:'doc-tint-blue', xls:'doc-tint-green',
+    xlsx:'doc-tint-green', ppt:'doc-tint-orange', pptx:'doc-tint-orange' };
+
+function isNewDoc(d) {
+    const t = Date.parse(d.uploadedAt || 0);
+    return t && (Date.now() - t) < 6048e5;
+}
+
+function renderDocuments(data, audience, title) {
+    const docs = (data.documents || []).filter(d => d.audience === audience);
     if (!docs.length) return '';
     return `
     <section class="section-card">
         <div class="section-header">
             <span class="icon-pill"><i class="fas fa-folder-open"></i></span>
-            <span>${opts.title || 'Documents & Forms'}</span>
+            <span>${esc(title || 'Documents & Forms')}</span>
         </div>
-        <div class="space-y-2">
+        <div style="display:flex;flex-direction:column;gap:9px">
             ${docs.map(d => `
-            <a href="${d.url}" target="_blank" rel="noopener" class="doc-card touch-row">
-                <span class="doc-card-icon ${docTint(d.type)}"><i class="fas ${docIcon(d.type)}"></i></span>
-                <span class="flex-1 min-w-0">
-                    <span class="flex items-center gap-2">
-                        <span class="font-bold text-sm text-slate-800 leading-snug">${d.label}</span>
+            <a href="${esc(d.url)}" target="_blank" rel="noopener" class="doc-card touch-row">
+                <span class="doc-card-icon ${DOC_TINTS[d.type] || 'doc-tint-slate'}">
+                    <i class="fas ${DOC_ICONS[d.type] || 'fa-file'}"></i></span>
+                <span style="flex:1;min-width:0">
+                    <span style="display:flex;align-items:center;gap:8px">
+                        <span style="font-weight:700;font-size:14px;color:#1E293B">${esc(d.label)}</span>
                         ${isNewDoc(d) ? '<span class="new-pill">NEW</span>' : ''}
                     </span>
-                    <span class="block text-[11px] text-slate-500 mt-0.5">Added ${formatDate(d.uploadedAt?.slice(0,10))} · tap to open</span>
+                    <span style="display:block;font-size:11.5px;color:#94A3B8;margin-top:2px">Tap to open</span>
                 </span>
-                <i class="fas fa-arrow-up-right-from-square text-[11px] text-slate-400"></i>
+                <i class="fas fa-arrow-up-right-from-square" style="font-size:11px;color:#CBD5E1"></i>
             </a>`).join('')}
         </div>
     </section>`;
 }
 
-function renderLinkTiles(links) {
-    if (!links?.length) return '';
-    return `
-    <div class="link-grid">
-        ${links.map(r => `
-        <a href="${r.url || '#'}" target="_blank" rel="noopener noreferrer" class="link-tile touch-row">
-            <span class="link-tile-icon"><i class="fas ${r.icon || 'fa-link'}"></i></span>
-            <span class="text-[13px] font-bold text-slate-700 leading-tight">${r.label}</span>
-        </a>`).join('')}
-    </div>`;
-}
-
 function renderSchoolLinks(data) {
-    if (!data.schoolLinks?.length) return '';
+    if (!(data.schoolLinks || []).length) return '';
     return `
     <section class="section-card">
         <div class="section-header">
             <span class="icon-pill"><i class="fas fa-link"></i></span>
             <span>Quick Links</span>
         </div>
-        ${renderLinkTiles(data.schoolLinks)}
+        <div class="link-grid">
+            ${data.schoolLinks.map(r => `
+            <a href="${esc(r.url || '#')}" target="_blank" rel="noopener noreferrer" class="link-tile touch-row">
+                <span class="link-tile-icon"><i class="fas ${esc(r.icon || 'fa-link')}"></i></span>
+                <span style="font-size:13px;font-weight:700;color:#475569;line-height:1.3">${esc(r.label)}</span>
+            </a>`).join('')}
+        </div>
     </section>`;
 }
 
-// ==================== LANDING PAGE ====================
+// ==================== PAGES ====================
 
-function renderLanding(data) {
-    setTopbar('Harding Academy', 'Kivett Family');
-    const classrooms = data.classrooms || [];
-    const now = new Date();
-    const chips = todayChips(data);
-
-    const tile = (c) => {
-        const nx = nextThingForTile(data, c);
-        const sub = c.teacher?.name ? c.teacher.name : c.grade;
-        return `
-        <a href="#/c/${c.id}" data-route="#/c/${c.id}" class="class-card chip-${c.color || 'gray'}">
-            <div class="class-card-avatar"><i class="fas ${c.icon || 'fa-chalkboard-user'}"></i></div>
-            <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-1.5 flex-wrap">
-                    <span class="font-extrabold text-[15px] leading-tight">${c.label}</span>
-                    ${c.isFamily ? '<span class="family-badge">Family</span>' : ''}
-                </div>
-                <div class="text-[12px] opacity-75 truncate mt-0.5">${sub}</div>
-                ${nx ? `
-                <div class="tile-next mt-2 flex items-center gap-1.5 text-[11px]">
-                    <i class="fas ${nx.kind === 'sas' ? 'fa-star' : 'fa-calendar-days'} opacity-70"></i>
-                    <span class="font-bold whitespace-nowrap">${daysUntil(nx.date)}</span>
-                    <span class="opacity-80 truncate">· ${nx.label}</span>
-                </div>` : ''}
-            </div>
-            <i class="fas fa-chevron-right text-sm opacity-40"></i>
-        </a>`;
-    };
-
-    const preK = classrooms.filter(c => c.grade === 'PreK');
-    const kinder = classrooms.filter(c => c.grade === 'Kindergarten');
-
+function renderHome(data) {
+    setTopbar(data.programName || 'Harding PreK', data.programSubtitle || 'Harding Academy');
     return `
     ${renderAnnouncement(data)}
-    <div class="px-4 py-4 space-y-5 page-enter">
-
-        <!-- Hero -->
-        <div class="today-hero">
-            <div class="relative z-10">
-                <div class="hero-eyebrow">${greeting()}, Kivett family</div>
-                <div class="flex items-end justify-between gap-3 mt-1">
-                    <div>
-                        <div class="text-[26px] font-extrabold leading-none">${longDay(now)}</div>
-                        <div class="text-sm text-blue-100 mt-1.5">${now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
-                    </div>
-                    <div class="hero-daynum">${now.getDate()}</div>
-                </div>
-                ${chips.length ? `<div class="flex flex-wrap gap-1.5 mt-3.5">${chips.join('')}</div>` : ''}
-            </div>
-        </div>
-
-        <!-- Classrooms -->
-        <div>
-            <div class="home-section-title"><i class="fas fa-seedling"></i> PreK</div>
-            <div class="grid grid-cols-1 gap-2.5">
-                ${preK.map(tile).join('') || '<p class="text-sm text-slate-400 px-1">None configured.</p>'}
-            </div>
-            <div class="home-section-title mt-5"><i class="fas fa-pencil"></i> Kindergarten</div>
-            <div class="grid grid-cols-1 gap-2.5">
-                ${kinder.map(tile).join('') || '<p class="text-sm text-slate-400 px-1">None configured.</p>'}
-            </div>
-        </div>
-
-        ${renderDocuments(data, 'school', { title: 'School Documents & Forms' })}
+    <div style="padding:16px;display:flex;flex-direction:column;gap:18px" class="page-enter">
+        ${renderHero(data)}
+        ${data.welcome ? `<div class="note-box" style="margin:0">
+            <div class="n"><i class="fas fa-star"></i><span style="font-weight:600">${esc(data.welcome)}</span></div>
+        </div>` : ''}
+        ${renderOrientation(data)}
+        ${renderWeeklyEmail(data)}
+        ${renderKeyDates(data)}
+        ${renderHandbookTile()}
+        ${renderDocuments(data, 'school', 'Documents & Forms')}
         ${renderSchoolLinks(data)}
-        ${renderImportantDates(data)}
-        ${renderUpcomingEvents(data, { limit: 3 })}
-
+        ${renderInfoSections(data)}
+        ${renderSoccer(data)}
+        ${renderPopsicles(data)}
+        ${renderTeam(data)}
         <div class="footer-note">
-            <img src="/img/hawk-head.png" alt="" class="w-6 h-6 mx-auto mb-1.5 opacity-60">
-            Go Hawks · Last updated ${data.lastUpdated ? new Date(data.lastUpdated).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}
+            <img src="/img/hawk-head.png" alt="" style="width:26px;margin:0 auto 7px;opacity:.55;display:block">
+            Go Hawks · Updated ${data.lastUpdated
+                ? new Date(data.lastUpdated).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}
         </div>
     </div>`;
 }
 
-// ==================== CLASSROOM PAGE ====================
-
-function renderClassroomPage(data, classroomId) {
-    const c = (data.classrooms || []).find(x => x.id === classroomId);
-    if (!c) return renderNotFound(classroomId);
-
-    setTopbar(c.shortLabel || c.label, c.grade);
-    const isKivett = c.id === 'kinder-kivett';
-    const note = c.weeklyExcerpt || (isKivett ? data.weeklyEmail.kindergartenExcerpt : '');
-
-    // --- Hero header ---
-    const hero = `
-    <div class="class-hero hero-${c.color || 'gray'}">
-        <div class="relative z-10 flex items-center gap-3.5">
-            <div class="class-hero-avatar"><i class="fas ${c.icon || 'fa-chalkboard-user'}"></i></div>
-            <div class="flex-1 min-w-0">
-                <div class="flex items-center flex-wrap gap-1.5">
-                    <span class="text-lg font-extrabold leading-tight">${c.label}</span>
-                    ${c.isFamily ? '<span class="family-badge">Family</span>' : ''}
-                </div>
-                <div class="text-[12px] opacity-85 mt-0.5">
-                    ${c.teacher?.name ? `${c.teacher.name}` : c.grade}${c.teacher?.room ? ` · Room ${c.teacher.room}` : ''}
-                </div>
-            </div>
-        </div>
-        ${c.teacher?.email ? `
-        <a href="mailto:${c.teacher.email}" class="hero-mail-btn relative z-10">
-            <i class="fas fa-envelope"></i> Email ${c.teacher.name ? c.teacher.name.split(' ')[0] : 'teacher'}
-        </a>` : ''}
-    </div>`;
-
-    // --- This week's note ---
-    const noteCard = `
-    <section class="section-card">
-        <div class="section-header">
-            <span class="icon-pill"><i class="fas fa-pen-nib"></i></span>
-            <span>This Week's Note</span>
-            ${data.weeklyEmail.week ? `<span class="ml-auto text-[10px] font-bold text-slate-400 uppercase tracking-wider">${data.weeklyEmail.week}</span>` : ''}
-        </div>
-        ${note ? `
-        <div class="note-bubble">${note}</div>` : `
-        <p class="text-sm text-slate-500 italic">No note for this week yet — check back soon.</p>`}
-    </section>`;
-
-    // --- Show & share ---
-    const sasCard = c.showAndShareEnabled ? renderShowAndShare(data) : '';
-
-    // --- Documents for this classroom ---
-    const docsCard = renderDocuments(data, c.id, { title: `${c.shortLabel || c.label} Documents` });
-
-    // --- Events ---
-    const eventsCard = renderUpcomingEvents(data, { limit: 5, classroom: c });
-
-    // --- Links ---
-    const linksCard = c.resources?.length ? `
-    <section class="section-card">
-        <div class="section-header">
-            <span class="icon-pill"><i class="fas fa-link"></i></span>
-            <span>Helpful Links</span>
-        </div>
-        ${renderLinkTiles(c.resources)}
-    </section>` : '';
-
-    // --- Daily schedule timeline ---
-    const scheduleCard = c.dailySchedule?.length ? `
-    <section class="section-card">
-        <div class="section-header">
-            <span class="icon-pill"><i class="fas fa-clock"></i></span>
-            <span>Daily Routine</span>
-        </div>
-        <div class="timeline">
-            ${c.dailySchedule.map(s => `
-            <div class="timeline-row">
-                <div class="timeline-time">${s.time}</div>
-                <div class="timeline-dot"></div>
-                <div class="timeline-activity">${s.activity}</div>
-            </div>`).join('')}
-        </div>
-    </section>` : '';
-
+function renderKindergartenIndex(data) {
+    setTopbar('Kindergarten', 'Archive');
+    const archived = (data.classrooms || []).filter(c => c.archived);
     return `
-    ${renderAnnouncement(data)}
-    <div class="px-4 py-4 space-y-4 page-enter">
-        ${hero}
-        ${noteCard}
-        ${docsCard}
-        ${sasCard}
-        ${eventsCard}
-        ${linksCard}
-        ${scheduleCard}
-        <a href="#/" data-route="#/" class="back-home touch-row">
-            <i class="fas fa-arrow-left"></i> Back to Home
-        </a>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:14px" class="page-enter">
+        <div class="archived-note">
+            <i class="fas fa-box-archive" style="margin-top:2px"></i>
+            <span>These are the Kindergarten classroom pages from the earlier version of this dashboard.
+            They're kept here for reference — the PreK program page is the one being updated this year.</span>
+        </div>
+        ${archived.map(c => `
+        <a href="#/c/${esc(c.id)}" data-route="#/c/${esc(c.id)}" class="doc-card touch-row" style="padding:15px">
+            <span class="doc-card-icon doc-tint-blue"><i class="fas ${esc(c.icon || 'fa-chalkboard-user')}"></i></span>
+            <span style="flex:1;min-width:0">
+                <span style="display:block;font-weight:700;font-size:14.5px;color:#1E293B">${esc(c.label)}</span>
+                <span style="display:block;font-size:12px;color:#94A3B8;margin-top:2px">
+                    ${esc(c.teacher?.name || 'No teacher listed')}</span>
+            </span>
+            <i class="fas fa-chevron-right" style="color:#CBD5E1;font-size:13px"></i>
+        </a>`).join('') || '<p style="color:#94A3B8;font-size:14px">Nothing archived.</p>'}
+        <a href="#/" data-route="#/" class="back-home touch-row"><i class="fas fa-arrow-left"></i> Back to PreK</a>
     </div>`;
 }
 
-function renderNotFound(id) {
+function renderClassroomPage(data, id) {
+    const c = (data.classrooms || []).find(x => x.id === id);
+    if (!c) return renderNotFound();
+    setTopbar(c.shortLabel || c.label, c.grade || '');
+    return `
+    <div style="padding:16px;display:flex;flex-direction:column;gap:14px" class="page-enter">
+        <div class="archived-note">
+            <i class="fas fa-box-archive" style="margin-top:2px"></i>
+            <span>Archived page — kept for reference, not updated this year.</span>
+        </div>
+        <section class="section-card">
+            <div class="section-header">
+                <span class="icon-pill"><i class="fas ${esc(c.icon || 'fa-chalkboard-user')}"></i></span>
+                <span>${esc(c.label)}</span>
+            </div>
+            ${c.teacher?.name ? `<div class="row"><span class="ic"><i class="fas fa-user"></i></span>
+                <div><div class="row-label">Teacher</div><div class="row-value">${esc(c.teacher.name)}</div></div></div>` : ''}
+            ${c.teacher?.room ? `<div class="row"><span class="ic"><i class="fas fa-door-closed"></i></span>
+                <div><div class="row-label">Room</div><div class="row-value">${esc(c.teacher.room)}</div></div></div>` : ''}
+            ${c.weeklyExcerpt ? `<div style="margin-top:14px;font-size:14px;line-height:1.6;color:#334155;
+                white-space:pre-line">${esc(c.weeklyExcerpt)}</div>` : ''}
+            ${!c.teacher?.name && !c.weeklyExcerpt
+                ? '<p style="font-size:14px;color:#94A3B8;margin:0">Nothing was saved on this page.</p>' : ''}
+        </section>
+        ${renderDocuments(data, c.id, `${c.shortLabel || c.label} Documents`)}
+        <a href="#/kindergarten" data-route="#/kindergarten" class="back-home touch-row">
+            <i class="fas fa-arrow-left"></i> Back to Kindergarten</a>
+    </div>`;
+}
+
+function renderNotFound() {
     setTopbar('Not Found', '');
     return `
-    <div class="px-6 py-12 text-center page-enter">
-        <img src="/img/hawk-body.png" alt="" class="w-28 h-auto mx-auto opacity-50 mb-4">
-        <h2 class="text-lg font-extrabold text-slate-700">Classroom not found</h2>
-        <p class="text-sm text-slate-500 mt-1">We couldn't find that page.</p>
-        <a href="#/" data-route="#/" class="inline-block mt-4 px-5 py-2.5 bg-[var(--navy)] text-white rounded-xl text-sm font-bold shadow">
-            <i class="fas fa-arrow-left mr-1.5"></i>Back to Home
-        </a>
+    <div style="padding:48px 24px;text-align:center" class="page-enter">
+        <img src="/img/hawk-body.png" alt="" style="width:112px;margin:0 auto 16px;opacity:.5;display:block">
+        <h2 class="display" style="font-size:19px;color:#334155;margin:0">Page not found</h2>
+        <a href="#/" data-route="#/" class="cta cta-navy" style="margin-top:18px">
+            <i class="fas fa-arrow-left"></i> Back to Home</a>
     </div>`;
 }
 
-// ==================== MAIN RENDER ====================
+// ==================== ROUTER ====================
 
-function renderApp() {
+function currentRoute() {
+    const hash = (location.hash || '#/').replace(/^#/, '');
+    if (hash.startsWith('/c/')) return { name: 'classroom', id: decodeURIComponent(hash.slice(3)) };
+    if (hash.startsWith('/kindergarten')) return { name: 'kindergarten' };
+    return { name: 'home' };
+}
+
+function navigate(hash) {
+    if (location.hash === hash) renderApp();
+    else location.hash = hash;
+}
+
+function renderApp(opts = {}) {
     if (!APP.data) return;
     renderNav(APP.data);
     const route = currentRoute();
     const root = document.getElementById('root');
-    let html = '';
-    if (route.name === ROUTES.classroom) {
-        html = renderClassroomPage(APP.data, route.classroomId);
+
+    root.innerHTML = route.name === 'classroom'    ? renderClassroomPage(APP.data, route.id)
+                   : route.name === 'kindergarten' ? renderKindergartenIndex(APP.data)
+                   : renderHome(APP.data);
+
+    if (opts.keepScroll) {
+        const el = document.getElementById('slotSearch');
+        if (el && opts.focusSearch) {
+            el.focus();
+            el.setSelectionRange(el.value.length, el.value.length);
+        }
     } else {
-        html = renderLanding(APP.data);
+        window.scrollTo({ top: 0, behavior: 'instant' });
     }
-    root.innerHTML = html;
-    root.addEventListener('click', mainClickHandler);
-    window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
-function mainClickHandler(e) {
-    const link = e.target.closest('[data-route]');
-    if (!link) return;
-    e.preventDefault();
-    navigate(link.getAttribute('data-route'));
+// ==================== INTERACTION ====================
+
+function setupRootHandlers() {
+    const root = document.getElementById('root');
+
+    root.addEventListener('click', e => {
+        const nav = e.target.closest('[data-route]');
+        if (nav) { e.preventDefault(); navigate(nav.getAttribute('data-route')); return; }
+
+        const tab = e.target.closest('[data-room]');
+        if (tab) {
+            APP.room = Number(tab.getAttribute('data-room')) || 0;
+            const y = window.scrollY;
+            renderApp({ keepScroll: true });
+            window.scrollTo({ top: y, behavior: 'instant' });
+            return;
+        }
+
+        const q = e.target.closest('.info-q');
+        if (q) { q.closest('.info-item').classList.toggle('open'); return; }
+    });
+
+    let t = null;
+    root.addEventListener('input', e => {
+        if (e.target.id !== 'slotSearch') return;
+        APP.slotQuery = e.target.value;
+        clearTimeout(t);
+        t = setTimeout(() => {
+            const y = window.scrollY;
+            renderApp({ keepScroll: true, focusSearch: true });
+            window.scrollTo({ top: y, behavior: 'instant' });
+        }, 220);
+    });
 }
 
 // ==================== INIT ====================
 
 setupNav();
-window.addEventListener('hashchange', renderApp);
+setupRootHandlers();
+window.addEventListener('hashchange', () => renderApp());
 
 loadDashboardData()
     .then(data => { APP.data = data; renderApp(); })
-    .catch(error => {
-        console.error('Dashboard init failed:', error);
+    .catch(err => {
+        console.error('Dashboard init failed:', err);
         document.getElementById('root').innerHTML = `
-        <div class="px-6 py-12 text-center">
-            <img src="/img/hawk-body.png" alt="" class="w-28 h-auto mx-auto opacity-50 mb-4">
-            <i class="fas fa-triangle-exclamation text-2xl text-rose-400 mb-2"></i>
-            <h2 class="text-lg font-extrabold text-slate-700">Couldn't load the dashboard</h2>
-            <p class="text-sm text-slate-500 mt-1">Please refresh to try again.</p>
+        <div style="padding:48px 24px;text-align:center">
+            <img src="/img/hawk-body.png" alt="" style="width:112px;margin:0 auto 16px;opacity:.5;display:block">
+            <h2 class="display" style="font-size:19px;color:#334155;margin:0">Couldn't load the dashboard</h2>
+            <p style="font-size:14px;color:#94A3B8;margin-top:6px">Please refresh to try again.</p>
         </div>`;
     });
