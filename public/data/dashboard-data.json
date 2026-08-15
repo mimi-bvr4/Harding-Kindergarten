@@ -78,7 +78,8 @@
         "teachers": [
           "Ann Walker Huttchson",
           "Megan Collins"
-        ]
+        ],
+        "classLabel": "Huttchson & Collins"
       },
       {
         "name": "Pre-K 2",
@@ -125,7 +126,8 @@
         "teachers": [
           "Lauren Bidez",
           "Gregory Nye"
-        ]
+        ],
+        "classLabel": "Bidez & Nye"
       }
     ],
     "conflictNote": "Time doesn't work for your family? Contact Anne Zuberer at 615-957-8040 and we'll find one that does.",

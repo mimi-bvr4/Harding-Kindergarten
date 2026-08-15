@@ -9,7 +9,7 @@
 
 const CALENDAR_URL = 'https://hardingacademy.myschoolapp.com/podium/feed/iCal.aspx?z=96wT5QnMrJrphQP5BInbTmAAJCsRcQpy%2bmDKcAacSR8eeFymiEdCFAWuYOhCPhXy4XjpFPFcjomN3uHn%2bWimYA%3d%3d';
 
-const APP = { data: null, room: 0, slotQuery: '' };
+const APP = { data: null, room: 0, slotQuery: '', classRoom: 0, classQuery: '' };
 
 // ==================== DATA ====================
 
@@ -77,6 +77,36 @@ function greeting() {
 
 function initials(name) {
     return String(name || '').trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase();
+}
+
+
+// ==================== NAME MATCHING (shared) ====================
+
+// Accent-insensitive, nickname-aware. "Genevieve" finds "Geneviève";
+// "Samantha" finds "Sammie Frank".
+const fold = (t) => String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+function makeMatcher(aliases, query) {
+    const needle = fold(query);
+    return (name) => {
+        if (!needle) return true;
+        if (fold(name).includes(needle)) return true;
+        return (aliases[name] || []).some(a => fold(a).includes(needle));
+    };
+}
+
+function classesOf(data) {
+    return (data.orientation?.rooms || []).map(r => ({
+        name: r.name,
+        label: r.classLabel || r.name,
+        teachers: r.teachers || [],
+        students: [...new Set((r.slots || []).flatMap(sl => sl.students || []))]
+            .sort((a, b) => a.localeCompare(b))
+    }));
+}
+
+function teacherEmail(data, name) {
+    return (data.team?.people || []).find(p => p.name === name)?.email || '';
 }
 
 // ==================== NAV ====================
@@ -650,6 +680,8 @@ function tabsFor(data) {
         orientationLive
             ? { hash: '#/orientation', label: 'Orientation', icon: 'fa-door-open', dot: true } : null,
         { hash: '#/week',       label: 'This Week', icon: 'fa-calendar-week' },
+        (data.orientation?.rooms || []).length
+            ? { hash: '#/classes', label: 'Classes', icon: 'fa-users' } : null,
         { hash: '#/info',       label: 'Info',    icon: 'fa-circle-info' },
         hasActivities(data)
             ? { hash: '#/activities', label: 'Sports', icon: 'fa-futbol' } : null,
@@ -785,6 +817,66 @@ function renderNotFound() {
     </div>`;
 }
 
+
+function renderClassesPage(data) {
+    setTopbar('Classes', 'Harding PreK');
+    const classes = classesOf(data);
+    if (!classes.length) return page(data, '#/classes',
+        '<div class="archived-note"><i class="fas fa-users" style="margin-top:2px"></i>' +
+        '<span>No class lists yet.</span></div>');
+
+    const q = APP.classQuery.trim();
+    const match = makeMatcher(data.orientation?.aliases || {}, q);
+    const active = Math.min(APP.classRoom, classes.length - 1);
+    const shown = q ? classes : [classes[active]];
+
+    const card = (c) => {
+        const kids = c.students.filter(match);
+        if (q && !kids.length) return '';
+        return `
+        <section class="section-card">
+            <div class="section-header">
+                <span class="icon-pill"><i class="fas fa-chalkboard-user"></i></span>
+                <span>${esc(c.label)}</span>
+                <span style="margin-left:auto;font-size:11px;font-weight:800;color:#94A3B8;
+                             text-transform:uppercase;letter-spacing:.08em">${esc(c.name)}</span>
+            </div>
+            ${c.teachers.map(t => {
+                const em = teacherEmail(data, t);
+                return em
+                    ? `<a class="person-row touch-row" href="mailto:${esc(em)}">
+                         <span class="person-avatar">${esc(initials(t))}</span>
+                         <span style="flex:1;min-width:0">
+                           <span style="display:block;font-weight:700;font-size:14.5px;color:#1E293B">${esc(t)}</span>
+                           <span style="display:block;font-size:12px;color:#94A3B8;margin-top:1px">${esc(em)}</span>
+                         </span>
+                         <i class="fas fa-envelope" style="color:#CBD5E1;font-size:14px"></i></a>`
+                    : `<div class="person-row"><span class="person-avatar">${esc(initials(t))}</span>
+                         <span style="font-weight:700;font-size:14.5px;color:#1E293B">${esc(t)}</span></div>`;
+            }).join('')}
+            <div class="home-section-title" style="margin:18px 0 9px 0">
+                ${q ? `${kids.length} match${kids.length === 1 ? '' : 'es'}` : `${kids.length} children`}
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:7px">
+                ${kids.map(n => `<span class="name-chip ${q && match(n) ? 'hit' : ''}">${esc(n)}</span>`).join('')}
+            </div>
+        </section>`;
+    };
+
+    const cards = shown.map(card).join('');
+
+    return page(data, '#/classes', `
+        <input id="classSearch" class="slot-search" type="search" autocomplete="off"
+               placeholder="Find a child in either class…" value="${esc(APP.classQuery)}">
+        ${q ? '' : `<div style="display:flex;gap:8px">
+            ${classes.map((c, i) => `<button class="room-tab ${i === active ? 'active' : ''}"
+                data-class="${i}">${esc(c.label)}</button>`).join('')}
+        </div>`}
+        ${cards || `<div class="archived-note"><i class="fas fa-magnifying-glass" style="margin-top:2px"></i>
+            <span>No child matching &ldquo;${esc(q)}&rdquo; in either class.</span></div>`}
+    `);
+}
+
 // ==================== ROUTER ====================
 
 function currentRoute() {
@@ -793,6 +885,7 @@ function currentRoute() {
     if (hash.startsWith('/orientation'))  return { name: 'orientation' };
     if (hash.startsWith('/week'))         return { name: 'week' };
     if (hash.startsWith('/info'))         return { name: 'info' };
+    if (hash.startsWith('/classes'))      return { name: 'classes' };
     if (hash.startsWith('/team'))         return { name: 'team' };
     return { name: 'home' };
 }
@@ -813,6 +906,7 @@ function renderApp(opts = {}) {
         orientation:  () => renderOrientationPage(APP.data),
         week:         () => renderWeekPage(APP.data),
         info:         () => renderInfoPage(APP.data),
+        classes:      () => renderClassesPage(APP.data),
         team:         () => renderTeamPage(APP.data),
         home:         () => renderHome(APP.data)
     };
@@ -823,7 +917,8 @@ function renderApp(opts = {}) {
     if (activeTab) activeTab.scrollIntoView({ block: 'nearest', inline: 'center' });
 
     if (opts.keepScroll) {
-        const el = document.getElementById('slotSearch');
+        const el = document.getElementById(
+            typeof opts.focusSearch === 'string' ? opts.focusSearch : 'slotSearch');
         if (el && opts.focusSearch) {
             el.focus();
             el.setSelectionRange(el.value.length, el.value.length);
@@ -842,6 +937,15 @@ function setupRootHandlers() {
         const nav = e.target.closest('[data-route]');
         if (nav) { e.preventDefault(); navigate(nav.getAttribute('data-route')); return; }
 
+        const ctab = e.target.closest('[data-class]');
+        if (ctab) {
+            APP.classRoom = Number(ctab.getAttribute('data-class')) || 0;
+            const y = window.scrollY;
+            renderApp({ keepScroll: true });
+            window.scrollTo({ top: y, behavior: 'instant' });
+            return;
+        }
+
         const tab = e.target.closest('[data-room]');
         if (tab) {
             APP.room = Number(tab.getAttribute('data-room')) || 0;
@@ -857,6 +961,16 @@ function setupRootHandlers() {
 
     let t = null;
     root.addEventListener('input', e => {
+        if (e.target.id === 'classSearch') {
+            APP.classQuery = e.target.value;
+            clearTimeout(t);
+            t = setTimeout(() => {
+                const y = window.scrollY;
+                renderApp({ keepScroll: true, focusSearch: 'classSearch' });
+                window.scrollTo({ top: y, behavior: 'instant' });
+            }, 220);
+            return;
+        }
         if (e.target.id !== 'slotSearch') return;
         APP.slotQuery = e.target.value;
         clearTimeout(t);
