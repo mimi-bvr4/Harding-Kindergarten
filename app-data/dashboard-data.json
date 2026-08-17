@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-17T00:11:16.529Z",
+  "lastUpdated": "2026-08-17T14:27:41.286Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -362,8 +362,22 @@
     "compassUrl": "",
     "emailUrl": "https://hardingacademy.myschoolapp.com/podium/push/default.aspx?i=722694&s=287&snd=3b1fc14e-fd6b-49cf-9133-b3c1fa9075a0",
     "kindergartenExcerpt": "",
-    "highlights": [],
-    "importantDates": []
+    "highlights": [
+      {
+        "title": "PreK Back to School Night",
+        "text": "Invitations sent three weeks in advance.",
+        "date": "Wed Sep 09 2026 00:00:00 GMT-0500 (Central Daylight Time)",
+        "category": "Meeting"
+      },
+      {
+        "title": "PreK Grade Level Parent Party",
+        "text": "Immediately following Back to School Night. Cocktails and hors d'oeuvres. RSVP required — click link in email.",
+        "date": "Wed Sep 09 2026 00:00:00 GMT-0500 (Central Daylight Time)",
+        "category": "Party"
+      }
+    ],
+    "importantDates": [],
+    "prekExcerpt": "A school nurse will be at a table during Orientation (Aug 17/18) to receive medications. Bring emergency medications (epinephrine, inhalers, glucagon, etc.) or daily medications at that time. Upload allergy action plans and daily medication authorization forms to Magnus.\n\nAll required Magnus forms must be completed and submitted before the first day of school. Students with outstanding forms will not be permitted to attend. Contact Moira Clark if prior arrangements are needed.\n\nStarting August 26, PreK runs 8:00 AM–3:00 PM. Drop-off 7:30 AM in front of WSL. Morning snack provided — please pack a lunch from home (cafeteria not available for PreK). Pursuit aftercare officially begins. Complete required dismissal form before this date. Have your Procare number and carline number ready at pickup.\n\nPursuit aftercare for PreK begins August 26. Sign up using the Lower School (PreK–5) form linked in the newsletter. Email branhaml@hardingacademy.us with questions. You must also complete the required dismissal form before care begins."
   },
   "classrooms": [
     {
