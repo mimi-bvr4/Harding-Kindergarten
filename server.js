@@ -395,12 +395,26 @@ async function bootSync() {
         const remote = await github.pullData();
         if (remote && remote.classrooms?.length) {
             const local = readData();
-            const remoteTime = Date.parse(remote.lastUpdated || 0) || 0;
-            const localTime = Date.parse(local.lastUpdated || 0) || 0;
-            if (remoteTime >= localTime) {
-                fs.writeFileSync(DATA_FILE, JSON.stringify(remote, null, 2));
-                console.log('[boot] Restored latest dashboard data from GitHub.');
+
+            // GitHub owns CONTENT (what Apps Script and the admin page publish).
+            // The deploy owns STRUCTURE (team roster, tabs, copy, links, layout).
+            //
+            // This used to be a wholesale overwrite, which silently reverted every
+            // structural change on the next restart — a deploy would look successful
+            // and then vanish. Merge instead: take content from GitHub, keep
+            // structure from the code that was just deployed.
+            const CONTENT_KEYS = [
+                'weeklyEmail', 'announcement', 'classrooms', 'documents',
+                'schoolLinks', 'keyDates', 'lastUpdated'
+            ];
+
+            const merged = { ...local };
+            for (const k of CONTENT_KEYS) {
+                if (Object.prototype.hasOwnProperty.call(remote, k)) merged[k] = remote[k];
             }
+
+            fs.writeFileSync(DATA_FILE, JSON.stringify(merged, null, 2));
+            console.log('[boot] Merged GitHub content into the deployed structure.');
         }
         // Restore any documents missing locally
         const docs = await github.listDocs();
