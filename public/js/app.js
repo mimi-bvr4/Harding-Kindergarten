@@ -593,14 +593,22 @@ function renderTeam(data) {
         </div>
         ${t.note ? `<p style="font-size:14px;color:#475569;margin:0 0 12px;line-height:1.55">${esc(t.note)}</p>` : ''}
         ${t.people.map(p => `
-        <a class="person-row touch-row" href="mailto:${esc(p.email)}">
+        <div class="person-row">
             <span class="person-avatar">${esc(initials(p.name))}</span>
             <span style="flex:1;min-width:0">
                 <span style="display:block;font-weight:700;font-size:14.5px;color:#1E293B">${esc(p.name)}</span>
                 <span style="display:block;font-size:12px;color:#94A3B8;margin-top:1px">${esc(p.role || '')}</span>
             </span>
-            <i class="fas fa-envelope" style="color:#CBD5E1;font-size:14px"></i>
-        </a>`).join('')}
+            ${p.favoritesPdf ? `
+            <a class="fav-btn" href="${esc(p.favoritesPdf)}" target="_blank" rel="noopener"
+               aria-label="${esc(p.name)}'s favorite things">
+                <i class="fas fa-heart"></i><span>Favorites</span>
+            </a>` : ''}
+            ${p.email ? `
+            <a class="person-mail" href="mailto:${esc(p.email)}" aria-label="Email ${esc(p.name)}">
+                <i class="fas fa-envelope"></i>
+            </a>` : ''}
+        </div>`).join('')}
         ${t.people.find(p => p.phone) ? `<p style="font-size:13px;color:#64748B;margin:14px 0 0">
             <i class="fas fa-phone" style="color:#94A3B8;margin-right:6px"></i>
             ${esc(t.people.find(p => p.phone).name)} · ${esc(t.people.find(p => p.phone).phone)}</p>` : ''}

@@ -9,7 +9,7 @@
     "show": true,
     "title": "Weekly Dismissal Form",
     "url": "https://docs.google.com/forms/d/e/1FAIpQLSf0ZxMKD-qzCMVHG98KHEINJuAcsnnvlIxsniv8aPx96s74cA/viewform",
-    "blurb": "Where your child goes after school each day, Monday through Friday — and who picks them up. One form per child, every week.",
+    "blurb": "Where your child goes after school each day, Monday through Friday. One form per child, every week.",
     "opensNote": "Opens Friday evening",
     "dueNote": "Due Monday 9:00 AM",
     "footnote": "No sign-in needed. The form asks for your child's homeroom teacher's last name."
@@ -291,27 +291,32 @@
         "name": "Anne Zuberer",
         "role": "Director of Primary Education",
         "email": "zuberera@hardingacademy.us",
-        "phone": "615-957-8040"
+        "phone": "615-957-8040",
+        "favoritesPdf": "/docs/favorites/zuberer-anne.pdf"
       },
       {
         "name": "Ann Walker Huttchson",
         "role": "Teacher",
-        "email": "Huttchsona@hardingacademy.us"
+        "email": "Huttchsona@hardingacademy.us",
+        "favoritesPdf": "/docs/favorites/huttchson-ann-walker.pdf"
       },
       {
         "name": "Megan Collins",
         "role": "Teacher",
-        "email": "Collinsm@hardingacademy.us"
+        "email": "Collinsm@hardingacademy.us",
+        "favoritesPdf": "/docs/favorites/collins-megan.pdf"
       },
       {
         "name": "Lauren Bidez",
         "role": "Teacher",
-        "email": "Bidezl@hardingacademy.us"
+        "email": "Bidezl@hardingacademy.us",
+        "favoritesPdf": "/docs/favorites/bidez-lauren.pdf"
       },
       {
         "name": "Gregory Nye",
         "role": "Teacher",
-        "email": "Nyeg@hardingacademy.us"
+        "email": "Nyeg@hardingacademy.us",
+        "favoritesPdf": "/docs/favorites/nye-greg.pdf"
       }
     ]
   },
