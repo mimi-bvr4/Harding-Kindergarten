@@ -35,7 +35,12 @@ header.hb{
   color:#fff;padding-top:env(safe-area-inset-top);
   box-shadow:0 4px 18px -8px rgba(1,33,105,.35);
 }
-header.hb .inner{padding:18px 0 20px}
+header.hb .inner{padding:14px 0 20px}
+.hb-back{display:inline-flex;align-items:center;gap:7px;margin-bottom:12px;
+  font-size:12.5px;font-weight:700;color:#fff;text-decoration:none;
+  background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);
+  border-radius:999px;padding:7px 13px 7px 11px;-webkit-tap-highlight-color:transparent}
+.hb-back:active{background:rgba(255,255,255,.22)}
 .eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#a9c2f0}
 h1.hb{margin:4px 0 2px;font-size:22px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
 .sub{font-size:12.5px;color:#c3d4f2}
@@ -140,6 +145,7 @@ mark{background:var(--gold-soft);color:inherit;border-radius:3px;padding:0 2px;f
 
 <header class="hb">
   <div class="wrap inner">
+    <a class="hb-back" href="/">&larr;&nbsp; Back to dashboard</a>
     <div class="eyebrow">Harding Academy &middot; 2026&ndash;2027</div>
     <h1 class="hb">Family &amp; Student Handbook</h1>
     <div class="sub">Search it instead of scrolling it. No login required.</div>

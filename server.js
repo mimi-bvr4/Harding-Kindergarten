@@ -476,7 +476,12 @@ app.put('/api/carline/cars', requireAdmin, (req, res) => {
     res.json({ success: true, count: cars.length });
 });
 
-app.get('/carline', requireCarline, (req, res) => {
+app.get('/carline', (req, res) => {
+    // A parent tapping "Run Carline" in the menu should be ASKED for the teacher
+    // code, not shown a raw 403. The API routes below still hard-refuse.
+    const ok = req.siteRole === 'carline' || req.siteRole === 'admin'
+               || validToken(req.headers['x-admin-token']);
+    if (!ok) return res.redirect(302, '/login?next=%2Fcarline');
     res.sendFile(path.join(__dirname, 'public', 'carline.html'));
 });
 

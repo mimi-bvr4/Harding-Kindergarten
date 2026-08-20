@@ -125,6 +125,18 @@
         .catch(function () { fail('Could not reach the server. Please try again.'); });
     });
 
+    // Arriving from the "Run Carline" menu item: say so, so a parent who taps it
+    // by accident understands this is the staff code, not the family password.
+    if (nextUrl().indexOf('/carline') === 0) {
+        document.title = 'Carline Sign In \u00b7 Harding PreK';
+        var sub = document.querySelector('.sub');
+        if (sub) sub.innerHTML = 'Carline dismissal is for teachers and staff.<br>' +
+                                 'Enter the carline code to continue.';
+        var lab = document.querySelector('label[for="pw"]');
+        if (lab) lab.textContent = 'Carline code';
+        pw.placeholder = 'Type the carline code';
+    }
+
     pw.focus();
 })();
 </script>

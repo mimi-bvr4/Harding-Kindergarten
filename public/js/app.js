@@ -138,16 +138,20 @@ function setupNav() {
 
 function renderNav(data) {
     const active = h => location.hash === h || (h === '#/' && !location.hash);
-    const item = (hash, icon, label, sub, external) => `
-        <a href="${hash}" ${external ? 'target="_blank" rel="noopener"' : `data-route="${hash}"`}
-           class="nav-item touch-row ${active(hash) ? 'active' : ''}">
+    // mode: undefined = in-app hash route | 'same' = full page on this site | 'new' = off-site tab
+    const item = (href, icon, label, sub, mode) => {
+        const isRoute = !mode, newTab = mode === 'new';
+        return `
+        <a href="${href}" ${isRoute ? `data-route="${href}"` : ''} ${newTab ? 'target="_blank" rel="noopener"' : ''}
+           class="nav-item touch-row ${isRoute && active(href) ? 'active' : ''}">
             <span class="icon"><i class="fas ${icon}"></i></span>
             <span style="flex:1">
                 <div>${label}</div>
                 ${sub ? `<div style="font-size:11px;color:#94A3B8;font-weight:500">${sub}</div>` : ''}
             </span>
-            ${external ? '<i class="fas fa-arrow-up-right-from-square" style="font-size:10px;color:#CBD5E1"></i>' : ''}
+            ${newTab ? '<i class="fas fa-arrow-up-right-from-square" style="font-size:10px;color:#CBD5E1"></i>' : ''}
         </a>`;
+    };
 
     const wk = data.weeklyEmail || {};
 
@@ -155,10 +159,12 @@ function renderNav(data) {
         ${item('#/', 'fa-house', 'Home', 'Everything for PreK')}
         ${data.dismissalForm?.show && data.dismissalForm?.url
             ? item(data.dismissalForm.url, 'fa-car-side', 'Dismissal Form',
-                   dismissalState(data)?.status || 'Weekly, due Monday 9 AM', true) : ''}
+                   dismissalState(data)?.status || 'Weekly, due Monday 9 AM', 'new') : ''}
         ${hasActivities(data) ? item('#/activities', 'fa-futbol', 'Sports & Activities', 'Outside the classroom') : ''}
-        ${item('/handbook.html', 'fa-book-open', 'Family Handbook', 'Search the 2026-27 handbook', true)}
-        ${wk.emailUrl ? item(wk.emailUrl, 'fa-envelope-open-text', "This Week's Email", 'Open the full school email', true) : ''}
+        ${item('/handbook.html', 'fa-book-open', 'Family Handbook', 'Search the 2026-27 handbook', 'same')}
+        ${wk.emailUrl ? item(wk.emailUrl, 'fa-envelope-open-text', "This Week's Email", 'Open the full school email', 'new') : ''}
+        <div style="height:1px;background:#F1F5F9;margin:8px 16px"></div>
+        ${item('/carline', 'fa-flag-checkered', 'Run Carline', 'Teachers \u00b7 sign-in required', 'same')}
     `;
 
     document.getElementById('navLastUpdated').textContent =
