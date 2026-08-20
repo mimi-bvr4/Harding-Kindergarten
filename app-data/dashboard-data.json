@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-18T01:07:14.933Z",
+  "lastUpdated": "2026-08-20T01:06:41.336Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -9,7 +9,7 @@
     "show": true,
     "title": "Weekly Dismissal Form",
     "url": "https://docs.google.com/forms/d/e/1FAIpQLSf0ZxMKD-qzCMVHG98KHEINJuAcsnnvlIxsniv8aPx96s74cA/viewform",
-    "blurb": "Where your child goes after school each day, Monday through Friday — and who picks them up. One form per child, every week.",
+    "blurb": "Where your child goes after school each day, Monday through Friday. One form per child, every week.",
     "opensNote": "Opens Friday evening",
     "dueNote": "Due Monday 9:00 AM",
     "footnote": "No sign-in needed. The form asks for your child's homeroom teacher's last name."
@@ -291,27 +291,32 @@
         "name": "Anne Zuberer",
         "role": "Director of Primary Education",
         "email": "zuberera@hardingacademy.us",
-        "phone": "615-957-8040"
+        "phone": "615-957-8040",
+        "favoritesPdf": "/docs/favorites/zuberer-anne.pdf"
       },
       {
         "name": "Ann Walker Huttchson",
         "role": "Teacher",
-        "email": "Huttchsona@hardingacademy.us"
+        "email": "Huttchsona@hardingacademy.us",
+        "favoritesPdf": "/docs/favorites/huttchson-ann-walker.pdf"
       },
       {
         "name": "Megan Collins",
         "role": "Teacher",
-        "email": "Collinsm@hardingacademy.us"
+        "email": "Collinsm@hardingacademy.us",
+        "favoritesPdf": "/docs/favorites/collins-megan.pdf"
       },
       {
         "name": "Lauren Bidez",
         "role": "Teacher",
-        "email": "Bidezl@hardingacademy.us"
+        "email": "Bidezl@hardingacademy.us",
+        "favoritesPdf": "/docs/favorites/bidez-lauren.pdf"
       },
       {
         "name": "Gregory Nye",
         "role": "Teacher",
-        "email": "Nyeg@hardingacademy.us"
+        "email": "Nyeg@hardingacademy.us",
+        "favoritesPdf": "/docs/favorites/nye-greg.pdf"
       }
     ]
   },
@@ -364,7 +369,7 @@
     "kindergartenExcerpt": "",
     "highlights": [],
     "importantDates": [],
-    "prekExcerpt": "Noon dismissal every day Aug 18–21 (this week) and Aug 24–25 (next Mon–Tue). Full day with 3:00 PM dismissal begins Wednesday, Aug 26. No lunches needed on noon dismissal days — morning snack is provided. No Pursuit on half days; Pursuit available starting Aug 26.\n\nPlease set up your ProCare account and 4-digit PIN before drop-off on Wednesday, Aug 19. The PIN is used to check your child into the classroom and for dismissal. Contact Lauren or Greg if you need help finding your PIN.\n\nPlease send in extra clothes, rain boots, a rain jacket, and family photos in your child's tote bag this week if you haven't already.\n\nDrop-off is 7:30–8:00 AM in front of the WSL building. Students exit the car and are escorted to their classrooms.\n\nIf you haven't already, please fill out the PreK Family Questionnaire: https://forms.gle/EuhF1MW2ujGJd2s36\n\nA school nurse will be at a table during Orientation (Aug 17/18) to receive medications. Bring emergency medications (epinephrine, inhalers, glucagon, etc.) or daily medications at that time. Upload allergy action plans and daily medication authorization forms to Magnus.\n\nAll required Magnus forms must be completed and submitted before the first day of school. Students with outstanding forms will not be permitted to attend. Contact Moira Clark if prior arrangements are needed.\n\nStarting August 26, PreK runs 8:00 AM–3:00 PM. Drop-off 7:30 AM in front of WSL. Morning snack provided — please pack a lunch from home (cafeteria not available for PreK). Pursuit aftercare officially begins. Complete required dismissal form before this date. Have your Procare number and carline number ready at pickup.\n\nPursuit aftercare for PreK begins August 26. Sign up using the Lower School (PreK–5) form linked in the newsletter. Email branhaml@hardingacademy.us with questions. You must also complete the required dismissal form before care begins."
+    "prekExcerpt": "The PreK class had a great first day! Ask your child how they liked the dried mango served during snack time.\n\nCar number tags must be hanging from your rearview mirror at pickup. Tags are only required for dismissal, not drop-off. Need a replacement or extra tag? Email Jay Arduser at arduserj@hardingacademy.us.\n\nEveryone authorized to regularly pick up your child — parents, nannies, grandparents — must have their own individual Procare code. Reach out to the teachers with any Procare questions."
   },
   "classrooms": [
     {
