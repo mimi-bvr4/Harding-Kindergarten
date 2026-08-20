@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#012169">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="/img/favicon.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<title>PreK Carline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#012169;--navy-2:#0A3A8B;--gold:#F59E0B;--cream:#FFFBEB;--ink:#1E293B;--mute:#94A3B8}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#F1F5F9;color:var(--ink);
+     min-height:100dvh;padding-bottom:env(safe-area-inset-bottom)}
+
+header{background:linear-gradient(160deg,var(--navy),#00133f);color:#fff;padding:14px 16px calc(14px + env(safe-area-inset-top));
+       padding-top:calc(14px + env(safe-area-inset-top));position:sticky;top:0;z-index:20}
+.hrow{display:flex;align-items:center;gap:12px}
+h1{font-family:'Fredoka',sans-serif;font-size:1.15rem;font-weight:600;flex:1}
+.count{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.75}
+.reset{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:11px;padding:9px 13px;
+       font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+.reset:active{transform:scale(.96)}
+
+.tabbar{display:flex;gap:6px;background:#fff;padding:8px;position:sticky;top:0;z-index:15;
+        border-bottom:1px solid #E2E8F0;overflow-x:auto}
+.tab{flex:1;min-width:96px;text-align:center;padding:11px 8px;border-radius:12px;border:0;background:#F1F5F9;
+     font-family:'Fredoka',sans-serif;font-size:14px;font-weight:500;color:#64748B;cursor:pointer;white-space:nowrap}
+.tab.on{background:var(--navy);color:#fff}
+
+main{padding:14px}
+.hint{font-size:13px;color:#64748B;line-height:1.5;margin-bottom:12px}
+
+.lanes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lane-head{font-family:'Fredoka',sans-serif;font-size:13px;font-weight:600;color:var(--navy);
+           text-align:center;padding:8px;background:#fff;border-radius:11px;margin-bottom:8px;
+           position:sticky;top:56px;z-index:10;box-shadow:0 1px 0 #E2E8F0}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.num{aspect-ratio:1;border:0;border-radius:13px;background:#fff;color:var(--ink);
+     font-family:'Fredoka',sans-serif;font-size:19px;font-weight:600;cursor:pointer;
+     box-shadow:0 1px 2px rgba(15,23,42,.07);display:flex;align-items:center;justify-content:center;
+     flex-direction:column;gap:1px;transition:transform .1s}
+.num small{font-size:9px;font-weight:700;color:var(--mute);font-family:'Inter',sans-serif;
+           max-width:92%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.num:active{transform:scale(.93)}
+.num.done{background:#E2E8F0;color:#A9B4C4;box-shadow:none;pointer-events:none}
+.num.done small{color:#C2CBD8}
+
+.order-item{display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:8px}
+.seq{flex:0 0 34px;height:34px;border-radius:11px;background:var(--navy);color:#fff;
+     font-family:'Fredoka',sans-serif;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.order-item.next .seq{background:var(--gold)}
+.who{flex:1;min-width:0}
+.who b{display:block;font-size:15px;font-weight:700}
+.who span{display:block;font-size:12px;color:var(--mute);margin-top:1px}
+.lanetag{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+         padding:4px 9px;border-radius:999px;background:#EEF2F7;color:#64748B}
+
+.empty{text-align:center;color:var(--mute);font-size:14px;padding:44px 20px;line-height:1.6}
+.lane-empty{text-align:center;color:var(--mute);font-size:12.5px;padding:22px 10px;background:#fff;border-radius:14px}
+/* two columns on a phone: tighten the cards so names still fit */
+.lanes .order-item{padding:10px;gap:10px}
+/* the box holds the car number — wide enough for two digits, still square-ish */
+.lanes .seq{flex:0 0 36px;height:36px;font-size:16px;border-radius:11px}
+.lanes .who b{font-size:14px;line-height:1.25}
+.who b.noname{color:var(--mute);font-weight:600;font-style:italic}
+.bar{position:sticky;bottom:0;display:flex;gap:8px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));
+     background:linear-gradient(to top,#F1F5F9 65%,rgba(241,245,249,0))}
+.btn{flex:1;padding:14px;border:0;border-radius:14px;font-family:inherit;font-size:14.5px;font-weight:700;cursor:pointer}
+.btn-undo{background:#fff;color:#475569;box-shadow:0 1px 3px rgba(15,23,42,.1)}
+.btn-go{background:var(--navy);color:#fff}
+.btn:active{transform:scale(.98)}
+
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden}
+td{padding:6px;border-bottom:1px solid #F1F5F9}
+td input{width:100%;border:1px solid #E2E8F0;border-radius:9px;padding:9px;font-family:inherit;font-size:14px}
+td:first-child{width:74px}
+.saved{font-size:13px;font-weight:700;color:#15803D;text-align:center;padding:10px}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="hrow">
+        <div style="flex:1">
+            <h1>PreK Carline</h1>
+            <div class="count" id="count">—</div>
+        </div>
+        <button class="reset" id="resetBtn">Day reset</button>
+    </div>
+</header>
+
+<div class="tabbar">
+    <button class="tab on" data-tab="pick">Pick cars</button>
+    <button class="tab" data-tab="order">Send order</button>
+    <button class="tab" data-tab="cars" id="carsTab" hidden>Numbers</button>
+</div>
+
+<main id="main"></main>
+
+<script>
+(function () {
+    var S = { cars: [], picks: [], canEdit: false, tab: 'pick' };
+    var main = document.getElementById('main');
+    var poll = null;
+
+    function esc(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g,
+            function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; });
+    }
+    function adminHeaders() {
+        var t = null;
+        try { t = localStorage.getItem('harding-admin-token'); } catch (e) {}
+        return t ? { 'x-admin-token': t } : {};
+    }
+    function api(path, opts) {
+        opts = opts || {};
+        opts.headers = Object.assign({ 'Content-Type': 'application/json' }, adminHeaders(), opts.headers || {});
+        return fetch(path, opts).then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+        });
+    }
+
+    /** Numbers the teacher taps. Falls back to 1-36 until the roster is filled in. */
+    function carList() {
+        if (S.cars.length) return S.cars;
+        var out = [];
+        for (var i = 1; i <= 36; i++) out.push({ number: String(i), child: '' });
+        return out;
+    }
+    function childFor(number) {
+        for (var i = 0; i < S.cars.length; i++) {
+            if (String(S.cars[i].number) === String(number)) return S.cars[i].child || '';
+        }
+        return '';
+    }
+    function isPicked(number) {
+        return S.picks.some(function (p) { return String(p.number) === String(number); });
+    }
+
+    function setCount() {
+        var total = carList().length;
+        document.getElementById('count').textContent =
+            S.picks.length + ' of ' + total + ' sent' + (S.picks.length ? '' : ' · not started');
+    }
+
+    // ---------- tab: pick ----------
+    function renderPick() {
+        var cars = carList();
+        function col(lane) {
+            return '<div><div class="lane-head">Lane ' + lane + '</div><div class="grid">' +
+                cars.map(function (c) {
+                    var done = isPicked(c.number);
+                    return '<button class="num' + (done ? ' done' : '') + '" data-n="' + esc(c.number) +
+                        '" data-lane="' + lane + '">' + esc(c.number) +
+                        (c.child ? '<small>' + esc(c.child.split(' ')[0]) + '</small>' : '') + '</button>';
+                }).join('') + '</div></div>';
+        }
+        main.innerHTML =
+            '<p class="hint">Tap each car number as you walk the line. A number you tap greys out in both lanes, ' +
+            'and stays grey through the next wave. Only <b>Day reset</b> clears it.</p>' +
+            '<div class="lanes">' + col('A') + col('B') + '</div>' +
+            '<div class="bar"><button class="btn btn-undo" id="undoBtn">Undo last</button>' +
+            '<button class="btn btn-go" id="toOrder">See send order</button></div>';
+
+        main.querySelectorAll('.num').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var n = b.dataset.n;
+                // Optimistic: the teacher is walking, the UI must not wait on the network.
+                S.picks.push({ number: n, lane: b.dataset.lane });
+                renderPick(); setCount();
+                api('/api/carline/pick', {
+                    method: 'POST',
+                    body: JSON.stringify({ number: n, lane: b.dataset.lane })
+                }).then(function (r) { S.picks = r.picks; renderPick(); setCount(); })
+                  .catch(function () { load(); });
+            });
+        });
+        document.getElementById('undoBtn').addEventListener('click', function () {
+            api('/api/carline/undo', { method: 'POST' })
+                .then(function (r) { S.picks = r.picks; renderPick(); setCount(); });
+        });
+        document.getElementById('toOrder').addEventListener('click', function () { go('order'); });
+    }
+
+    // ---------- tab: order ----------
+    //
+    // Two columns, not one list. The children physically walk out in two lines,
+    // one per lane, so a single merged list would make whoever is sending them
+    // out re-sort it in their head while cars are waiting.
+    function renderOrder() {
+        if (!S.picks.length) {
+            main.innerHTML = '<div class="empty">No cars yet.<br>Tap numbers on <b>Pick cars</b> and they appear here, in order.</div>';
+            return;
+        }
+
+        function column(lane) {
+            var inLane = S.picks.filter(function (p) { return p.lane === lane; });
+            // The box carries the CAR NUMBER, not a position — the queue order is
+            // the list order, so a separate counter is noise. The number is what
+            // the teacher matches against the windscreen in front of her.
+            var body = inLane.length
+                ? inLane.map(function (p, i) {
+                    var name = childFor(p.number);
+                    return '<div class="order-item' + (i === 0 ? ' next' : '') + '">' +
+                        '<span class="seq">' + esc(p.number) + '</span>' +
+                        '<span class="who"><b' + (name ? '' : ' class="noname"') + '>' +
+                        esc(name || 'No name on file') + '</b></span>' +
+                        '</div>';
+                }).join('')
+                : '<div class="lane-empty">No cars in this lane yet</div>';
+
+            return '<div><div class="lane-head">Lane ' + lane +
+                ' · ' + inLane.length + '</div>' + body + '</div>';
+        }
+
+        main.innerHTML =
+            '<p class="hint">Send each line out in this order. Updates live as cars are tapped.</p>' +
+            '<div class="lanes">' + column('A') + column('B') + '</div>';
+    }
+
+    // ---------- tab: cars (admin) ----------
+    function renderCars() {
+        var cars = S.cars.length ? S.cars : carList();
+        main.innerHTML =
+            '<p class="hint">Type the child beside each car number. Blank numbers still work — they just show ' +
+            '“Car 12” instead of a name. Saved to the dashboard, so it survives a redeploy.</p>' +
+            '<table><tbody>' + cars.map(function (c, i) {
+                return '<tr><td><input value="' + esc(c.number) + '" data-i="' + i + '" data-f="number" inputmode="numeric"></td>' +
+                    '<td><input value="' + esc(c.child || '') + '" data-i="' + i + '" data-f="child" placeholder="Child name"></td></tr>';
+            }).join('') + '</tbody></table>' +
+            '<div class="bar"><button class="btn btn-go" id="saveCars">Save numbers</button></div>' +
+            '<div id="savedMsg"></div>';
+
+        document.getElementById('saveCars').addEventListener('click', function () {
+            var rows = {};
+            main.querySelectorAll('input[data-i]').forEach(function (inp) {
+                var i = inp.dataset.i;
+                rows[i] = rows[i] || { number: '', child: '' };
+                rows[i][inp.dataset.f] = inp.value;
+            });
+            var cars = Object.keys(rows).map(function (k) { return rows[k]; })
+                .filter(function (r) { return String(r.number).trim(); });
+            api('/api/carline/cars', { method: 'PUT', body: JSON.stringify({ cars: cars }) })
+                .then(function (r) {
+                    S.cars = cars;
+                    document.getElementById('savedMsg').innerHTML =
+                        '<div class="saved">Saved ' + r.count + ' car numbers.</div>';
+                })
+                .catch(function () {
+                    document.getElementById('savedMsg').innerHTML =
+                        '<div class="saved" style="color:#B91C1C">Could not save — sign in with the admin password.</div>';
+                });
+        });
+    }
+
+    // ---------- shell ----------
+    function render() {
+        if (S.tab === 'pick') renderPick();
+        else if (S.tab === 'order') renderOrder();
+        else renderCars();
+        setCount();
+    }
+    function go(tab) {
+        S.tab = tab;
+        document.querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('on', t.dataset.tab === tab); });
+        render();
+        // The order screen is the one a second person watches, so keep it fresh.
+        if (poll) clearInterval(poll);
+        if (tab === 'order') poll = setInterval(function () { load(true); }, 2500);
+    }
+
+    function load(quiet) {
+        return api('/api/carline').then(function (r) {
+            S.cars = r.cars || [];
+            S.picks = r.picks || [];
+            S.canEdit = !!r.canEditRoster;
+            document.getElementById('carsTab').hidden = !S.canEdit;
+            if (!quiet || S.tab === 'order') render();
+            setCount();
+        }).catch(function () {
+            if (!quiet) main.innerHTML = '<div class="empty">Could not reach the carline. Check the connection and pull to refresh.</div>';
+        });
+    }
+
+    document.querySelectorAll('.tab').forEach(function (t) {
+        t.addEventListener('click', function () { go(t.dataset.tab); });
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', function () {
+        if (!S.picks.length) return;
+        if (!confirm('Clear every car for today and start over?\n\nThis cannot be undone.')) return;
+        api('/api/carline/reset', { method: 'POST' }).then(function () { S.picks = []; render(); });
+    });
+
+    // Keep the screen awake — she is outside holding a phone for 20 minutes.
+    if ('wakeLock' in navigator) {
+        navigator.wakeLock.request('screen').catch(function () {});
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'visible') navigator.wakeLock.request('screen').catch(function () {});
+        });
+    }
+
+    load();
+})();
+</script>
+</body>
+</html>

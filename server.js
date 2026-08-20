@@ -33,6 +33,12 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'GoHawks2026';
 const DATA_FILE = path.join(__dirname, 'public', 'data', 'dashboard-data.json');
 const DOCS_DIR = path.join(__dirname, 'public', 'docs');
 
+// Live carline state for the current afternoon. Deliberately NOT in
+// dashboard-data.json and never pushed to GitHub — it is thrown away every day.
+// On disk rather than in memory so a container restart mid-dismissal does not
+// lose a line of cars that is physically already moving.
+const CARLINE_FILE = path.join(__dirname, 'carline-state.json');
+
 // Railway terminates TLS in front of us — needed so Secure cookies are set.
 app.set('trust proxy', 1);
 
@@ -372,6 +378,104 @@ app.post('/api/data', (req, res) => {
     }
 });
 
+// ==================== CARLINE ====================
+//
+// PreK afternoon dismissal. Cars queue in two lanes, each with a household
+// number on the windscreen. A teacher walks between the lanes tapping numbers
+// in the order she passes them; the order tab shows the children to send out,
+// in that exact order, live on a second screen.
+//
+// Rules that come from how the carline physically works:
+//   • A number tapped in either lane greys out in BOTH — one household, one car.
+//   • Taps accumulate across waves. Cars pull through, she taps the next wave,
+//     and everything already sent stays greyed.
+//   • Only an explicit day reset clears it.
+
+function readCarline() {
+    try {
+        return JSON.parse(fs.readFileSync(CARLINE_FILE, 'utf8'));
+    } catch (_) {
+        return { picks: [], startedAt: null };
+    }
+}
+
+function writeCarline(state) {
+    fs.writeFileSync(CARLINE_FILE, JSON.stringify(state, null, 2));
+    return state;
+}
+
+/** Teachers and admins. Parents must not see the dismissal order. */
+function requireCarline(req, res, next) {
+    if (req.siteRole === 'carline' || req.siteRole === 'admin') return next();
+    if (validToken(req.headers['x-admin-token'])) return next();
+    res.status(403).json({ error: 'Carline access only.' });
+}
+
+app.get('/api/carline', requireCarline, (req, res) => {
+    const data = readData();
+    const state = readCarline();
+    res.json({
+        cars: (data.carline && data.carline.cars) || [],
+        picks: state.picks || [],
+        startedAt: state.startedAt || null,
+        canEditRoster: req.siteRole === 'admin' || validToken(req.headers['x-admin-token'])
+    });
+});
+
+app.post('/api/carline/pick', requireCarline, (req, res) => {
+    const number = String((req.body || {}).number || '').trim();
+    const lane = (req.body || {}).lane === 'B' ? 'B' : 'A';
+    if (!number) return res.status(400).json({ error: 'Car number required.' });
+
+    const state = readCarline();
+    state.picks = state.picks || [];
+
+    // Same household in both columns — ignore a second tap rather than
+    // double-calling a child.
+    if (state.picks.some(p => String(p.number) === number)) {
+        return res.json({ picks: state.picks, duplicate: true });
+    }
+
+    if (!state.startedAt) state.startedAt = new Date().toISOString();
+    state.picks.push({ number, lane, at: new Date().toISOString() });
+    writeCarline(state);
+    res.json({ picks: state.picks });
+});
+
+/** Mis-tap while walking a moving line. Removes the most recent pick only. */
+app.post('/api/carline/undo', requireCarline, (req, res) => {
+    const state = readCarline();
+    state.picks = state.picks || [];
+    state.picks.pop();
+    writeCarline(state);
+    res.json({ picks: state.picks });
+});
+
+app.post('/api/carline/reset', requireCarline, (req, res) => {
+    res.json(writeCarline({ picks: [], startedAt: null }));
+});
+
+/** Roster editor — admin only. Saved into the dashboard data so it syncs. */
+app.put('/api/carline/cars', requireAdmin, (req, res) => {
+    const incoming = Array.isArray((req.body || {}).cars) ? req.body.cars : null;
+    if (!incoming) return res.status(400).json({ error: 'cars array required.' });
+
+    const cars = incoming.slice(0, 200).map(c => ({
+        number: String(c.number || '').trim().slice(0, 8),
+        child: String(c.child || '').trim().slice(0, 80),
+        teacher: String(c.teacher || '').trim().slice(0, 80)
+    })).filter(c => c.number);
+
+    const data = readData();
+    data.carline = { ...(data.carline || {}), cars };
+    writeData(data, 'Update carline car numbers');
+    res.json({ success: true, count: cars.length });
+});
+
+app.get('/carline', requireCarline, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'carline.html'));
+});
+
 // ==================== PAGES ====================
 
 app.get('/admin', (req, res) => {
@@ -405,7 +509,7 @@ async function bootSync() {
             // structure from the code that was just deployed.
             const CONTENT_KEYS = [
                 'weeklyEmail', 'announcement', 'classrooms', 'documents',
-                'schoolLinks', 'keyDates', 'lastUpdated'
+                'schoolLinks', 'keyDates', 'carline', 'lastUpdated'
             ];
 
             const merged = { ...local };

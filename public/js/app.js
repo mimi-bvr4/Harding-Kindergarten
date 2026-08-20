@@ -4,7 +4,8 @@
  * One general PreK program page, tabbed rather than one long scroll.
  *
  * Routes:
- *   #/  #/orientation  #/week  #/info  #/activities  #/team
+ *   #/  #/orientation  #/classes  #/info  #/activities  #/team
+ *   (#/week merged into #/ — the route redirects for old links)
  */
 
 const CALENDAR_URL = 'https://hardingacademy.myschoolapp.com/podium/feed/iCal.aspx?z=96wT5QnMrJrphQP5BInbTmAAJCsRcQpy%2bmDKcAacSR8eeFymiEdCFAWuYOhCPhXy4XjpFPFcjomN3uHn%2bWimYA%3d%3d';
@@ -201,7 +202,7 @@ function renderHero(data) {
                 </div>
                 <div class="hero-daynum">${now.getDate()}</div>
             </div>
-            ${nx ? `<div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:14px">
+            ${nx && !(n !== null && n <= 14) ? `<div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:14px">
                 <span class="hero-chip"><i class="fas fa-calendar-day"></i>${esc(whenLabel(nx.date))} · ${esc(nx.label.split('—')[0].trim())}</span>
             </div>` : ''}
         </div>
@@ -526,6 +527,16 @@ function renderSoccer(data) {
                        font-size:13px;font-weight:700;color:#475569;background:#F1F5F9;text-decoration:none">
                 <i class="fas ${esc(l.icon || 'fa-link')}" style="color:#94A3B8"></i>${esc(l.label)}</a>`).join('')}
         </div>` : ''}
+        ${renderNextGame(s)}
+        ${s.jerseys ? `<div class="row">
+            <span class="ic"><i class="fas fa-shirt"></i></span>
+            <div><div class="row-label">Jerseys</div><div class="row-value">${esc(s.jerseys)}</div></div>
+        </div>` : ''}
+        ${renderGameSchedule(s)}
+        ${renderRosters(s)}
+        ${s.fieldNote ? `<div class="note-box" style="margin-top:14px">
+            <div class="n"><i class="fas fa-map-location-dot"></i><span>${esc(s.fieldNote)}</span></div>
+        </div>` : ''}
         ${(s.notes || []).length ? `<div class="note-box">
             ${s.notes.map(n => `<div class="n"><i class="fas fa-circle-info"></i><span>${esc(n)}</span></div>`).join('')}
         </div>` : ''}
@@ -536,6 +547,140 @@ function renderSoccer(data) {
             ${s.coachPhone ? ` · <a href="tel:${esc(s.coachPhone.replace(/[^\d+]/g, ''))}"
                 style="font-weight:700;color:var(--green);text-decoration:none">${esc(s.coachPhone)}</a>` : ''}
         </p>` : ''}
+    </section>`;
+}
+
+// ---- soccer: schedule, next game, rosters ----
+
+const JERSEY_STYLE = {
+    red:  'background:#FEE2E2;color:#B91C1C;border:1px solid #FCA5A5',
+    blue: 'background:#DBEAFE;color:#1D4ED8;border:1px solid #93C5FD'
+};
+
+function jerseyChip(colour) {
+    const c = String(colour || '').toLowerCase();
+    if (!JERSEY_STYLE[c]) return '';
+    return `<span style="${JERSEY_STYLE[c]};font-size:10.5px;font-weight:800;letter-spacing:.05em;
+             text-transform:uppercase;padding:3px 8px;border-radius:999px;white-space:nowrap">
+             wear ${esc(c)}</span>`;
+}
+
+/** The next game for the child's own team — the one thing you actually need on a Friday night. */
+function renderNextGame(s) {
+    const mine = (s.schedule || []).find(x => x.team === s.myTeam);
+    if (!mine) return '';
+
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const next = (mine.games || [])
+        .map(g => ({ ...g, dt: parseISO(g.date) }))
+        .filter(g => g.dt && g.dt >= today)
+        .sort((a, b) => a.dt - b.dt)[0];
+    if (!next) return '';
+
+    return `
+    <div style="background:linear-gradient(135deg,var(--green),var(--green-2));color:#fff;
+                border-radius:16px;padding:14px 16px;margin:14px 0">
+        <div style="font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;opacity:.85">
+            Next game · ${esc(s.myTeam)}</div>
+        <div style="font-size:16px;font-weight:800;margin-top:4px;font-family:'Fredoka',sans-serif">
+            ${next.dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</div>
+        <div style="font-size:13.5px;margin-top:3px;opacity:.95">
+            ${esc(next.time)} · ${esc(next.field)} · vs ${esc(next.opponent)}</div>
+        <div style="margin-top:9px">${jerseyChip(next.jersey)}</div>
+    </div>`;
+}
+
+function renderGameSchedule(s) {
+    const sched = s.schedule || [];
+    if (!sched.length) return '';
+
+    // The child's own team first — nobody scrolls past their own kid's games.
+    const ordered = [...sched].sort((a, b) => (b.team === s.myTeam) - (a.team === s.myTeam));
+
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+
+    return ordered.map(block => `
+    <div style="margin-top:16px">
+        <div style="font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:#1E293B;
+                    margin-bottom:8px;display:flex;align-items:center;gap:8px">
+            ${esc(block.team)}
+            ${block.team === s.myTeam ? `<span style="font-size:9.5px;font-weight:800;letter-spacing:.08em;
+                text-transform:uppercase;background:var(--gold);color:#fff;padding:3px 8px;
+                border-radius:999px">Edie</span>` : ''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+        ${(block.games || []).map(g => {
+            const dt = parseISO(g.date);
+            const past = dt && dt < today;
+            return `
+            <div style="display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:13px;
+                        background:${past ? '#F8FAFC' : '#fff'};border:1px solid #EEF2F7;${past ? 'opacity:.5' : ''}">
+                <div style="flex:0 0 40px;text-align:center">
+                    <div style="font-size:9.5px;font-weight:800;color:#94A3B8;letter-spacing:.06em">
+                        ${dt ? MONTHS[dt.getMonth()].toUpperCase() : '·'}</div>
+                    <div style="font-family:'Fredoka',sans-serif;font-size:17px;font-weight:600;color:#1E293B;line-height:1">
+                        ${dt ? dt.getDate() : '–'}</div>
+                </div>
+                <div style="flex:1;min-width:0">
+                    <div style="font-size:13.5px;font-weight:700;color:#1E293B">${esc(g.time)}</div>
+                    <div style="font-size:12px;color:#94A3B8;margin-top:1px">
+                        ${esc(g.field)} · vs ${esc(g.opponent)}${g.note ? ` · ${esc(g.note)}` : ''}</div>
+                </div>
+                ${jerseyChip(g.jersey)}
+            </div>`;
+        }).join('')}
+        </div>
+    </div>`).join('');
+}
+
+function renderRosters(s) {
+    const teams = s.teams || [];
+    if (!teams.length) return '';
+    const ordered = [...teams].sort((a, b) => (b.isMine === true) - (a.isMine === true));
+
+    return `
+    <div style="margin-top:18px;padding-top:16px;border-top:1px solid #F1F5F9">
+        <div style="font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:#1E293B;margin-bottom:10px">
+            Teams</div>
+        ${ordered.map(t => `
+        <div style="margin-bottom:12px">
+            <div style="font-size:12px;font-weight:800;color:#64748B;text-transform:uppercase;
+                        letter-spacing:.06em;margin-bottom:7px">${esc(t.name)}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+                ${(t.players || []).map(n => `<span class="name-chip">${esc(n)}</span>`).join('')}
+            </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+/* Ballet. Three things a PreK parent needs — when, where to collect, what to
+   send. Everything else (tuition, studio calendar, parking) is one tap away in
+   the studio's own letter rather than pasted onto the page. */
+function renderBallet(data) {
+    const b = data.ballet || {};
+    if (!b.show) return '';
+
+    const rows = [
+        ['fa-calendar-day', 'When', b.when],
+        ['fa-door-open', 'Pick-up', b.pickup],
+        ['fa-shirt', 'What to send', [b.wear, b.wearNote].filter(Boolean).join(' ')]
+    ].filter(r => r[2]);
+
+    return `
+    <section class="section-card">
+        <div class="section-header">
+            <span class="icon-pill" style="background:#FCE7F3;color:#BE185D"><i class="fas fa-music"></i></span>
+            <span>${esc(b.headline || 'Ballet')}</span>
+        </div>
+        ${b.blurb ? `<p style="font-size:14px;line-height:1.6;color:#475569;margin:0 0 14px">${esc(b.blurb)}</p>` : ''}
+        ${rows.map(r => `
+        <div class="row">
+            <span class="ic"><i class="fas ${r[0]}"></i></span>
+            <div><div class="row-label">${r[1]}</div><div class="row-value">${esc(r[2])}</div></div>
+        </div>`).join('')}
+        ${b.letterUrl ? `<a href="${esc(b.letterUrl)}" target="_blank" rel="noopener"
+            class="cta cta-block" style="margin-top:15px;background:#BE185D;color:#fff">
+            <i class="fas fa-file-lines"></i>${esc(b.letterLabel || 'Read the full dance letter')}</a>` : ''}
     </section>`;
 }
 
@@ -687,7 +832,6 @@ function tabsFor(data) {
         { hash: '#/',           label: 'Today',   icon: 'fa-house' },
         orientationLive
             ? { hash: '#/orientation', label: 'Orientation', icon: 'fa-door-open', dot: true } : null,
-        { hash: '#/week',       label: 'This Week', icon: 'fa-calendar-week' },
         (data.orientation?.rooms || []).length
             ? { hash: '#/classes', label: 'Classes', icon: 'fa-users' } : null,
         { hash: '#/info',       label: 'Info',    icon: 'fa-circle-info' },
@@ -725,9 +869,10 @@ function renderHome(data) {
     const orientationLive = tabsFor(data).some(t => t.hash === '#/orientation');
     return page(data, '#/', `
         ${renderHero(data)}
-        ${data.welcome ? `<div class="note-box" style="margin:0">
+        ${data.welcome && orientationLive ? `<div class="note-box" style="margin:0">
             <div class="n"><i class="fas fa-star"></i><span style="font-weight:600">${esc(data.welcome)}</span></div>
         </div>` : ''}
+        ${renderWeeklyEmail(data)}
         ${renderDismissal(data, 'card')}
         ${orientationLive ? `
         <a href="#/orientation" data-route="#/orientation" class="feature-tile touch-row"
@@ -751,15 +896,13 @@ function renderOrientationPage(data) {
         '<span>Orientation has passed. See Today for what\'s next.</span></div>');
 }
 
+/* "This Week" was merged into Today — two of its three blocks were already
+   duplicated there, so the tabs read as the same page. The route is kept alive
+   so an old bookmark or a link someone shared lands on Today instead of
+   nothing. */
 function renderWeekPage(data) {
-    setTopbar('This Week', 'Harding PreK');
-    return page(data, '#/week', `
-        ${renderWeeklyEmail(data) || `<div class="archived-note">
-            <i class="fas fa-envelope-open-text" style="margin-top:2px"></i>
-            <span>This week's PreK note hasn't been posted yet.</span></div>`}
-        ${renderDismissal(data, 'card')}
-        ${renderKeyDates(data)}
-    `);
+    location.replace('#/');
+    return renderHome(data);
 }
 
 function renderInfoPage(data) {
@@ -778,13 +921,14 @@ function renderTeamPage(data) {
 }
 
 function hasActivities(data) {
-    return !!(data.soccer?.show || data.popsicles?.show);
+    return !!(data.soccer?.show || data.ballet?.show || data.popsicles?.show);
 }
 
 function renderActivitiesTile(data) {
     if (!hasActivities(data)) return '';
     const bits = [];
     if (data.soccer?.show) bits.push('Soccer');
+    if (data.ballet?.show) bits.push('Ballet');
     if (data.popsicles?.show) bits.push('Get-togethers');
     return `
     <a href="#/activities" data-route="#/activities" class="feature-tile touch-row"
@@ -803,6 +947,7 @@ function renderActivitiesPage(data) {
     setTopbar('Sports & Activities', 'Harding PreK');
     return page(data, '#/activities', `
         ${renderSoccer(data)}
+        ${renderBallet(data)}
         ${renderPopsicles(data)}
         ${!hasActivities(data) ? `<div class="archived-note">
             <i class="fas fa-futbol" style="margin-top:2px"></i>

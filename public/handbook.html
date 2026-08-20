@@ -344,12 +344,74 @@ function highlight(text, terms){
 
 /* Make phone numbers and emails tappable — the point of this page is a parent
    standing in the carpool line, not reading a PDF at a desk. */
+/* Links the handbook PDF carried that did not survive the text extraction.
+   The PDF said "Online tutorial" as clickable text; the extraction kept the
+   words and dropped the destination. Each entry needs a URL we have actually
+   been given — an entry with no url stays plain text rather than guessing.
+
+   `within` scopes a phrase to its section: "Online tutorial" appears in the
+   emergency-contact section AND in the lice section, and they are not the
+   same page. */
+const HANDBOOK_LINKS = [
+  { phrase: /Online tutorial/gi,
+    within: /emergency contact/i,
+    url: 'https://sites.google.com/hardingacademy.us/hardinghelp/home/compassnet/adding-emergency-contacts' },
+
+  // Awaiting URLs — these render as plain text until one is filled in:
+  { phrase: /Click here for instructions on how to update emergency contact information/gi,
+    within: /CompassNet/i, url: '' },
+  { phrase: /this link/gi, within: /DOE Rules/i,
+    url: 'https://www.tn.gov/content/dam/tn/stateboardofeducation/documents/pendingrules/0520-12-01%20Standards%20for%20School%20Administered%20Child%20Care%20Programs%2010-19-18.pdf' },
+  // The two uniform mentions sit in ONE sentence and go to DIFFERENT places, so
+  // they are matched by their surrounding words rather than by section. The
+  // capture group is what becomes clickable — the lead-in words stay plain.
+  { phrase: /website at (this LINK)/g, url: 'https://www.landsend.com/co/account/school-uniforms?selectedSchoolNum=900132846&cTest=y' },
+  { phrase: /purchasing the uniform please see (this link)/g, url: 'https://hardingacademy.myschoolapp.com/app/parent?svcid=edu#newsdetail/1369382/0/0/0' }
+];
+
+/* Run a replacement only on plain text: never inside a tag, and never inside
+   an anchor we have already written. Without the anchor guard the passes stack
+   on each other — a URL wrapped by the first pass gets wrapped again by the
+   next, producing nested <a> tags that render as broken links. */
+function outsideTags(html, fn){
+  let inAnchor = false;
+  return html.split(/(<[^>]*>)/).map(part => {
+    if (part.charAt(0) === '<'){
+      if (/^<a\b/i.test(part))  inAnchor = true;
+      if (/^<\/a>/i.test(part)) inAnchor = false;
+      return part;
+    }
+    return inAnchor ? part : fn(part);
+  }).join('');
+}
+
+/* Make phone numbers, emails, bare URLs and known handbook links tappable —
+   the point of this page is a parent standing in the carpool line. */
 function linkify(html){
-  return html
+  // Bare URLs the extraction left as text (lice videos, the DCS page).
+  html = outsideTags(html, t => t.replace(
+    /\bhttps?:\/\/[^\s<>()"']+[^\s<>()"'.,;:]/g,
+    u => '<a href="' + u + '" target="_blank" rel="noopener">' + u + '</a>'));
+
+  for (const L of HANDBOOK_LINKS){
+    if (!L.url) continue;
+    if (L.within && !L.within.test(html)) continue;
+    html = outsideTags(html, t => t.replace(L.phrase, function(m, g1){
+      // With no capture group, String.replace passes the OFFSET here — a number,
+      // not undefined. Testing truthiness silently corrupted every pattern that
+      // had no group, so test the type.
+      const cap   = (typeof g1 === 'string') ? g1 : null;
+      const words = cap || m;                     // link only the capture, if given
+      const a = '<a href="' + L.url + '" target="_blank" rel="noopener">' + words + '</a>';
+      return cap ? m.replace(cap, a) : a;
+    }));
+  }
+
+  return outsideTags(html, t => t
     .replace(/(\(\d{3}\)\s?\d{3}-\d{4}|\b\d{3}-\d{3}-\d{4}\b)/g,
              m => '<a href="tel:' + m.replace(/[^\d]/g,'') + '">' + m + '</a>')
     .replace(/\b([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})\b/g,
-             '<a href="mailto:$1">$1</a>');
+             '<a href="mailto:$1">$1</a>'));
 }
 
 function snippet(s, terms){

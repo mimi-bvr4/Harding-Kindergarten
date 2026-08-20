@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-14T12:00:00.000Z",
+  "lastUpdated": "2026-08-19T17:51:26.908Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -322,21 +322,21 @@
   },
   "soccer": {
     "show": true,
-    "headline": "PreK Soccer — Coach Ryan's Team",
-    "blurb": "Coach Ryan Pack (Evvie's dad) is coaching the PreK 5U co-ed team this fall through First Presbyterian's Upward league — a low-pressure intro to soccer and a fun way for the kids (and parents) to connect outside the classroom.",
-    "highlight": "",
+    "headline": "PreK Soccer — Upward at First Presbyterian",
+    "blurb": "All 16 kids practice together on Thursdays, then split into two teams for games. Edie is on Team Fran/Duncan. A low-pressure intro to soccer and a good way for the kids (and parents) to connect outside the classroom.",
+    "highlight": "First practice Thursday 08.20.2026 · 5:15 PM · Parmer Park",
     "season": "Fall 2026",
     "deadline": "",
     "grades": "PreK 5U, co-ed",
-    "practices": "About one weekday a week, likely at Parmer Park",
-    "games": "See the First Presbyterian game-day schedule",
+    "practices": "Thursdays 5:15 PM at Parmer Park (~45 min) — first practice 08.20.2026",
+    "games": "Saturdays at Oak Hill / First Presbyterian — Lower Fields 5, 6, 7",
     "signupUrl": "",
     "signupLabel": "",
     "signupTip": "",
     "links": [
       {
-        "label": "Game-day schedule",
-        "url": "https://fpcnashville.org/ministry/soccer",
+        "label": "myUpward portal",
+        "url": "https://my.upward.org",
         "icon": "fa-calendar-days"
       },
       {
@@ -346,10 +346,156 @@
       }
     ],
     "notes": [
-      "Want to help coach? Extra hands are welcome — just reach out to Ryan."
+      "Game times can shift — a rained-out weekend moves later weeks. The myUpward portal is always the most accurate schedule.",
+      "Parmer can get busy at 5:15; the coaches may move practice nearby if it feels crowded.",
+      "Snack sign-up and a team text thread are coming from the coaches."
     ],
-    "coachName": "Coach Ryan Pack (Evvie's dad)",
-    "coachPhone": "(865) 719-6669"
+    "coachName": "Coaches Ryan, Fran & Duncan",
+    "myTeam": "Team Fran/Duncan",
+    "jerseys": "Reversible jerseys — blue on one side, red on the other. Handed out at the first practice. Each game below says which colour to wear.",
+    "fieldNote": "Games are on the Lower Fields (5, 6, 7) at the Oak Hill Athletic Facility, off Churchwood Dr. Blue-numbered fields are the 4U/5U pitches. Parking and a Welcome Tent are on the Franklin Pike side.",
+    "teams": [
+      {
+        "name": "Team Fran/Duncan",
+        "isMine": true,
+        "players": [
+          "Etta Allen",
+          "Margo Chatfield",
+          "Nora Fecht",
+          "Edie Beaver",
+          "Phineas Troy",
+          "James Pilkerton",
+          "Field McPherson",
+          "Archie Akbari"
+        ]
+      },
+      {
+        "name": "Team Ryan",
+        "isMine": false,
+        "players": [
+          "Evvie Pack",
+          "Charlie Branstetter",
+          "Archie Adam",
+          "Oliver Davis",
+          "London Thompson",
+          "Penny Johnson",
+          "Phoebe Woods",
+          "Jace Aujla"
+        ]
+      }
+    ],
+    "schedule": [
+      {
+        "team": "Team Fran/Duncan",
+        "games": [
+          {
+            "date": "2026-08-22",
+            "time": "11:45 AM–12:30 PM",
+            "field": "Field 7",
+            "opponent": "Michael Reese",
+            "jersey": "red"
+          },
+          {
+            "date": "2026-08-29",
+            "time": "8:00–8:45 AM",
+            "field": "Field 6",
+            "opponent": "Lodge/LeMense",
+            "jersey": "blue",
+            "note": "Picture Day"
+          },
+          {
+            "date": "2026-09-12",
+            "time": "8:00–8:45 AM",
+            "field": "Field 6",
+            "opponent": "Jeff Turpin",
+            "jersey": "red"
+          },
+          {
+            "date": "2026-09-26",
+            "time": "8:00–8:45 AM",
+            "field": "Field 5",
+            "opponent": "Gerhart/Turitto",
+            "jersey": "red"
+          },
+          {
+            "date": "2026-10-03",
+            "time": "10:15–11:00 AM",
+            "field": "Field 6",
+            "opponent": "Ferguson/Geismar/Barry",
+            "jersey": "blue"
+          },
+          {
+            "date": "2026-10-10",
+            "time": "11:45 AM–12:30 PM",
+            "field": "Field 7",
+            "opponent": "Coleman/West",
+            "jersey": "blue"
+          },
+          {
+            "date": "2026-10-24",
+            "time": "12:30–1:15 PM",
+            "field": "Field 7",
+            "opponent": "Abhi Pardeshi",
+            "jersey": "red"
+          }
+        ]
+      },
+      {
+        "team": "Team Ryan",
+        "games": [
+          {
+            "date": "2026-08-22",
+            "time": "9:30–10:15 AM",
+            "field": "Field 7",
+            "opponent": "Case/VanArsdale",
+            "jersey": "blue"
+          },
+          {
+            "date": "2026-08-29",
+            "time": "11:00–11:45 AM",
+            "field": "Field 7",
+            "opponent": "Ryan Succon",
+            "jersey": "blue",
+            "note": "Picture Day"
+          },
+          {
+            "date": "2026-09-12",
+            "time": "10:15–11:00 AM",
+            "field": "Field 7",
+            "opponent": "Nirula/Haggard",
+            "jersey": "red"
+          },
+          {
+            "date": "2026-09-26",
+            "time": "12:30–1:15 PM",
+            "field": "Field 5",
+            "opponent": "Michael Reese",
+            "jersey": "blue"
+          },
+          {
+            "date": "2026-10-03",
+            "time": "10:15–11:00 AM",
+            "field": "Field 7",
+            "opponent": "Lodge/LeMense",
+            "jersey": "red"
+          },
+          {
+            "date": "2026-10-10",
+            "time": "11:45 AM–12:30 PM",
+            "field": "Field 6",
+            "opponent": "Jeff Turpin",
+            "jersey": "red"
+          },
+          {
+            "date": "2026-10-24",
+            "time": "8:45–9:30 AM",
+            "field": "Field 5",
+            "opponent": "Gerhart/Turitto",
+            "jersey": "red"
+          }
+        ]
+      }
+    ]
   },
   "popsicles": {
     "show": false,
@@ -395,5 +541,16 @@
         "primary"
       ]
     }
-  ]
+  ],
+  "ballet": {
+    "show": true,
+    "headline": "PreK Ballet / Jazz",
+    "blurb": "The dance teachers collect PreK dancers from their classroom at dismissal — nothing for you to do at carline.",
+    "when": "Wednesdays · 3:15 – 4:15 PM",
+    "pickup": "4:15 PM at the dance door",
+    "wear": "Send dance clothes in their bag. Teachers help them change at the studio.",
+    "wearNote": "Plus a small peanut-free snack.",
+    "letterUrl": "/docs/dance-parent-letter-2026-27.pdf",
+    "letterLabel": "Read the full dance letter"
+  }
 }

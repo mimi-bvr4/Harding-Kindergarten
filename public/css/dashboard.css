@@ -53,8 +53,13 @@ body {
 
 /* ---------- slide-out nav ---------- */
 
-#navDrawer.open { transform: translateX(0); }
-#navScrim.show  { opacity: 1; }
+/* The drawer and scrim carry their closed state as INLINE styles in index.html
+   (transform:translateX(-100%) and opacity:0) so they never flash open before
+   the CSS loads. Inline styles outrank a stylesheet rule, so without
+   !important these two never win and the menu button appears to do nothing —
+   the .open class lands, and the drawer stays parked off-screen. */
+#navDrawer.open { transform: translateX(0) !important; }
+#navScrim.show  { opacity: 1 !important; }
 
 .drawer-hawk-bg {
     position: absolute; right: -18px; top: -10px;
