@@ -565,14 +565,11 @@ function jerseyChip(colour) {
              wear ${esc(c)}</span>`;
 }
 
-/** The next game for the child's own team — the one thing you actually need on a Friday night. */
+/** The next game on the calendar, whichever team is playing it. */
 function renderNextGame(s) {
-    const mine = (s.schedule || []).find(x => x.team === s.myTeam);
-    if (!mine) return '';
-
     const today = new Date(); today.setHours(0, 0, 0, 0);
-    const next = (mine.games || [])
-        .map(g => ({ ...g, dt: parseISO(g.date) }))
+    const next = (s.schedule || [])
+        .flatMap(b => (b.games || []).map(g => ({ ...g, team: b.team, dt: parseISO(g.date) })))
         .filter(g => g.dt && g.dt >= today)
         .sort((a, b) => a.dt - b.dt)[0];
     if (!next) return '';
@@ -581,7 +578,7 @@ function renderNextGame(s) {
     <div style="background:linear-gradient(135deg,var(--green),var(--green-2));color:#fff;
                 border-radius:16px;padding:14px 16px;margin:14px 0">
         <div style="font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;opacity:.85">
-            Next game · ${esc(s.myTeam)}</div>
+            Next game · ${esc(next.team)}</div>
         <div style="font-size:16px;font-weight:800;margin-top:4px;font-family:'Fredoka',sans-serif">
             ${next.dt.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</div>
         <div style="font-size:13.5px;margin-top:3px;opacity:.95">
@@ -594,8 +591,8 @@ function renderGameSchedule(s) {
     const sched = s.schedule || [];
     if (!sched.length) return '';
 
-    // The child's own team first — nobody scrolls past their own kid's games.
-    const ordered = [...sched].sort((a, b) => (b.team === s.myTeam) - (a.team === s.myTeam));
+    // No team is privileged — this page is for every PreK family.
+    const ordered = sched;
 
     const today = new Date(); today.setHours(0, 0, 0, 0);
 
@@ -604,9 +601,6 @@ function renderGameSchedule(s) {
         <div style="font-family:'Fredoka',sans-serif;font-size:14px;font-weight:600;color:#1E293B;
                     margin-bottom:8px;display:flex;align-items:center;gap:8px">
             ${esc(block.team)}
-            ${block.team === s.myTeam ? `<span style="font-size:9.5px;font-weight:800;letter-spacing:.08em;
-                text-transform:uppercase;background:var(--gold);color:#fff;padding:3px 8px;
-                border-radius:999px">Edie</span>` : ''}
         </div>
         <div style="display:flex;flex-direction:column;gap:7px">
         ${(block.games || []).map(g => {
