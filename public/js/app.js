@@ -835,9 +835,9 @@ function tabsFor(data) {
         (data.orientation?.rooms || []).length
             ? { hash: '#/classes', label: 'Classes', icon: 'fa-users' } : null,
         { hash: '#/info',       label: 'Info',    icon: 'fa-circle-info' },
+        { hash: '#/team',       label: 'Teachers', icon: 'fa-people-group' },
         hasActivities(data)
-            ? { hash: '#/activities', label: 'Sports', icon: 'fa-futbol' } : null,
-        { hash: '#/team',       label: 'Team',    icon: 'fa-people-group' }
+            ? { hash: '#/activities', label: 'Sports', icon: 'fa-futbol' } : null
     ].filter(Boolean);
 }
 
@@ -916,7 +916,7 @@ function renderInfoPage(data) {
 }
 
 function renderTeamPage(data) {
-    setTopbar('Team', 'Harding PreK');
+    setTopbar('Teachers', 'Harding PreK');
     return page(data, '#/team', renderTeam(data));
 }
 
