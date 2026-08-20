@@ -135,6 +135,15 @@
         var lab = document.querySelector('label[for="pw"]');
         if (lab) lab.textContent = 'Carline code';
         pw.placeholder = 'Type the carline code';
+
+        // A parent who tapped this by mistake must not be stranded on a form
+        // they have no code for.
+        var out = document.createElement('p');
+        out.className = 'help';
+        out.innerHTML = '<a href="/" style="color:#012169;font-weight:700;' +
+                        'text-decoration:none">&larr; Back to the dashboard</a>';
+        var helpEl = document.querySelector('.help');
+        if (helpEl && helpEl.parentNode) helpEl.parentNode.insertBefore(out, helpEl);
     }
 
     pw.focus();

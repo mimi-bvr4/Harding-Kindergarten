@@ -116,8 +116,21 @@ siteAuth.setAdminTokenValidator(validToken);
 // ==================== SITE-WIDE SIGN IN ====================
 
 app.get(['/login', '/login.html'], (req, res) => {
-    // Already signed in? Don't make them type it again.
-    if (siteAuth.roleFromRequest(req)) return res.redirect(302, '/');
+    const role = siteAuth.roleFromRequest(req);
+
+    // Only ever honour a destination on this site.
+    const raw  = typeof req.query.next === 'string' ? req.query.next : '';
+    const next = (raw.charAt(0) === '/' && raw.charAt(1) !== '/') ? raw : '';
+
+    if (role) {
+        // A signed-in PARENT sent here by /carline must still be allowed to type
+        // the carline code. Bouncing them to '/' because they hold *a* session
+        // makes the "Run Carline" menu item look like it does nothing.
+        const wantsCarline = next.indexOf('/carline') === 0;
+        const hasCarline   = role === 'carline' || role === 'admin';
+        if (!wantsCarline || hasCarline) return res.redirect(302, next || '/');
+        // else: fall through and show the form, so they can upgrade their session.
+    }
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
