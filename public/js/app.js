@@ -10,7 +10,7 @@
 
 const CALENDAR_URL = 'https://hardingacademy.myschoolapp.com/podium/feed/iCal.aspx?z=96wT5QnMrJrphQP5BInbTmAAJCsRcQpy%2bmDKcAacSR8eeFymiEdCFAWuYOhCPhXy4XjpFPFcjomN3uHn%2bWimYA%3d%3d';
 
-const APP = { data: null, room: 0, slotQuery: '', classRoom: 0, classQuery: '' };
+const APP = { data: null, room: 0, slotQuery: '', classRoom: 0, classQuery: '', activity: 0 };
 
 // ==================== DATA ====================
 
@@ -943,18 +943,41 @@ function renderActivitiesTile(data) {
     </a>`;
 }
 
+/* One activity at a time. Soccer alone runs to a 14-game schedule plus two
+   rosters, so stacking every activity on one page buried whatever you came
+   for. Only activities that are actually running get a tab. */
+function activityTabs(data) {
+    return [
+        data.soccer?.show    ? { key: 'soccer',    label: 'Soccer',  icon: 'fa-futbol',    render: renderSoccer }    : null,
+        data.ballet?.show    ? { key: 'ballet',    label: 'Ballet',  icon: 'fa-music',     render: renderBallet }    : null,
+        data.popsicles?.show ? { key: 'popsicles', label: 'Get-Togethers', icon: 'fa-ice-cream', render: renderPopsicles } : null
+    ].filter(Boolean);
+}
+
 function renderActivitiesPage(data) {
     setTopbar('Sports & Activities', 'Harding PreK');
-    return page(data, '#/activities', `
-        ${renderSoccer(data)}
-        ${renderBallet(data)}
-        ${renderPopsicles(data)}
-        ${!hasActivities(data) ? `<div class="archived-note">
+    const tabs = activityTabs(data);
+
+    if (!tabs.length) {
+        return page(data, '#/activities', `<div class="archived-note">
             <i class="fas fa-futbol" style="margin-top:2px"></i>
             <span>Nothing running right now. Check back — this is where soccer,
             play dates, and anything else outside the classroom will live.</span>
-        </div>` : ''}
-    `);
+        </div>`);
+    }
+
+    const i = Math.min(APP.activity, tabs.length - 1);
+
+    // A single activity needs no chooser.
+    const chooser = tabs.length > 1 ? `
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+            ${tabs.map((t, n) => `
+            <button class="room-tab ${n === i ? 'active' : ''}" data-activity="${n}">
+                <i class="fas ${t.icon}" style="font-size:12px;margin-right:6px"></i>${esc(t.label)}
+            </button>`).join('')}
+        </div>` : '';
+
+    return page(data, '#/activities', chooser + tabs[i].render(data));
 }
 
 
@@ -1096,6 +1119,14 @@ function setupRootHandlers() {
             const y = window.scrollY;
             renderApp({ keepScroll: true });
             window.scrollTo({ top: y, behavior: 'instant' });
+            return;
+        }
+
+        const act = e.target.closest('[data-activity]');
+        if (act) {
+            APP.activity = Number(act.getAttribute('data-activity')) || 0;
+            renderApp({ keepScroll: true });
+            window.scrollTo({ top: 0, behavior: 'instant' });
             return;
         }
 
