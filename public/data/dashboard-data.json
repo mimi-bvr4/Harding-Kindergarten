@@ -39,39 +39,39 @@
           {
             "time": "8:00 – 8:20 AM",
             "students": [
-              "Charlie Braddy",
-              "Lia Boyd",
-              "Lolly Starnes",
-              "Pierce Pettit",
-              "Charlotte McNabb"
+              "Charlie Brad.",
+              "Lia B.",
+              "Lolly S.",
+              "Pierce P.",
+              "Charlotte M."
             ]
           },
           {
             "time": "8:30 – 8:50 AM",
             "students": [
-              "Charlie Branstetter",
-              "Etta Allen",
-              "Oliver Davis",
-              "Quinley Yastrzemski"
+              "Charlie Bran.",
+              "Etta A.",
+              "Oliver D.",
+              "Quinley Y."
             ]
           },
           {
             "time": "10:00 – 10:20 AM",
             "students": [
-              "Archie Adams",
-              "Brooks Li",
-              "Scarlett Matz",
-              "Coe Kelley"
+              "Archie Ad.",
+              "Brooks L.",
+              "Scarlett M.",
+              "Coe K."
             ]
           },
           {
             "time": "10:30 – 10:50 AM",
             "students": [
-              "Evvie Pack",
-              "Field McPherson",
-              "London Thompson",
-              "Penny Johnson",
-              "Phinney Troy"
+              "Evvie P.",
+              "Field M.",
+              "London T.",
+              "Penny J.",
+              "Phinney T."
             ]
           }
         ],
@@ -87,39 +87,39 @@
           {
             "time": "8:00 – 8:20 AM",
             "students": [
-              "Archie Akbari",
-              "Elijah Glotta",
-              "Scottie Snyder",
-              "Virginia McNabb",
-              "Phoebe Woods"
+              "Archie Ak.",
+              "Elijah G.",
+              "Scottie S.",
+              "Virginia M.",
+              "Phoebe W."
             ]
           },
           {
             "time": "8:30 – 8:50 AM",
             "students": [
-              "Vivienne Riggs",
-              "Nora Fecht",
-              "James Pilkerton",
-              "Cecily Poppler"
+              "Vivienne R.",
+              "Nora F.",
+              "James P.",
+              "Cecily P."
             ]
           },
           {
             "time": "10:00 – 10:20 AM",
             "students": [
-              "Edie Beaver",
-              "London Li",
-              "Genevieve Santapuram",
-              "Jace Aujla"
+              "Edie B.",
+              "London L.",
+              "Genevieve S.",
+              "Jace A."
             ]
           },
           {
             "time": "10:30 – 10:50 AM",
             "students": [
-              "Kai McAfee",
-              "Jack Barge",
-              "Kennedy Carty",
-              "Margo Chatfield",
-              "Sammie Frank"
+              "Kai M.",
+              "Jack B.",
+              "Kennedy C.",
+              "Margo C.",
+              "Sammie F."
             ]
           }
         ],
@@ -130,35 +130,7 @@
         "classLabel": "Bidez & Nye"
       }
     ],
-    "conflictNote": "Time doesn't work for your family? Contact Anne Zuberer at 615-957-8040 and we'll find one that does.",
-    "aliases": {
-      "Sammie Frank": [
-        "Samantha Frank",
-        "Samantha",
-        "Sam Frank",
-        "Sam"
-      ],
-      "Lolly Starnes": [
-        "Laurel Starnes",
-        "Laurel"
-      ],
-      "Penny Johnson": [
-        "Penelope Johnson",
-        "Penelope"
-      ],
-      "Lia Boyd": [
-        "Emilia Boyd",
-        "Emilia"
-      ],
-      "Evvie Pack": [
-        "Evelyn Pack",
-        "Evelyn"
-      ],
-      "Genevieve Santapuram": [
-        "Geneviève Santapuram",
-        "Geneviève"
-      ]
-    }
+    "conflictNote": "Time doesn't work for your family? Contact Anne Zuberer at 615-957-8040 and we'll find one that does."
   },
   "keyDates": [
     {
@@ -366,7 +338,7 @@
           "Phineas T.",
           "James P.",
           "Field M.",
-          "Archie A."
+          "Archie Ak."
         ]
       },
       {
@@ -374,8 +346,8 @@
         "isMine": false,
         "players": [
           "Evvie P.",
-          "Charlie B.",
-          "Archie A.",
+          "Charlie Bran.",
+          "Archie Ad.",
           "Oliver D.",
           "London T.",
           "Penny J.",

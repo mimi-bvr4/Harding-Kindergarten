@@ -10,7 +10,7 @@
 
 const CALENDAR_URL = 'https://hardingacademy.myschoolapp.com/podium/feed/iCal.aspx?z=96wT5QnMrJrphQP5BInbTmAAJCsRcQpy%2bmDKcAacSR8eeFymiEdCFAWuYOhCPhXy4XjpFPFcjomN3uHn%2bWimYA%3d%3d';
 
-const APP = { data: null, room: 0, slotQuery: '', classRoom: 0, classQuery: '', activity: 0 };
+const APP = { data: null, room: 0, classRoom: 0, activity: 0 };
 
 // ==================== DATA ====================
 
@@ -49,6 +49,9 @@ const shortName = (full) => {
     const parts = String(full ?? '').trim().split(/\s+/).filter(Boolean);
     if (parts.length < 2) return parts[0] || '';
     const last = parts[parts.length - 1];
+    // Already shortened ("Edie B.", "Charlie Bran.") — leave it alone, or we
+    // would collapse the extra letters that keep two Charlies apart.
+    if (last.endsWith('.')) return parts.join(' ');
     return parts.slice(0, -1).join(' ') + ' ' + last.charAt(0).toUpperCase() + '.';
 };
 
@@ -91,21 +94,6 @@ function initials(name) {
     return String(name || '').trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase();
 }
 
-
-// ==================== NAME MATCHING (shared) ====================
-
-// Accent-insensitive, nickname-aware. "Genevieve" finds "Geneviève";
-// "Samantha" finds "Sammie Frank".
-const fold = (t) => String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-
-function makeMatcher(aliases, query) {
-    const needle = fold(query);
-    return (name) => {
-        if (!needle) return true;
-        if (fold(name).includes(needle)) return true;
-        return (aliases[name] || []).some(a => fold(a).includes(needle));
-    };
-}
 
 function classesOf(data) {
     return (data.orientation?.rooms || []).map(r => ({
@@ -317,28 +305,13 @@ function renderOrientation(data) {
     // switch it off. Set orientation.show to false to hide it sooner.
     if (o.dateISO && (daysFromToday(o.dateISO) ?? 0) < 0) return '';
 
-    const q = APP.slotQuery.trim().toLowerCase();
     const activeRoom = Math.min(APP.room, o.rooms.length - 1);
 
-    // Families search the name they use, not the one on the roster. A child
-    // shown as "Sammie Frank" must still be found by "Samantha" or "Sam".
-    const aliases = o.aliases || {};
-    // Accent-insensitive: "Genevieve" must find "Geneviève" and vice versa.
-    const fold = (t) => String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-    const needle = fold(q);
-    const matchesName = (name) => {
-        if (fold(name).includes(needle)) return true;
-        return (aliases[name] || []).some(a => fold(a).includes(needle));
-    };
-
-    // A parent's first move is typing their child's name. Search must span
-    // BOTH rooms — they don't know which room their child is in yet.
     const slotCard = (s, roomName, showRoom, roomTeachers) => {
-        const mine = q && (s.students || []).some(n => matchesName(n));
         const meridiem = (/([AP])M/i.exec(s.time) || [, 'A'])[1].toUpperCase() + 'M';
         const startTime = (s.time.split(/[–-]/)[0] || '').replace(/\s*[AP]M/i, '').trim();
         return `
-        <div class="slot-card ${mine ? 'is-mine' : ''}">
+        <div class="slot-card">
             <div class="slot-time">
                 <div class="t">${esc(meridiem)}</div>
                 <div class="n">${esc(startTime)}</div>
@@ -352,26 +325,15 @@ function renderOrientation(data) {
                 ${showRoom && roomTeachers?.length ? `<div style="font-size:12px;color:#64748B;margin-top:3px">
                     <i class="fas fa-chalkboard-user" style="margin-right:5px;color:#CBD5E1"></i>${esc(roomTeachers.join(' · '))}</div>` : ''}
                 <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
-                    ${(s.students || []).map(n => `<span class="name-chip ${
-                        q && matchesName(n) ? 'hit' : ''}">${esc(n)}</span>`).join('')}
+                    ${(s.students || []).map(n =>
+                        `<span class="name-chip">${esc(shortName(n))}</span>`).join('')}
                 </div>
             </div>
         </div>`;
     };
 
-    let slots;
-    if (q) {
-        const matches = [];
-        o.rooms.forEach(r => (r.slots || []).forEach(s => {
-            if ((s.students || []).some(n => matchesName(n))) {
-                matches.push(slotCard(s, r.name, true, r.teachers));
-            }
-        }));
-        slots = matches.join('');
-    } else {
-        const r = o.rooms[activeRoom];
-        slots = (r.slots || []).map(s => slotCard(s, r.name, false, r.teachers)).join('');
-    }
+    const room = o.rooms[activeRoom];
+    const slots = (room.slots || []).map(s => slotCard(s, room.name, false, room.teachers)).join('');
 
     return `
     <section class="section-card">
@@ -385,24 +347,17 @@ function renderOrientation(data) {
 
         <div style="margin-top:18px">
             <div class="home-section-title" style="margin-left:0">Find your time</div>
-            <input id="slotSearch" class="slot-search" type="search" autocomplete="off"
-                   placeholder="Type your child's name…" value="${esc(APP.slotQuery)}">
-            ${q ? '' : `
             <div style="display:flex;gap:8px;margin-top:10px">
                 ${o.rooms.map((r, i) => `<button class="room-tab ${i === activeRoom ? 'active' : ''}"
                     data-room="${i}">${esc(r.name)}</button>`).join('')}
-            </div>`}
-            ${!q && (o.rooms[activeRoom].teachers || []).length ? `
+            </div>
+            ${(room.teachers || []).length ? `
             <div style="margin-top:11px;font-size:13px;color:#475569">
                 <i class="fas fa-chalkboard-user" style="margin-right:6px;color:#94A3B8"></i>
-                <span style="font-weight:700">${esc(o.rooms[activeRoom].teachers.join(' · '))}</span>
+                <span style="font-weight:700">${esc(room.teachers.join(' · '))}</span>
                 <span style="color:#94A3B8"> — the last name the dismissal form asks for</span>
             </div>` : ''}
-            <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
-                ${slots || `<p style="font-size:14px;color:#94A3B8;margin:6px 0">
-                    No child matching &ldquo;${esc(APP.slotQuery)}&rdquo; — check the spelling,
-                    or clear the box to see every group.</p>`}
-            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">${slots}</div>
         </div>
 
         ${(o.bringList || []).length ? `
@@ -1061,14 +1016,11 @@ function renderClassesPage(data) {
         '<div class="archived-note"><i class="fas fa-users" style="margin-top:2px"></i>' +
         '<span>No class lists yet.</span></div>');
 
-    const q = APP.classQuery.trim();
-    const match = makeMatcher(data.orientation?.aliases || {}, q);
     const active = Math.min(APP.classRoom, classes.length - 1);
-    const shown = q ? classes : [classes[active]];
+    const shown = [classes[active]];
 
     const card = (c) => {
-        const kids = c.students.filter(match);
-        if (q && !kids.length) return '';
+        const kids = c.students;
         return `
         <section class="section-card">
             <div class="section-header">
@@ -1091,10 +1043,10 @@ function renderClassesPage(data) {
                          <span style="font-weight:700;font-size:14.5px;color:#1E293B">${esc(t)}</span></div>`;
             }).join('')}
             <div class="home-section-title" style="margin:18px 0 9px 0">
-                ${q ? `${kids.length} match${kids.length === 1 ? '' : 'es'}` : `${kids.length} children`}
+                ${kids.length} children
             </div>
             <div style="display:flex;flex-wrap:wrap;gap:7px">
-                ${kids.map(n => `<span class="name-chip ${q && match(n) ? 'hit' : ''}">${esc(n)}</span>`).join('')}
+                ${kids.map(n => `<span class="name-chip">${esc(shortName(n))}</span>`).join('')}
             </div>
         </section>`;
     };
@@ -1102,14 +1054,11 @@ function renderClassesPage(data) {
     const cards = shown.map(card).join('');
 
     return page(data, '#/classes', `
-        <input id="classSearch" class="slot-search" type="search" autocomplete="off"
-               placeholder="Find a child in either class…" value="${esc(APP.classQuery)}">
-        ${q ? '' : `<div style="display:flex;gap:8px">
+        <div style="display:flex;gap:8px">
             ${classes.map((c, i) => `<button class="room-tab ${i === active ? 'active' : ''}"
                 data-class="${i}">${esc(c.label)}</button>`).join('')}
-        </div>`}
-        ${cards || `<div class="archived-note"><i class="fas fa-magnifying-glass" style="margin-top:2px"></i>
-            <span>No child matching &ldquo;${esc(q)}&rdquo; in either class.</span></div>`}
+        </div>
+        ${cards}
     `);
 }
 
@@ -1152,16 +1101,7 @@ function renderApp(opts = {}) {
     const activeTab = root.querySelector('.tab.active');
     if (activeTab) activeTab.scrollIntoView({ block: 'nearest', inline: 'center' });
 
-    if (opts.keepScroll) {
-        const el = document.getElementById(
-            typeof opts.focusSearch === 'string' ? opts.focusSearch : 'slotSearch');
-        if (el && opts.focusSearch) {
-            el.focus();
-            el.setSelectionRange(el.value.length, el.value.length);
-        }
-    } else {
-        window.scrollTo({ top: 0, behavior: 'instant' });
-    }
+    if (!opts.keepScroll) window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
 // ==================== INTERACTION ====================
@@ -1203,27 +1143,6 @@ function setupRootHandlers() {
         if (q) { q.closest('.info-item').classList.toggle('open'); return; }
     });
 
-    let t = null;
-    root.addEventListener('input', e => {
-        if (e.target.id === 'classSearch') {
-            APP.classQuery = e.target.value;
-            clearTimeout(t);
-            t = setTimeout(() => {
-                const y = window.scrollY;
-                renderApp({ keepScroll: true, focusSearch: 'classSearch' });
-                window.scrollTo({ top: y, behavior: 'instant' });
-            }, 220);
-            return;
-        }
-        if (e.target.id !== 'slotSearch') return;
-        APP.slotQuery = e.target.value;
-        clearTimeout(t);
-        t = setTimeout(() => {
-            const y = window.scrollY;
-            renderApp({ keepScroll: true, focusSearch: true });
-            window.scrollTo({ top: y, behavior: 'instant' });
-        }, 220);
-    });
 }
 
 // ==================== INIT ====================
