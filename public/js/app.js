@@ -949,7 +949,7 @@ function renderActivitiesTile(data) {
 function activityTabs(data) {
     return [
         data.soccer?.show    ? { key: 'soccer',    label: 'Soccer',  icon: 'fa-futbol',    render: renderSoccer }    : null,
-        data.ballet?.show    ? { key: 'ballet',    label: 'Ballet',  icon: 'fa-music',     render: renderBallet }    : null,
+        data.ballet?.show    ? { key: 'ballet',    label: 'Ballet',  icon: 'fa-heart',     render: renderBallet }    : null,
         data.popsicles?.show ? { key: 'popsicles', label: 'Get-Togethers', icon: 'fa-ice-cream', render: renderPopsicles } : null
     ].filter(Boolean);
 }
