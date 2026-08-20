@@ -323,7 +323,7 @@
   "soccer": {
     "show": true,
     "headline": "PreK Soccer — Upward at First Presbyterian",
-    "blurb": "All 16 kids practice together on Thursdays, then split into two teams for games. Edie is on Team Fran/Duncan. A low-pressure intro to soccer and a good way for the kids (and parents) to connect outside the classroom.",
+    "blurb": "All 16 kids practice together on Thursdays, then split into two teams for games. A low-pressure intro to soccer and a good way for the kids (and parents) to connect outside the classroom.",
     "highlight": "First practice Thursday 08.20.2026 · 5:15 PM · Parmer Park",
     "season": "Fall 2026",
     "deadline": "",
@@ -359,28 +359,28 @@
         "name": "Team Fran/Duncan",
         "isMine": true,
         "players": [
-          "Etta Allen",
-          "Margo Chatfield",
-          "Nora Fecht",
-          "Edie Beaver",
-          "Phineas Troy",
-          "James Pilkerton",
-          "Field McPherson",
-          "Archie Akbari"
+          "Etta A.",
+          "Margo C.",
+          "Nora F.",
+          "Edie B.",
+          "Phineas T.",
+          "James P.",
+          "Field M.",
+          "Archie A."
         ]
       },
       {
         "name": "Team Ryan",
         "isMine": false,
         "players": [
-          "Evvie Pack",
-          "Charlie Branstetter",
-          "Archie Adam",
-          "Oliver Davis",
-          "London Thompson",
-          "Penny Johnson",
-          "Phoebe Woods",
-          "Jace Aujla"
+          "Evvie P.",
+          "Charlie B.",
+          "Archie A.",
+          "Oliver D.",
+          "London T.",
+          "Penny J.",
+          "Phoebe W.",
+          "Jace A."
         ]
       }
     ],
@@ -552,5 +552,48 @@
     "wearNote": "Plus a small peanut-free snack.",
     "letterUrl": "/docs/dance-parent-letter-2026-27.pdf",
     "letterLabel": "Read the full dance letter"
+  },
+  "weeklyRhythm": {
+    "show": true,
+    "items": [
+      {
+        "id": "spirit-dress",
+        "show": true,
+        "dayOf": 5,
+        "title": "Spirit Dress tomorrow",
+        "titleToday": "Spirit Dress today",
+        "body": "Any Harding t-shirt with uniform bottoms.",
+        "note": "Primary girls are allowed to wear the cheerleading dress (unofficially).",
+        "icon": "fa-shirt",
+        "color": "gold",
+        "from": {
+          "day": 4,
+          "hour": 15
+        },
+        "to": {
+          "day": 5,
+          "hour": 15
+        }
+      },
+      {
+        "id": "late-start",
+        "show": true,
+        "dayOf": 3,
+        "title": "Late start tomorrow",
+        "titleToday": "Late start today",
+        "body": "Wednesday is a late start — the school day begins at 9:00 AM, not 8:00.",
+        "note": "",
+        "icon": "fa-clock",
+        "color": "navy",
+        "from": {
+          "day": 2,
+          "hour": 15
+        },
+        "to": {
+          "day": 3,
+          "hour": 9
+        }
+      }
+    ]
   }
 }

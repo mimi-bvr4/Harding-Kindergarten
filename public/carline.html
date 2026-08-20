@@ -133,9 +133,18 @@ td:first-child{width:74px}
         for (var i = 1; i <= 36; i++) out.push({ number: String(i), child: '' });
         return out;
     }
+    // First name + last initial, same rule as the parent page. A teacher calling
+    // a car doesn't need a child's full legal name on a screen in a windshield.
+    function shortName(full) {
+        var parts = String(full == null ? '' : full).trim().split(/\s+/);
+        parts = parts.filter(function (x) { return x.length; });
+        if (parts.length < 2) return parts[0] || '';
+        var last = parts[parts.length - 1];
+        return parts.slice(0, -1).join(' ') + ' ' + last.charAt(0).toUpperCase() + '.';
+    }
     function childFor(number) {
         for (var i = 0; i < S.cars.length; i++) {
-            if (String(S.cars[i].number) === String(number)) return S.cars[i].child || '';
+            if (String(S.cars[i].number) === String(number)) return shortName(S.cars[i].child || '');
         }
         return '';
     }

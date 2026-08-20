@@ -41,6 +41,17 @@ async function loadDashboardData() {
 
 // ==================== SMALL HELPERS ====================
 
+/* Children on this page are shown as first name + last initial. The site is
+   password-gated, but a full-name roster of four-year-olds is more than any
+   parent needs to read a schedule. Applied at render time so a full name typed
+   into the admin editor is still shortened before it reaches a screen. */
+const shortName = (full) => {
+    const parts = String(full ?? '').trim().split(/\s+/).filter(Boolean);
+    if (parts.length < 2) return parts[0] || '';
+    const last = parts[parts.length - 1];
+    return parts.slice(0, -1).join(' ') + ' ' + last.charAt(0).toUpperCase() + '.';
+};
+
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -178,6 +189,54 @@ function setTopbar(title, subtitle) {
 }
 
 // ==================== SECTIONS ====================
+
+/* ---------- THE WEEKLY RHYTHM ----------
+   Things that are true every week rather than once: Spirit Dress on Friday,
+   the Wednesday late start. Posting these by hand every week is exactly the
+   kind of chore this page exists to kill, so they are windows on the clock.
+
+   Each item names the day it happens (dayOf) and a window it is visible in,
+   expressed as weekday + hour. The reminder surfaces the afternoon BEFORE, so
+   it lands while there is still time to find the shirt.                     */
+
+function weekMinutes(d) {
+    return d.getDay() * 1440 + d.getHours() * 60 + d.getMinutes();
+}
+
+function rhythmActive(data, now) {
+    now = now || new Date();
+    const r = data.weeklyRhythm || {};
+    if (r.show === false) return [];
+    const t = weekMinutes(now);
+
+    return (r.items || []).filter(it => {
+        if (it.show === false || !it.from || !it.to) return false;
+        const a = it.from.day * 1440 + (it.from.hour || 0) * 60 + (it.from.minute || 0);
+        const b = it.to.day   * 1440 + (it.to.hour   || 0) * 60 + (it.to.minute   || 0);
+        // A window may wrap past Saturday night into Sunday.
+        return a <= b ? (t >= a && t < b) : (t >= a || t < b);
+    });
+}
+
+function renderRhythm(data) {
+    const now = new Date();
+    const items = rhythmActive(data, now);
+    if (!items.length) return '';
+
+    return items.map(it => {
+        const isToday = now.getDay() === it.dayOf;
+        const title = (isToday && it.titleToday) ? it.titleToday : it.title;
+        return `
+        <div class="rhythm-card rhythm-${esc(it.color || 'navy')}">
+            <span class="rhythm-icon"><i class="fas ${esc(it.icon || 'fa-bell')}"></i></span>
+            <div style="flex:1;min-width:0">
+                <div class="rhythm-title">${esc(title)}</div>
+                ${it.body ? `<div class="rhythm-body">${esc(it.body)}</div>` : ''}
+                ${it.note ? `<div class="rhythm-note">${esc(it.note)}</div>` : ''}
+            </div>
+        </div>`;
+    }).join('');
+}
 
 function renderAnnouncement(data) {
     if (!data.announcement) return '';
@@ -636,7 +695,7 @@ function renderGameSchedule(s) {
 function renderRosters(s) {
     const teams = s.teams || [];
     if (!teams.length) return '';
-    const ordered = [...teams].sort((a, b) => (b.isMine === true) - (a.isMine === true));
+    const ordered = teams;   // no team is "mine" — this page is for every family
 
     return `
     <div style="margin-top:18px;padding-top:16px;border-top:1px solid #F1F5F9">
@@ -647,7 +706,7 @@ function renderRosters(s) {
             <div style="font-size:12px;font-weight:800;color:#64748B;text-transform:uppercase;
                         letter-spacing:.06em;margin-bottom:7px">${esc(t.name)}</div>
             <div style="display:flex;flex-wrap:wrap;gap:6px">
-                ${(t.players || []).map(n => `<span class="name-chip">${esc(n)}</span>`).join('')}
+                ${(t.players || []).map(n => `<span class="name-chip">${esc(shortName(n))}</span>`).join('')}
             </div>
         </div>`).join('')}
     </div>`;
@@ -869,6 +928,7 @@ function renderHome(data) {
     const orientationLive = tabsFor(data).some(t => t.hash === '#/orientation');
     return page(data, '#/', `
         ${renderHero(data)}
+        ${renderRhythm(data)}
         ${data.welcome && orientationLive ? `<div class="note-box" style="margin:0">
             <div class="n"><i class="fas fa-star"></i><span style="font-weight:600">${esc(data.welcome)}</span></div>
         </div>` : ''}
@@ -1171,6 +1231,23 @@ function setupRootHandlers() {
 setupNav();
 setupRootHandlers();
 window.addEventListener('hashchange', () => renderApp());
+
+/* A reminder that turns on at 3:00 Thursday is worthless if the page has been
+   sitting open since noon. Re-check every minute and repaint only when the set
+   of active reminders actually changes — and on wake, since a phone that slept
+   through 3:00 fires no timers. */
+(function watchRhythm() {
+    const key = () => (APP.data ? rhythmActive(APP.data).map(i => i.id).join('|') : '');
+    let last = null;
+    const check = () => {
+        if (!APP.data) return;
+        const k = key();
+        if (last === null) { last = k; return; }
+        if (k !== last) { last = k; renderApp(); }
+    };
+    setInterval(check, 60000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) check(); });
+})();
 
 loadDashboardData()
     .then(data => { APP.data = data; renderApp(); })
