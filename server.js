@@ -165,7 +165,11 @@ app.get('/api/health', (req, res) => {
         auth: {
             siteGate: true,
             sitePasswordSet: !siteAuth.usingDefaultSitePassword(),
-            adminPasswordSet: !siteAuth.usingDefaultAdminPassword()
+            adminPasswordSet: !siteAuth.usingDefaultAdminPassword(),
+            // Without this, a CARLINE_PASSWORD that silently failed to save in
+            // Railway would fall back to the default that sits in the repo —
+            // and nothing would say so.
+            carlinePasswordSet: !siteAuth.usingDefaultCarlinePassword()
         },
         github: { configured: github.configured(), ...github.status }
     });
