@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-20T20:56:45.436Z",
+  "lastUpdated": "2026-08-21T20:58:16.073Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -39,39 +39,39 @@
           {
             "time": "8:00 – 8:20 AM",
             "students": [
-              "Charlie Braddy",
-              "Lia Boyd",
-              "Lolly Starnes",
-              "Pierce Pettit",
-              "Charlotte McNabb"
+              "Charlie Brad.",
+              "Lia B.",
+              "Lolly S.",
+              "Pierce P.",
+              "Charlotte M."
             ]
           },
           {
             "time": "8:30 – 8:50 AM",
             "students": [
-              "Charlie Branstetter",
-              "Etta Allen",
-              "Oliver Davis",
-              "Quinley Yastrzemski"
+              "Charlie Bran.",
+              "Etta A.",
+              "Oliver D.",
+              "Quinley Y."
             ]
           },
           {
             "time": "10:00 – 10:20 AM",
             "students": [
-              "Archie Adams",
-              "Brooks Li",
-              "Scarlett Matz",
-              "Coe Kelley"
+              "Archie Ad.",
+              "Brooks L.",
+              "Scarlett M.",
+              "Coe K."
             ]
           },
           {
             "time": "10:30 – 10:50 AM",
             "students": [
-              "Evvie Pack",
-              "Field McPherson",
-              "London Thompson",
-              "Penny Johnson",
-              "Phinney Troy"
+              "Evvie P.",
+              "Field M.",
+              "London T.",
+              "Penny J.",
+              "Phinney T."
             ]
           }
         ],
@@ -87,39 +87,39 @@
           {
             "time": "8:00 – 8:20 AM",
             "students": [
-              "Archie Akbari",
-              "Elijah Glotta",
-              "Scottie Snyder",
-              "Virginia McNabb",
-              "Phoebe Woods"
+              "Archie Ak.",
+              "Elijah G.",
+              "Scottie S.",
+              "Virginia M.",
+              "Phoebe W."
             ]
           },
           {
             "time": "8:30 – 8:50 AM",
             "students": [
-              "Vivienne Riggs",
-              "Nora Fecht",
-              "James Pilkerton",
-              "Cecily Poppler"
+              "Vivienne R.",
+              "Nora F.",
+              "James P.",
+              "Cecily P."
             ]
           },
           {
             "time": "10:00 – 10:20 AM",
             "students": [
-              "Edie Beaver",
-              "London Li",
-              "Genevieve Santapuram",
-              "Jace Aujla"
+              "Edie B.",
+              "London L.",
+              "Genevieve S.",
+              "Jace A."
             ]
           },
           {
             "time": "10:30 – 10:50 AM",
             "students": [
-              "Kai McAfee",
-              "Jack Barge",
-              "Kennedy Carty",
-              "Margo Chatfield",
-              "Sammie Frank"
+              "Kai M.",
+              "Jack B.",
+              "Kennedy C.",
+              "Margo C.",
+              "Sammie F."
             ]
           }
         ],
@@ -130,35 +130,7 @@
         "classLabel": "Bidez & Nye"
       }
     ],
-    "conflictNote": "Time doesn't work for your family? Contact Anne Zuberer at 615-957-8040 and we'll find one that does.",
-    "aliases": {
-      "Sammie Frank": [
-        "Samantha Frank",
-        "Samantha",
-        "Sam Frank",
-        "Sam"
-      ],
-      "Lolly Starnes": [
-        "Laurel Starnes",
-        "Laurel"
-      ],
-      "Penny Johnson": [
-        "Penelope Johnson",
-        "Penelope"
-      ],
-      "Lia Boyd": [
-        "Emilia Boyd",
-        "Emilia"
-      ],
-      "Evvie Pack": [
-        "Evelyn Pack",
-        "Evelyn"
-      ],
-      "Genevieve Santapuram": [
-        "Geneviève Santapuram",
-        "Geneviève"
-      ]
-    }
+    "conflictNote": "Time doesn't work for your family? Contact Anne Zuberer at 615-957-8040 and we'll find one that does."
   },
   "keyDates": [
     {
@@ -322,21 +294,21 @@
   },
   "soccer": {
     "show": true,
-    "headline": "PreK Soccer — Coach Ryan's Team",
-    "blurb": "Coach Ryan Pack (Evvie's dad) is coaching the PreK 5U co-ed team this fall through First Presbyterian's Upward league — a low-pressure intro to soccer and a fun way for the kids (and parents) to connect outside the classroom.",
-    "highlight": "",
+    "headline": "PreK Soccer — Upward at First Presbyterian",
+    "blurb": "All 16 kids practice together on Thursdays, then split into two teams for games. A low-pressure intro to soccer and a good way for the kids (and parents) to connect outside the classroom.",
+    "highlight": "First practice Thursday 08.20.2026 · 5:15 PM · Parmer Park",
     "season": "Fall 2026",
     "deadline": "",
     "grades": "PreK 5U, co-ed",
-    "practices": "About one weekday a week, likely at Parmer Park",
-    "games": "See the First Presbyterian game-day schedule",
+    "practices": "Thursdays 5:15 PM at Parmer Park (~45 min) — first practice 08.20.2026",
+    "games": "Saturdays at Oak Hill / First Presbyterian — Lower Fields 5, 6, 7",
     "signupUrl": "",
     "signupLabel": "",
     "signupTip": "",
     "links": [
       {
-        "label": "Game-day schedule",
-        "url": "https://fpcnashville.org/ministry/soccer",
+        "label": "myUpward portal",
+        "url": "https://my.upward.org",
         "icon": "fa-calendar-days"
       },
       {
@@ -346,10 +318,156 @@
       }
     ],
     "notes": [
-      "Want to help coach? Extra hands are welcome — just reach out to Ryan."
+      "Game times can shift — a rained-out weekend moves later weeks. The myUpward portal is always the most accurate schedule.",
+      "Parmer can get busy at 5:15; the coaches may move practice nearby if it feels crowded.",
+      "Snack sign-up and a team text thread are coming from the coaches."
     ],
-    "coachName": "Coach Ryan Pack (Evvie's dad)",
-    "coachPhone": "(865) 719-6669"
+    "coachName": "Coaches Ryan, Fran & Duncan",
+    "myTeam": "Team Fran/Duncan",
+    "jerseys": "Reversible jerseys — blue on one side, red on the other. Handed out at the first practice. Each game below says which colour to wear.",
+    "fieldNote": "Games are on the Lower Fields (5, 6, 7) at the Oak Hill Athletic Facility, off Churchwood Dr. Blue-numbered fields are the 4U/5U pitches. Parking and a Welcome Tent are on the Franklin Pike side.",
+    "teams": [
+      {
+        "name": "Team Fran/Duncan",
+        "isMine": true,
+        "players": [
+          "Etta A.",
+          "Margo C.",
+          "Nora F.",
+          "Edie B.",
+          "Phineas T.",
+          "James P.",
+          "Field M.",
+          "Archie Ak."
+        ]
+      },
+      {
+        "name": "Team Ryan",
+        "isMine": false,
+        "players": [
+          "Evvie P.",
+          "Charlie Bran.",
+          "Archie Ad.",
+          "Oliver D.",
+          "London T.",
+          "Penny J.",
+          "Phoebe W.",
+          "Jace A."
+        ]
+      }
+    ],
+    "schedule": [
+      {
+        "team": "Team Fran/Duncan",
+        "games": [
+          {
+            "date": "2026-08-22",
+            "time": "11:45 AM–12:30 PM",
+            "field": "Field 7",
+            "opponent": "Michael Reese",
+            "jersey": "red"
+          },
+          {
+            "date": "2026-08-29",
+            "time": "8:00–8:45 AM",
+            "field": "Field 6",
+            "opponent": "Lodge/LeMense",
+            "jersey": "blue",
+            "note": "Picture Day"
+          },
+          {
+            "date": "2026-09-12",
+            "time": "8:00–8:45 AM",
+            "field": "Field 6",
+            "opponent": "Jeff Turpin",
+            "jersey": "red"
+          },
+          {
+            "date": "2026-09-26",
+            "time": "8:00–8:45 AM",
+            "field": "Field 5",
+            "opponent": "Gerhart/Turitto",
+            "jersey": "red"
+          },
+          {
+            "date": "2026-10-03",
+            "time": "10:15–11:00 AM",
+            "field": "Field 6",
+            "opponent": "Ferguson/Geismar/Barry",
+            "jersey": "blue"
+          },
+          {
+            "date": "2026-10-10",
+            "time": "11:45 AM–12:30 PM",
+            "field": "Field 7",
+            "opponent": "Coleman/West",
+            "jersey": "blue"
+          },
+          {
+            "date": "2026-10-24",
+            "time": "12:30–1:15 PM",
+            "field": "Field 7",
+            "opponent": "Abhi Pardeshi",
+            "jersey": "red"
+          }
+        ]
+      },
+      {
+        "team": "Team Ryan",
+        "games": [
+          {
+            "date": "2026-08-22",
+            "time": "9:30–10:15 AM",
+            "field": "Field 7",
+            "opponent": "Case/VanArsdale",
+            "jersey": "blue"
+          },
+          {
+            "date": "2026-08-29",
+            "time": "11:00–11:45 AM",
+            "field": "Field 7",
+            "opponent": "Ryan Succon",
+            "jersey": "blue",
+            "note": "Picture Day"
+          },
+          {
+            "date": "2026-09-12",
+            "time": "10:15–11:00 AM",
+            "field": "Field 7",
+            "opponent": "Nirula/Haggard",
+            "jersey": "red"
+          },
+          {
+            "date": "2026-09-26",
+            "time": "12:30–1:15 PM",
+            "field": "Field 5",
+            "opponent": "Michael Reese",
+            "jersey": "blue"
+          },
+          {
+            "date": "2026-10-03",
+            "time": "10:15–11:00 AM",
+            "field": "Field 7",
+            "opponent": "Lodge/LeMense",
+            "jersey": "red"
+          },
+          {
+            "date": "2026-10-10",
+            "time": "11:45 AM–12:30 PM",
+            "field": "Field 6",
+            "opponent": "Jeff Turpin",
+            "jersey": "red"
+          },
+          {
+            "date": "2026-10-24",
+            "time": "8:45–9:30 AM",
+            "field": "Field 5",
+            "opponent": "Gerhart/Turitto",
+            "jersey": "red"
+          }
+        ]
+      }
+    ]
   },
   "popsicles": {
     "show": false,
@@ -369,7 +487,7 @@
     "kindergartenExcerpt": "",
     "highlights": [],
     "importantDates": [],
-    "prekExcerpt": "If you didn't get a text from Harding during this morning's lightning delay, two things to check: (1) Your CompassNet profile must list your mobile as a 'Wireless' number. (2) Some carriers (T-Mobile, Verizon, AT&T, prepaid) may block messages from shortcode 36598. See the school's instructions to fix this."
+    "prekExcerpt": "Edie had a wonderful first week in Pre-K! She enjoyed exploring books with classmates and found a particular interest in sorting shells when the rock and sand pits opened. Teachers Lauren and Greg are looking forward to a great year.\n\nCheck Sunday's Compass Connection email for a link to the PreK class photo album featuring highlights from the first few days of school.\n\nMon Aug 24 & Tue Aug 25: Half days, dismissal at 12:00 PM. Wed Aug 26: First full day, pickup at 3:00 PM. Also the first Late Start Wednesday — arrival between 8:30–9:00 AM. Pursuit aftercare begins Wednesday. Send lunch with your child starting Wednesday.\n\nThe first few days of school have been wonderful! Students have been getting to know one another, exploring classrooms, and visiting new spaces like the courtyard and the NOP. Thank you for having your Procare numbers ready and for your patience during dismissal.\n\nPlease fill out the PreK dismissal form if you haven't already. The link is in this newsletter and will also be in Sunday's Compass Connection email.\n\nIf you didn't get a text from Harding during this morning's lightning delay, two things to check: (1) Your CompassNet profile must list your mobile as a 'Wireless' number. (2) Some carriers (T-Mobile, Verizon, AT&T, prepaid) may block messages from shortcode 36598. See the school's instructions to fix this."
   },
   "classrooms": [
     {
@@ -396,5 +514,59 @@
         "primary"
       ]
     }
-  ]
+  ],
+  "ballet": {
+    "show": true,
+    "headline": "PreK Ballet / Jazz",
+    "blurb": "The dance teachers collect PreK dancers from their classroom at dismissal — nothing for you to do at carline.",
+    "when": "Wednesdays · 3:15 – 4:15 PM",
+    "pickup": "4:15 PM at the dance door",
+    "wear": "Send dance clothes in their bag. Teachers help them change at the studio.",
+    "wearNote": "Plus a small peanut-free snack.",
+    "letterUrl": "/docs/dance-parent-letter-2026-27.pdf",
+    "letterLabel": "Read the full dance letter"
+  },
+  "weeklyRhythm": {
+    "show": true,
+    "items": [
+      {
+        "id": "spirit-dress",
+        "show": true,
+        "dayOf": 5,
+        "title": "Spirit Dress tomorrow",
+        "titleToday": "Spirit Dress today",
+        "body": "Any Harding t-shirt with uniform bottoms.",
+        "note": "Primary girls are allowed to wear the cheerleading dress (unofficially).",
+        "icon": "fa-shirt",
+        "color": "gold",
+        "from": {
+          "day": 4,
+          "hour": 15
+        },
+        "to": {
+          "day": 5,
+          "hour": 15
+        }
+      },
+      {
+        "id": "late-start",
+        "show": true,
+        "dayOf": 3,
+        "title": "Late start tomorrow",
+        "titleToday": "Late start today",
+        "body": "Wednesday is a late start — the school day begins at 9:00 AM, not 8:00.",
+        "note": "",
+        "icon": "fa-clock",
+        "color": "navy",
+        "from": {
+          "day": 2,
+          "hour": 15
+        },
+        "to": {
+          "day": 3,
+          "hour": 9
+        }
+      }
+    ]
+  }
 }
