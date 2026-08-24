@@ -587,6 +587,9 @@ function renderSoccer(data) {
             <i class="fas fa-pen-to-square"></i>${esc(s.signupLabel || 'Register')}</a>` : ''}
         ${s.signupTip ? `<p style="font-size:13px;color:#64748B;margin:10px 0 0;text-align:center">
             ${esc(s.signupTip)}</p>` : ''}
+        ${s.snackUrl ? `<a href="${esc(s.snackUrl)}" target="_blank" rel="noopener"
+            class="cta cta-green cta-block" style="margin-top:14px">
+            <i class="fas fa-cookie-bite"></i>${esc(s.snackLabel || 'Snack sign-up')}</a>` : ''}
         ${(s.links || []).length ? `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
             ${s.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener"
                 style="display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:999px;
