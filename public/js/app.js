@@ -510,6 +510,47 @@ function renderInfoSections(data) {
     </section>`).join('');
 }
 
+/* The soccer banner used to be a hand-typed line, which meant it still read
+   "First practice 08.20.2026" days after that practice happened. Two rules
+   replace the hand-editing:
+
+     1. A highlight carrying a date that has passed is suppressed outright.
+     2. The next weekly practice is computed from the practice day, and stops
+        on its own once the last game on the schedule is behind us.          */
+
+function seasonEndsOn(s) {
+    const all = (s.schedule || []).flatMap(b => (b.games || []).map(g => g.date)).filter(Boolean);
+    return all.length ? parseISO(all.sort().slice(-1)[0]) : null;
+}
+
+/** A highlight is stale once the MM.DD.YYYY inside it is in the past. */
+function highlightIsCurrent(text) {
+    const m = /(\d{2})\.(\d{2})\.(\d{4})/.exec(String(text || ''));
+    if (!m) return true;                       // no date in it — nothing to go stale
+    const d = new Date(+m[3], +m[1] - 1, +m[2]);
+    return d >= startOfToday();
+}
+
+/** "Next practice · Thursday 08.27.2026 · 5:15 PM · Parmer Park" */
+function nextPracticeLine(s) {
+    const p = s.practice;
+    if (!p || typeof p.weekday !== 'number') return '';
+
+    const today = startOfToday();
+    const d = new Date(today);
+    d.setDate(d.getDate() + ((p.weekday - d.getDay() + 7) % 7));   // today counts
+
+    const end = seasonEndsOn(s);
+    if (end && d > end) return '';             // season is over; say nothing
+
+    const pad = (n) => String(n).padStart(2, '0');
+    const label = d.getTime() === today.getTime() ? 'today' :
+        d.toLocaleDateString('en-US', { weekday: 'long' }) + ' ' +
+        pad(d.getMonth() + 1) + '.' + pad(d.getDate()) + '.' + d.getFullYear();
+
+    return ['Next practice', label, p.time, p.location].filter(Boolean).join(' · ');
+}
+
 function renderSoccer(data) {
     const s = data.soccer || {};
     if (!s.show) return '';
@@ -528,9 +569,14 @@ function renderSoccer(data) {
             <span>${esc(s.headline || 'Soccer')}</span>
         </div>
         <p style="font-size:14px;line-height:1.6;color:#475569;margin:0 0 14px">${esc(s.blurb || '')}</p>
-        ${s.highlight ? `<div style="background:linear-gradient(135deg,var(--green),var(--green-2));color:#fff;
-            border-radius:16px;padding:12px 14px;font-weight:700;font-size:14px;margin-bottom:14px">
-            <i class="fas fa-bolt" style="margin-right:7px"></i>${esc(s.highlight)}</div>` : ''}
+        ${(() => {
+            const banner = (s.highlight && highlightIsCurrent(s.highlight))
+                ? s.highlight : nextPracticeLine(s);
+            return banner ? `<div style="background:linear-gradient(135deg,var(--green),var(--green-2));
+                color:#fff;border-radius:16px;padding:12px 14px;font-weight:700;font-size:14px;
+                margin-bottom:14px">
+                <i class="fas fa-bolt" style="margin-right:7px"></i>${esc(banner)}</div>` : '';
+        })()}
         ${rows.map(r => `
         <div class="row">
             <span class="ic"><i class="fas ${r[0]}"></i></span>

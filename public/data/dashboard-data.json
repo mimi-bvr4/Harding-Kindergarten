@@ -296,11 +296,11 @@
     "show": true,
     "headline": "PreK Soccer — Upward at First Presbyterian",
     "blurb": "All 16 kids practice together on Thursdays, then split into two teams for games. A low-pressure intro to soccer and a good way for the kids (and parents) to connect outside the classroom.",
-    "highlight": "First practice Thursday 08.20.2026 · 5:15 PM · Parmer Park",
+    "highlight": "",
     "season": "Fall 2026",
     "deadline": "",
     "grades": "PreK 5U, co-ed",
-    "practices": "Thursdays 5:15 PM at Parmer Park (~45 min) — first practice 08.20.2026",
+    "practices": "Thursdays 5:15 PM at Parmer Park (~45 min)",
     "games": "Saturdays at Oak Hill / First Presbyterian — Lower Fields 5, 6, 7",
     "signupUrl": "",
     "signupLabel": "",
@@ -467,7 +467,12 @@
           }
         ]
       }
-    ]
+    ],
+    "practice": {
+      "weekday": 4,
+      "time": "5:15 PM",
+      "location": "Parmer Park"
+    }
   },
   "popsicles": {
     "show": false,
