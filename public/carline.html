@@ -61,6 +61,29 @@ main{padding:14px}
 .num.r12::after{background:linear-gradient(90deg,var(--room1) 0 50%,var(--room2) 50% 100%)}
 .num.done::after{opacity:.3}
 
+/* ---- look up by name: the grandparent who says "I'm here for Margo" ---- */
+.findbox{position:relative;margin-bottom:10px}
+.findbox input{width:100%;box-sizing:border-box;font-family:inherit;font-size:16px;
+  padding:13px 40px 13px 14px;border:2px solid #E2E8F0;border-radius:14px;background:#fff;color:var(--ink)}
+.findbox input:focus{outline:none;border-color:var(--navy)}
+.findbox .clr{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:#EEF2F7;
+  color:#64748B;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;line-height:1}
+.hits{margin-bottom:12px;display:flex;flex-direction:column;gap:7px}
+.hit{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:10px 12px;
+  box-shadow:0 1px 2px rgba(15,23,42,.07)}
+.hit .dot{width:11px;height:34px;border-radius:4px}
+.hit .nm{flex:1;min-width:0}
+.hit .nm b{display:block;font-size:14.5px;font-weight:700}
+.hit .nm span{display:block;font-size:11.5px;color:var(--mute);margin-top:1px}
+.hit .lanebtn{border:0;border-radius:10px;background:var(--navy);color:#fff;font-family:'Fredoka',sans-serif;
+  font-size:13px;font-weight:600;padding:9px 12px;cursor:pointer}
+.hit .lanebtn:active{transform:scale(.94)}
+.hit.sent{opacity:.55}
+.hit.sent .lanebtn{display:none}
+.hit .senttag{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--mute)}
+.nohit{background:#fff;border-radius:14px;padding:14px;font-size:13px;color:var(--mute);
+  margin-bottom:12px;text-align:center}
+
 .legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
 .leg{display:inline-flex;align-items:center;gap:7px;background:#fff;border-radius:999px;
      padding:7px 13px 7px 9px;font-size:12px;font-weight:700;color:#475569;
@@ -128,7 +151,7 @@ td:first-child{width:74px}
 
 <script>
 (function () {
-    var S = { cars: [], picks: [], canEdit: false, tab: 'pick' };
+    var S = { cars: [], picks: [], canEdit: false, tab: 'pick', find: '', refocusFind: false };
     var main = document.getElementById('main');
     var poll = null;
 
@@ -174,6 +197,12 @@ td:first-child{width:74px}
         '2':   { cls: 'r2',  label: 'Pre-K 2', who: 'Bidez & Nye' },
         '1,2': { cls: 'r12', label: 'Pre-K 1 + 2', who: 'one from each room' }
     };
+    /** Accent- and case-insensitive, so "genevieve" finds "Geneviève". */
+    function fold(t) {
+        return String(t == null ? '' : t).normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    }
+
     function carFor(number) {
         for (var i = 0; i < S.cars.length; i++) {
             if (String(S.cars[i].number) === String(number)) return S.cars[i];
@@ -204,6 +233,39 @@ td:first-child{width:74px}
             S.picks.length + ' of ' + total + ' sent' + (S.picks.length ? '' : ' · not started');
     }
 
+    /* A grandparent at the window often has no car number — just a name.
+       Typing two or three letters here resolves the name back to the number
+       the rest of the screen already runs on, so a name pick and a tile tap
+       land in exactly the same place. */
+    function renderFind() {
+        var q = fold(S.find);
+        var box = '<div class="findbox">' +
+            '<input id="nameFind" type="search" autocomplete="off" autocapitalize="off" ' +
+            'spellcheck="false" placeholder="No car number? Type a child\u2019s name\u2026" ' +
+            'value="' + esc(S.find) + '">' +
+            (S.find ? '<button class="clr" id="findClr" aria-label="Clear">&times;</button>' : '') +
+            '</div>';
+        if (!q) return box;
+
+        var hits = S.cars.filter(function (c) { return fold(c.child).indexOf(q) !== -1; }).slice(0, 6);
+        if (!hits.length) {
+            return box + '<div class="nohit">No child matching \u201c' + esc(S.find) + '\u201d. ' +
+                'Check the spelling, or tap the number instead.</div>';
+        }
+
+        return box + '<div class="hits">' + hits.map(function (c) {
+            var r = roomOf(c), done = isPicked(c.number);
+            return '<div class="hit' + (done ? ' sent' : '') + '">' +
+                '<span class="dot' + roomClass(c) + '"></span>' +
+                '<span class="nm"><b>' + esc(c.child) + '</b><span>Car ' + esc(c.number) +
+                (r ? ' \u00b7 ' + esc(r.label) : '') + '</span></span>' +
+                (done ? '<span class="senttag">Sent</span>'
+                      : '<button class="lanebtn" data-find="' + esc(c.number) + '" data-lane="A">Lane A</button>' +
+                        '<button class="lanebtn" data-find="' + esc(c.number) + '" data-lane="B">Lane B</button>') +
+                '</div>';
+        }).join('') + '</div>';
+    }
+
     // ---------- tab: pick ----------
     function renderPick() {
         var cars = carList();
@@ -219,24 +281,39 @@ td:first-child{width:74px}
         main.innerHTML =
             '<p class="hint">Tap each car number as you walk the line. A number you tap greys out in both lanes, ' +
             'and stays grey through the next wave. Only <b>Day reset</b> clears it.</p>' +
+            renderFind() +
             roomLegend() +
             '<div class="lanes">' + col('A') + col('B') + '</div>' +
             '<div class="bar"><button class="btn btn-undo" id="undoBtn">Undo last</button>' +
             '<button class="btn btn-go" id="toOrder">See send order</button></div>';
 
         main.querySelectorAll('.num').forEach(function (b) {
+            b.addEventListener('click', function () { sendCar(b.dataset.n, b.dataset.lane); });
+        });
+        main.querySelectorAll('[data-find]').forEach(function (b) {
             b.addEventListener('click', function () {
-                var n = b.dataset.n;
-                // Optimistic: the teacher is walking, the UI must not wait on the network.
-                S.picks.push({ number: n, lane: b.dataset.lane });
-                renderPick(); setCount();
-                api('/api/carline/pick', {
-                    method: 'POST',
-                    body: JSON.stringify({ number: n, lane: b.dataset.lane })
-                }).then(function (r) { S.picks = r.picks; renderPick(); setCount(); })
-                  .catch(function () { load(); });
+                sendCar(b.dataset.find, b.dataset.lane);
             });
         });
+
+        var fi = document.getElementById('nameFind');
+        if (fi) {
+            fi.addEventListener('input', function () {
+                S.find = fi.value;
+                renderPick();
+                var again = document.getElementById('nameFind');
+                if (again) { again.focus(); again.setSelectionRange(again.value.length, again.value.length); }
+            });
+            // Re-rendering after a pick would otherwise drop the caret mid-search.
+            if (S.refocusFind) {
+                S.refocusFind = false;
+                fi.focus();
+                fi.setSelectionRange(fi.value.length, fi.value.length);
+            }
+        }
+        var fc = document.getElementById('findClr');
+        if (fc) fc.addEventListener('click', function () { S.find = ''; renderPick(); });
+
         document.getElementById('undoBtn').addEventListener('click', function () {
             api('/api/carline/undo', { method: 'POST' })
                 .then(function (r) { S.picks = r.picks; renderPick(); setCount(); });
@@ -246,6 +323,20 @@ td:first-child{width:74px}
 
     /** Only shows rooms that actually appear in the roster, so it never
         promises a colour the teacher will not see on screen. */
+    /* Optimistic on purpose: the teacher is walking a line of cars, so the
+       screen must respond on the tap, not on the round trip. */
+    function sendCar(number, lane) {
+        if (isPicked(number)) return;
+        if (S.find) S.refocusFind = true;
+        S.picks.push({ number: number, lane: lane === 'B' ? 'B' : 'A' });
+        renderPick(); setCount();
+        api('/api/carline/pick', {
+            method: 'POST',
+            body: JSON.stringify({ number: number, lane: lane })
+        }).then(function (r) { S.picks = r.picks; renderPick(); setCount(); })
+          .catch(function () { load(); });
+    }
+
     function roomLegend() {
         var seen = {};
         S.cars.forEach(function (c) { if (ROOMS[String(c.room || '')]) seen[c.room] = true; });
