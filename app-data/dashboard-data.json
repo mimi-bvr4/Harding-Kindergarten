@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-24T16:19:50.086Z",
+  "lastUpdated": "2026-08-25T01:06:12.294Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -296,11 +296,11 @@
     "show": true,
     "headline": "PreK Soccer — Upward at First Presbyterian",
     "blurb": "All 16 kids practice together on Thursdays, then split into two teams for games. A low-pressure intro to soccer and a good way for the kids (and parents) to connect outside the classroom.",
-    "highlight": "First practice Thursday 08.20.2026 · 5:15 PM · Parmer Park",
+    "highlight": "",
     "season": "Fall 2026",
     "deadline": "",
     "grades": "PreK 5U, co-ed",
-    "practices": "Thursdays 5:15 PM at Parmer Park (~45 min) — first practice 08.20.2026",
+    "practices": "Thursdays 5:15 PM at Parmer Park (~45 min)",
     "games": "Saturdays at Oak Hill / First Presbyterian — Lower Fields 5, 6, 7",
     "signupUrl": "",
     "signupLabel": "",
@@ -320,7 +320,7 @@
     "notes": [
       "Game times can shift — a rained-out weekend moves later weeks. The myUpward portal is always the most accurate schedule.",
       "Parmer can get busy at 5:15; the coaches may move practice nearby if it feels crowded.",
-      "Snack sign-up and a team text thread are coming from the coaches."
+      "A team text thread is coming from the coaches."
     ],
     "coachName": "Coaches Ryan, Fran & Duncan",
     "myTeam": "Team Fran/Duncan",
@@ -467,7 +467,14 @@
           }
         ]
       }
-    ]
+    ],
+    "practice": {
+      "weekday": 4,
+      "time": "5:15 PM",
+      "location": "Parmer Park"
+    },
+    "snackUrl": "https://www.signupgenius.com/go/8050C4FADAE2BA4F85-65276461-coach#/",
+    "snackLabel": "Sign up to bring snack"
   },
   "popsicles": {
     "show": false,
@@ -487,7 +494,7 @@
     "kindergartenExcerpt": "",
     "highlights": [],
     "importantDates": [],
-    "prekExcerpt": "We had a wonderful first few days! Students got to know one another, explored classrooms, and visited the courtyard and the NOP. Thank you for having your Procare numbers ready and for your patience at dismissal.\n\nMonday Aug 24 and Tuesday Aug 25 are half days — dismissal at noon. Wednesday Aug 26 is the first full day (dismissal 3:00 PM) and also the first Late Start Wednesday (arrival 8:30–9:00 AM). Pursuit aftercare is available for PreK students starting Wednesday. Please begin sending lunch with your child on Wednesday.\n\nPlease fill out the PreK dismissal form so teachers know where your child is going after school. The link is in the newsletter and will also appear in the Sunday Compass Connection.\n\nEdie had a wonderful first week in Pre-K! She enjoyed exploring books with classmates and found a particular interest in sorting shells when the rock and sand pits opened. Teachers Lauren and Greg are looking forward to a great year.\n\nCheck Sunday's Compass Connection email for a link to the PreK class photo album featuring highlights from the first few days of school.\n\nMon Aug 24 & Tue Aug 25: Half days, dismissal at 12:00 PM. Wed Aug 26: First full day, pickup at 3:00 PM. Also the first Late Start Wednesday — arrival between 8:30–9:00 AM. Pursuit aftercare begins Wednesday. Send lunch with your child starting Wednesday.\n\nThe first few days of school have been wonderful! Students have been getting to know one another, exploring classrooms, and visiting new spaces like the courtyard and the NOP. Thank you for having your Procare numbers ready and for your patience during dismissal.\n\nPlease fill out the PreK dismissal form if you haven't already. The link is in this newsletter and will also be in Sunday's Compass Connection email.\n\nIf you didn't get a text from Harding during this morning's lightning delay, two things to check: (1) Your CompassNet profile must list your mobile as a 'Wireless' number. (2) Some carriers (T-Mobile, Verizon, AT&T, prepaid) may block messages from shortcode 36598. See the school's instructions to fix this."
+    "prekExcerpt": "Late Start Wednesdays start this week (Aug 26). School begins at 9:00 AM. Free Early Care is available 7:30–8:15 AM — PreK drop-off is at Compass Rose; students walk to the cafeteria side door where a staff member greets them. At 8:30 AM, PreK students are walked directly to their classrooms. If you arrive at or after 8:15 AM, use the regular car line.\n\nEdie had a wonderful first week in Pre-K! She enjoyed exploring books with classmates and found a particular interest in sorting shells when the rock and sand pits opened. Teachers Lauren and Greg are looking forward to a great year.\n\nMonday Aug 24 and Tuesday Aug 25 are half days — dismissal at noon. Wednesday Aug 26 is the first full day (dismissal 3:00 PM) and also the first Late Start Wednesday (arrival 8:30–9:00 AM). Pursuit aftercare is available for PreK students starting Wednesday. Please begin sending lunch with your child on Wednesday.\n\nMon Aug 24 & Tue Aug 25: Half days, dismissal at 12:00 PM. Wed Aug 26: First full day, pickup at 3:00 PM. Also the first Late Start Wednesday — arrival between 8:30–9:00 AM. Pursuit aftercare begins Wednesday. Send lunch with your child starting Wednesday.\n\nThe first few days of school have been wonderful! Students have been getting to know one another, exploring classrooms, and visiting new spaces like the courtyard and the NOP. Thank you for having your Procare numbers ready and for your patience during dismissal.\n\nIf you didn't get a text from Harding during this morning's lightning delay, two things to check: (1) Your CompassNet profile must list your mobile as a 'Wireless' number. (2) Some carriers (T-Mobile, Verizon, AT&T, prepaid) may block messages from shortcode 36598. See the school's instructions to fix this."
   },
   "classrooms": [
     {
