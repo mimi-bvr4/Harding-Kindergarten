@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-25T17:21:06.690Z",
+  "lastUpdated": "2026-08-25T17:27:11.143Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -665,6 +665,12 @@
       {
         "number": "330",
         "child": "Scarlett M.",
+        "room": "1",
+        "teacher": ""
+      },
+      {
+        "number": "360",
+        "child": "Quinley Y.",
         "room": "1",
         "teacher": ""
       },
