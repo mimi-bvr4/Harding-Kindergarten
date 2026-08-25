@@ -480,6 +480,10 @@ app.put('/api/carline/cars', requireAdmin, (req, res) => {
     const cars = incoming.slice(0, 200).map(c => ({
         number: String(c.number || '').trim().slice(0, 8),
         child: String(c.child || '').trim().slice(0, 80),
+        // Which classroom to fetch from: "1", "2", or "1,2" for a twin set
+        // riding on one number. Anything else is dropped rather than shown.
+        room: ['1', '2', '1,2'].includes(String(c.room || '').trim())
+            ? String(c.room).trim() : '',
         teacher: String(c.teacher || '').trim().slice(0, 80)
     })).filter(c => c.number);
 

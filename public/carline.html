@@ -12,7 +12,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#012169;--navy-2:#0A3A8B;--gold:#F59E0B;--cream:#FFFBEB;--ink:#1E293B;--mute:#94A3B8}
+:root{--navy:#012169;--navy-2:#0A3A8B;--gold:#F59E0B;--cream:#FFFBEB;--ink:#1E293B;--mute:#94A3B8;
+      /* Bidez = Blue. The alliteration is the mnemonic, so Pre-K 2 is blue
+         and Pre-K 1 (Huttchson & Collins) is red. */
+      --room1:#C81E1E;--room2:#1D4ED8}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#F1F5F9;color:var(--ink);
      min-height:100dvh;padding-bottom:env(safe-area-inset-bottom)}
@@ -50,10 +53,31 @@ main{padding:14px}
 .num.done{background:#E2E8F0;color:#A9B4C4;box-shadow:none;pointer-events:none}
 .num.done small{color:#C2CBD8}
 
+/* ---- classroom colour: which room to fetch the child from ---- */
+.num{position:relative;overflow:hidden}
+.num::after{content:'';position:absolute;left:0;right:0;bottom:0;height:6px;background:transparent}
+.num.r1::after{background:var(--room1)}
+.num.r2::after{background:var(--room2)}
+.num.r12::after{background:linear-gradient(90deg,var(--room1) 0 50%,var(--room2) 50% 100%)}
+.num.done::after{opacity:.3}
+
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.leg{display:inline-flex;align-items:center;gap:7px;background:#fff;border-radius:999px;
+     padding:7px 13px 7px 9px;font-size:12px;font-weight:700;color:#475569;
+     box-shadow:0 1px 2px rgba(15,23,42,.07)}
+.dot{width:13px;height:13px;border-radius:4px;flex:0 0 auto}
+.dot.r1{background:var(--room1)}
+.dot.r2{background:var(--room2)}
+.dot.r12{background:linear-gradient(135deg,var(--room1) 0 50%,var(--room2) 50% 100%)}
+
 .order-item{display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:8px}
 .seq{flex:0 0 34px;height:34px;border-radius:11px;background:var(--navy);color:#fff;
      font-family:'Fredoka',sans-serif;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center}
-.order-item.next .seq{background:var(--gold)}
+.seq.r1{background:var(--room1)}
+.seq.r2{background:var(--room2)}
+.seq.r12{background:linear-gradient(135deg,var(--room1) 0 50%,var(--room2) 50% 100%)}
+/* "next" is a ring, not a fill — the fill is carrying the classroom colour now */
+.order-item.next{box-shadow:0 0 0 2.5px var(--gold)}
 .who{flex:1;min-width:0}
 .who b{display:block;font-size:15px;font-weight:700}
 .who span{display:block;font-size:12px;color:var(--mute);margin-top:1px}
@@ -143,6 +167,27 @@ td:first-child{width:74px}
         if (last.charAt(last.length - 1) === '.') return parts.join(' ');
         return parts.slice(0, -1).join(' ') + ' ' + last.charAt(0).toUpperCase() + '.';
     }
+    // The two PreK rooms. Edit these two lines each year and everything else
+    // — the tile stripes, the legend, the labels — follows.
+    var ROOMS = {
+        '1':   { cls: 'r1',  label: 'Pre-K 1', who: 'Huttchson & Collins' },
+        '2':   { cls: 'r2',  label: 'Pre-K 2', who: 'Bidez & Nye' },
+        '1,2': { cls: 'r12', label: 'Pre-K 1 + 2', who: 'one from each room' }
+    };
+    function carFor(number) {
+        for (var i = 0; i < S.cars.length; i++) {
+            if (String(S.cars[i].number) === String(number)) return S.cars[i];
+        }
+        return null;
+    }
+    function roomOf(car) {
+        return (car && ROOMS[String(car.room || '')]) || null;
+    }
+    function roomClass(car) {
+        var r = roomOf(car);
+        return r ? ' ' + r.cls : '';
+    }
+
     function childFor(number) {
         for (var i = 0; i < S.cars.length; i++) {
             if (String(S.cars[i].number) === String(number)) return shortName(S.cars[i].child || '');
@@ -166,14 +211,15 @@ td:first-child{width:74px}
             return '<div><div class="lane-head">Lane ' + lane + '</div><div class="grid">' +
                 cars.map(function (c) {
                     var done = isPicked(c.number);
-                    return '<button class="num' + (done ? ' done' : '') + '" data-n="' + esc(c.number) +
-                        '" data-lane="' + lane + '">' + esc(c.number) +
+                    return '<button class="num' + (done ? ' done' : '') + roomClass(c) +
+                        '" data-n="' + esc(c.number) + '" data-lane="' + lane + '">' + esc(c.number) +
                         (c.child ? '<small>' + esc(c.child.split(' ')[0]) + '</small>' : '') + '</button>';
                 }).join('') + '</div></div>';
         }
         main.innerHTML =
             '<p class="hint">Tap each car number as you walk the line. A number you tap greys out in both lanes, ' +
             'and stays grey through the next wave. Only <b>Day reset</b> clears it.</p>' +
+            roomLegend() +
             '<div class="lanes">' + col('A') + col('B') + '</div>' +
             '<div class="bar"><button class="btn btn-undo" id="undoBtn">Undo last</button>' +
             '<button class="btn btn-go" id="toOrder">See send order</button></div>';
@@ -198,6 +244,20 @@ td:first-child{width:74px}
         document.getElementById('toOrder').addEventListener('click', function () { go('order'); });
     }
 
+    /** Only shows rooms that actually appear in the roster, so it never
+        promises a colour the teacher will not see on screen. */
+    function roomLegend() {
+        var seen = {};
+        S.cars.forEach(function (c) { if (ROOMS[String(c.room || '')]) seen[c.room] = true; });
+        var keys = Object.keys(seen);
+        if (!keys.length) return '';
+        return '<div class="legend">' + keys.sort().map(function (k) {
+            var r = ROOMS[k];
+            return '<span class="leg"><span class="dot ' + r.cls + '"></span>' +
+                   esc(r.label) + ' · ' + esc(r.who) + '</span>';
+        }).join('') + '</div>';
+    }
+
     // ---------- tab: order ----------
     //
     // Two columns, not one list. The children physically walk out in two lines,
@@ -217,11 +277,14 @@ td:first-child{width:74px}
             var body = inLane.length
                 ? inLane.map(function (p, i) {
                     var name = childFor(p.number);
+                    var car = carFor(p.number);
+                    var room = roomOf(car);
                     return '<div class="order-item' + (i === 0 ? ' next' : '') + '">' +
-                        '<span class="seq">' + esc(p.number) + '</span>' +
+                        '<span class="seq' + roomClass(car) + '">' + esc(p.number) + '</span>' +
                         '<span class="who"><b' + (name ? '' : ' class="noname"') + '>' +
-                        esc(name || 'No name on file') + '</b></span>' +
-                        '</div>';
+                        esc(name || 'No name on file') + '</b>' +
+                        (room ? '<span>' + esc(room.label) + '</span>' : '') +
+                        '</span></div>';
                 }).join('')
                 : '<div class="lane-empty">No cars in this lane yet</div>';
 
@@ -238,11 +301,13 @@ td:first-child{width:74px}
     function renderCars() {
         var cars = S.cars.length ? S.cars : carList();
         main.innerHTML =
-            '<p class="hint">Type the child beside each car number. Blank numbers still work — they just show ' +
-            '“Car 12” instead of a name. Saved to the dashboard, so it survives a redeploy.</p>' +
+            '<p class="hint">Type the child beside each car number, and the room to fetch them from — ' +
+            '<b>1</b>, <b>2</b>, or <b>1,2</b> for twins on one number. Blank numbers still work — they just ' +
+            'show “Car 12” instead of a name. Saved to the dashboard, so it survives a redeploy.</p>' +
             '<table><tbody>' + cars.map(function (c, i) {
                 return '<tr><td><input value="' + esc(c.number) + '" data-i="' + i + '" data-f="number" inputmode="numeric"></td>' +
-                    '<td><input value="' + esc(c.child || '') + '" data-i="' + i + '" data-f="child" placeholder="Child name"></td></tr>';
+                    '<td><input value="' + esc(c.child || '') + '" data-i="' + i + '" data-f="child" placeholder="Child name"></td>' +
+                    '<td style="width:62px"><input value="' + esc(c.room || '') + '" data-i="' + i + '" data-f="room" placeholder="1" style="text-align:center"></td></tr>';
             }).join('') + '</tbody></table>' +
             '<div class="bar"><button class="btn btn-go" id="saveCars">Save numbers</button></div>' +
             '<div id="savedMsg"></div>';
@@ -251,7 +316,7 @@ td:first-child{width:74px}
             var rows = {};
             main.querySelectorAll('input[data-i]').forEach(function (inp) {
                 var i = inp.dataset.i;
-                rows[i] = rows[i] || { number: '', child: '' };
+                rows[i] = rows[i] || { number: '', child: '', room: '' };
                 rows[i][inp.dataset.f] = inp.value;
             });
             var cars = Object.keys(rows).map(function (k) { return rows[k]; })
