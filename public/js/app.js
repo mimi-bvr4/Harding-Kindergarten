@@ -974,11 +974,20 @@ function renderSchoolLinks(data) {
             <span>Quick Links</span>
         </div>
         <div class="link-grid">
-            ${data.schoolLinks.map(r => `
-            <a href="${esc(r.url || '#')}" target="_blank" rel="noopener noreferrer" class="link-tile touch-row">
-                <span class="link-tile-icon"><i class="fas ${esc(r.icon || 'fa-link')}"></i></span>
-                <span style="font-size:13px;font-weight:700;color:#475569;line-height:1.3">${esc(r.label)}</span>
-            </a>`).join('')}
+            ${data.schoolLinks.map(r => {
+                // A tile with no URL is a placeholder for something the school
+                // has not opened yet — shown so parents know it is coming, but
+                // never dressed up as a working link.
+                const live = !!r.url && !r.soon;
+                const inner = `
+                    <span class="link-tile-icon"><i class="fas ${esc(r.icon || 'fa-link')}"></i></span>
+                    <span style="font-size:13px;font-weight:700;color:#475569;line-height:1.3">${esc(r.label)}</span>
+                    ${!live ? `<span class="link-tile-soon">${esc(r.soonLabel || 'Coming soon')}</span>` : ''}`;
+                return live
+                    ? `<a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer"
+                          class="link-tile touch-row">${inner}</a>`
+                    : `<span class="link-tile is-soon">${inner}</span>`;
+            }).join('')}
         </div>
     </section>`;
 }
