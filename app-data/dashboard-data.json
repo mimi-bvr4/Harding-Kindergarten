@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-28T15:55:26.559Z",
+  "lastUpdated": "2026-08-28T22:08:34.497Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -681,5 +681,55 @@
         "teacher": ""
       }
     ]
+  },
+  "classNewsletters": {
+    "2": {
+      "week": "Week 2",
+      "subject": "Pre-K Newsletter: Week 2",
+      "date": "2026-08-28",
+      "dateLabel": "08.28.2026",
+      "teachers": "Bidez & Nye",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Whew! Your child made it through the first full week of school! This week was filled with getting to know one another, learning classroom routines, and meeting special area teachers. Students have also been introduced to new items in the classroom, including the painting easel, tangrams, and a variety of blocks."
+        },
+        {
+          "type": "p",
+          "text": "Students continue to build their self-reliance skills as they practice their three step morning routine, take on helper jobs within the classroom, and work together to clean up after snack and lunch. To this end, if your child is bringing a sweater or sweatshirt to school, please work with them to practice independently putting it on, taking it off, and getting it right side out. Your child will be so proud to add another self-sufficient skill to their growing roster!"
+        },
+        {
+          "type": "p",
+          "text": "This week, we read Little Blue and Little Yellow by Leo Lionni. Through guided discovery, the children explored playdough, noticing how it feels, sounds, and smells, and thinking about what they can create with it. Each child started with a little blue ball of playdough and was then given a little ball of yellow. Some children immediately mixed the two colors together, while others mixed them a little at a time. Everyone was delighted to discover that mixing blue and yellow makes green! Students also explored playdough tools and experimented with the different ways they can be used."
+        },
+        {
+          "type": "p",
+          "text": "Students watched and listened to the Secret Stories Better Alphabet song [LINKED](https://www.youtube.com/watch?v=q3M_rdef7sw) here. This song will be revisited throughout the year as students delve deeper into letters and the sounds they make as an important pre-reading skill. Screen time in Pre-K is thoughtfully limited, with physical teaching tools and manipulatives used whenever possible. Occasionally, however, a short, intentionally chosen video can be a helpful way to introduce a concept or reinforce learning. One student even referred to the Smart Board as the “learning TV,” which honestly might need to become its official name!"
+        },
+        {
+          "type": "p",
+          "text": "Next week, students will begin the Handwriting Without Tears program, create self-portraits, and explore more of campus as they travel to the rest of their special area classes."
+        },
+        {
+          "type": "ul",
+          "items": [
+            "Can you tell me the name of one person in your pod?",
+            "What did your playdough smell like?",
+            "Did you like dried pineapple or freeze dried strawberries better?",
+            "Where in the classroom is your rest spot?",
+            "What is the line up mat?  When do you use it?"
+          ],
+          "heading": "Only getting “Good” as your answer to “How was your day?”.  Try asking"
+        },
+        {
+          "type": "p",
+          "text": "Happy Weekend!"
+        },
+        {
+          "type": "p",
+          "text": "Lauren and Greg"
+        }
+      ]
+    }
   }
 }
