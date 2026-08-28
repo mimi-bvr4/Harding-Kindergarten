@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-28T22:33:32.640Z",
+  "lastUpdated": "2026-08-28T22:35:59.015Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -487,9 +487,19 @@
   "documents": [],
   "schoolLinks": [
     {
-      "label": "Parent Volunteer Sign-Up",
+      "label": "HPA Parent Volunteer Sign-Up",
       "url": "https://www.signupgenius.com/tabs/33772D703A1C8EB7-20262027",
       "icon": "fa-hand-holding-heart"
+    },
+    {
+      "label": "PreK Sign-Ups",
+      "icon": "fa-seedling",
+      "soon": true
+    },
+    {
+      "label": "Snack Sign-Up",
+      "icon": "fa-apple-whole",
+      "soon": true
     }
   ],
   "allSchoolKeywords": [],
