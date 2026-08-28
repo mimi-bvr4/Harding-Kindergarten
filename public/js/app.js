@@ -106,6 +106,27 @@ function richText(str) {
         .replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
 }
 
+/* On a phone the newsletter sits below the whole class roster, so nobody
+   scrolls to it — and it only gets further away as weeks pile up. This puts a
+   jump link right under the teachers, where the eye already is.
+   It scrolls rather than links: the hash IS the router here, so an <a href="#…">
+   would navigate the app instead of moving the page. */
+function newsletterJump(data, roomKey) {
+    const nl = (data.classNewsletters || {})[roomKey];
+    if (!nl || !(nl.blocks || []).length) return '';
+    const older = (nl.archive || []).filter(a => (a.blocks || []).length).length;
+    return `
+    <button class="nl-jump touch-row" data-scroll="nl-${esc(roomKey)}">
+        <span class="nl-jump-ic"><i class="fas fa-envelope-open-text"></i></span>
+        <span style="flex:1;min-width:0;text-align:left">
+            <span class="nl-jump-t">${esc(nl.week || 'Newsletter')} newsletter</span>
+            <span class="nl-jump-s">${esc(nl.dateLabel || '')}${
+                older ? ` · ${older} earlier week${older === 1 ? '' : 's'}` : ''}</span>
+        </span>
+        <i class="fas fa-arrow-down" style="font-size:12px;opacity:.75"></i>
+    </button>`;
+}
+
 /* Verbatim: paragraphs stay paragraphs, the teacher's bullet list stays a
    bullet list under her own heading. Nothing is summarised or reordered. */
 function renderNewsletter(data, roomKey, roomLabel) {
@@ -120,7 +141,7 @@ function renderNewsletter(data, roomKey, roomLabel) {
     const past = (nl.archive || []).filter(a => (a.blocks || []).length);
 
     return `
-    <section class="section-card" style="margin-top:14px">
+    <section class="section-card nl-card" id="nl-${esc(roomKey)}" style="margin-top:14px">
         <div class="section-header">
             <span class="icon-pill"><i class="fas fa-envelope-open-text"></i></span>
             <span>${esc(nl.week || 'This week')}</span>
@@ -1160,6 +1181,7 @@ function renderClassesPage(data) {
                 <span style="margin-left:auto;font-size:11px;font-weight:800;color:#94A3B8;
                              text-transform:uppercase;letter-spacing:.08em">${esc(c.name)}</span>
             </div>
+            ${newsletterJump(data, c.key)}
             ${c.teachers.map(t => {
                 const em = teacherEmail(data, t);
                 return em
@@ -1268,6 +1290,13 @@ function setupRootHandlers() {
             const y = window.scrollY;
             renderApp({ keepScroll: true });
             window.scrollTo({ top: y, behavior: 'instant' });
+            return;
+        }
+
+        const jump = e.target.closest('[data-scroll]');
+        if (jump) {
+            const el = document.getElementById(jump.getAttribute('data-scroll'));
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             return;
         }
 
