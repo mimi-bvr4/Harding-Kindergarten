@@ -116,14 +116,8 @@ function renderNewsletter(data, roomKey, roomLabel) {
             <span>No newsletter posted for ${esc(roomLabel)} yet.</span></div>`;
     }
 
-    const body = nl.blocks.map(b => {
-        if (b.type === 'ul') {
-            return `${b.heading ? `<div class="nl-sub">${richText(b.heading)}</div>` : ''}
-                <ul class="nl-list">${(b.items || [])
-                    .filter(Boolean).map(it => `<li>${richText(it)}</li>`).join('')}</ul>`;
-        }
-        return `<p class="nl-p">${richText(b.text || '')}</p>`;
-    }).join('');
+    const body = newsletterBody(nl.blocks);
+    const past = (nl.archive || []).filter(a => (a.blocks || []).length);
 
     return `
     <section class="section-card" style="margin-top:14px">
@@ -135,7 +129,32 @@ function renderNewsletter(data, roomKey, roomLabel) {
         </div>
         <div class="nl-body">${body}</div>
         ${nl.teachers ? `<p class="nl-from">From ${esc(nl.teachers)}</p>` : ''}
+        ${past.length ? `
+        <div class="nl-archive">
+            <div class="nl-archive-title">Earlier weeks</div>
+            ${past.map(a => `
+            <details class="nl-old">
+                <summary>
+                    <span class="nl-old-week">${esc(a.week || 'Newsletter')}</span>
+                    <span class="nl-old-date">${esc(a.dateLabel || '')}</span>
+                    <i class="fas fa-chevron-down nl-chev"></i>
+                </summary>
+                <div class="nl-body" style="margin-top:12px">${newsletterBody(a.blocks)}</div>
+            </details>`).join('')}
+        </div>` : ''}
     </section>`;
+}
+
+/** Shared by the current newsletter and every archived one. */
+function newsletterBody(blocks) {
+    return (blocks || []).map(b => {
+        if (b.type === 'ul') {
+            return `${b.heading ? `<div class="nl-sub">${richText(b.heading)}</div>` : ''}
+                <ul class="nl-list">${(b.items || [])
+                    .filter(Boolean).map(it => `<li>${richText(it)}</li>`).join('')}</ul>`;
+        }
+        return `<p class="nl-p">${richText(b.text || '')}</p>`;
+    }).join('');
 }
 
 function classesOf(data) {
@@ -318,27 +337,45 @@ function renderHero(data) {
     </div>` : ''}`;
 }
 
-function renderWeeklyEmail(data) {
+/* Two different things used to share one card, and the button underneath the
+   PreK note read as though the note itself came from the school. They are
+   separate sources with separate authors, so they are separate cards:
+
+     renderWeeklyNote()  — the PreK-specific note, gathered by Mom Brain
+     renderCompass()     — the school's all-school Sunday email, linked out   */
+
+function renderWeeklyNote(data) {
     const wk = data.weeklyEmail || {};
     const prek = (data.classrooms || []).find(c => c.id === 'prek');
     const excerpt = prek?.weeklyExcerpt || wk.prekExcerpt || '';
-    if (!excerpt && !wk.emailUrl) return '';
+    if (!excerpt) return '';        // no note, no card — never an empty promise
+    return `
+    <section class="section-card">
+        <div class="section-header">
+            <span class="icon-pill"><i class="fas fa-school"></i></span>
+            <span>This Week from School</span>
+        </div>
+        <div style="font-size:14.5px;line-height:1.65;color:#334155;white-space:pre-line">${esc(excerpt)}</div>
+    </section>`;
+}
+
+function renderCompass(data) {
+    const wk = data.weeklyEmail || {};
+    if (!wk.emailUrl) return '';
     return `
     <section class="section-card">
         <div class="section-header">
             <span class="icon-pill"><i class="fas fa-envelope-open-text"></i></span>
-            <span>This Week from School</span>
+            <span>Compass Connection</span>
             ${wk.week ? `<span style="margin-left:auto;font-size:10px;font-weight:800;color:#94A3B8;
                           text-transform:uppercase;letter-spacing:.09em">${esc(wk.week)}</span>` : ''}
         </div>
-        ${excerpt
-            ? `<div style="font-size:14.5px;line-height:1.65;color:#334155;white-space:pre-line">${esc(excerpt)}</div>`
-            : `<p style="font-size:14px;color:#94A3B8;margin:0">This week's PreK note hasn't been posted yet.</p>`}
-        ${wk.emailUrl ? `
+        <p style="font-size:14px;line-height:1.6;color:#475569;margin:0">
+            The school's all-school email, sent Sunday mornings. This link updates itself each week.</p>
         <a href="${esc(wk.emailUrl)}" target="_blank" rel="noopener"
-           class="cta cta-navy cta-block" style="margin-top:15px">
-            <i class="fas fa-arrow-up-right-from-square"></i> Read the full school email
-        </a>` : ''}
+           class="cta cta-navy cta-block" style="margin-top:14px">
+            <i class="fas fa-arrow-up-right-from-square"></i> Read the Latest Sunday Compass Connection
+        </a>
     </section>`;
 }
 
@@ -980,7 +1017,8 @@ function renderHome(data) {
         ${data.welcome && orientationLive ? `<div class="note-box" style="margin:0">
             <div class="n"><i class="fas fa-star"></i><span style="font-weight:600">${esc(data.welcome)}</span></div>
         </div>` : ''}
-        ${renderWeeklyEmail(data)}
+        ${renderWeeklyNote(data)}
+        ${renderCompass(data)}
         ${renderDismissal(data, 'card')}
         ${orientationLive ? `
         <a href="#/orientation" data-route="#/orientation" class="feature-tile touch-row"
