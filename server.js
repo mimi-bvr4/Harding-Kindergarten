@@ -72,6 +72,9 @@ function readData() {
     if (typeof data.announcement !== 'string') data.announcement = '';
     if (!Array.isArray(data.classrooms)) data.classrooms = [];
     if (!data.weeklyEmail) data.weeklyEmail = {};
+    // Classroom newsletters, keyed by room number ("1", "2") — same keys the
+    // carline roster uses, so one idea of "which room" runs through the app.
+    if (!data.classNewsletters || typeof data.classNewsletters !== 'object') data.classNewsletters = {};
     return data;
 }
 
@@ -376,6 +379,10 @@ app.post('/api/data', (req, res) => {
             if (k === 'classroomExcerpts') continue;
             if (k === 'weeklyEmail' && merged.weeklyEmail) {
                 merged.weeklyEmail = { ...merged.weeklyEmail, ...incoming.weeklyEmail };
+            } else if (k === 'classNewsletters' && incoming.classNewsletters) {
+                // Merge per room. A push for room 2 must never wipe room 1.
+                merged.classNewsletters = { ...(merged.classNewsletters || {}),
+                                            ...incoming.classNewsletters };
             } else {
                 merged[k] = incoming[k];
             }
@@ -534,7 +541,7 @@ async function bootSync() {
             // and then vanish. Merge instead: take content from GitHub, keep
             // structure from the code that was just deployed.
             const CONTENT_KEYS = [
-                'weeklyEmail', 'announcement', 'classrooms', 'documents',
+                'weeklyEmail', 'announcement', 'classrooms', 'documents', 'classNewsletters',
                 'schoolLinks', 'keyDates', 'carline', 'lastUpdated'
             ];
 

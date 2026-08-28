@@ -203,6 +203,24 @@ body {
     box-shadow: 0 14px 28px -16px rgba(245,158,11,.8);
 }
 
+/* ---------- classroom newsletter (verbatim from the teacher) ---------- */
+
+.nl-body { font-size: 14.5px; line-height: 1.68; color: #334155; }
+.nl-p { margin: 0 0 12px; }
+.nl-p:last-child { margin-bottom: 0; }
+.nl-sub {
+    font-family: 'Fredoka', sans-serif; font-size: 14px; font-weight: 600;
+    color: var(--navy); margin: 16px 0 8px;
+}
+.nl-list { margin: 0 0 12px; padding-left: 20px; }
+.nl-list li { margin-bottom: 7px; }
+.nl-list li:last-child { margin-bottom: 0; }
+.nl-link { color: var(--navy); font-weight: 700; text-decoration: underline; }
+.nl-from {
+    margin: 14px 0 0; padding-top: 12px; border-top: 1px solid #F1F5F9;
+    font-size: 12.5px; color: #94A3B8; font-weight: 700;
+}
+
 /* ---------- weekly rhythm (spirit dress, late start) ---------- */
 
 .rhythm-card {

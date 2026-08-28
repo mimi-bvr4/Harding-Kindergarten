@@ -95,8 +95,52 @@ function initials(name) {
 }
 
 
+/* The teacher's own words, rendered as written. Escape first, then allow back
+   exactly two things: [label](http…) links and *emphasis* — both of which the
+   Gmail plain-text body already encodes. Nothing else from an email body is
+   ever treated as markup. */
+function richText(str) {
+    return esc(str)
+        .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,
+            (m, label, url) => `<a href="${url}" target="_blank" rel="noopener" class="nl-link">${label}</a>`)
+        .replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
+}
+
+/* Verbatim: paragraphs stay paragraphs, the teacher's bullet list stays a
+   bullet list under her own heading. Nothing is summarised or reordered. */
+function renderNewsletter(data, roomKey, roomLabel) {
+    const nl = (data.classNewsletters || {})[roomKey];
+    if (!nl || !(nl.blocks || []).length) {
+        return `<div class="archived-note" style="margin-top:12px">
+            <i class="fas fa-envelope" style="margin-top:2px"></i>
+            <span>No newsletter posted for ${esc(roomLabel)} yet.</span></div>`;
+    }
+
+    const body = nl.blocks.map(b => {
+        if (b.type === 'ul') {
+            return `${b.heading ? `<div class="nl-sub">${richText(b.heading)}</div>` : ''}
+                <ul class="nl-list">${(b.items || [])
+                    .filter(Boolean).map(it => `<li>${richText(it)}</li>`).join('')}</ul>`;
+        }
+        return `<p class="nl-p">${richText(b.text || '')}</p>`;
+    }).join('');
+
+    return `
+    <section class="section-card" style="margin-top:14px">
+        <div class="section-header">
+            <span class="icon-pill"><i class="fas fa-envelope-open-text"></i></span>
+            <span>${esc(nl.week || 'This week')}</span>
+            ${nl.dateLabel ? `<span style="margin-left:auto;font-size:10px;font-weight:800;color:#94A3B8;
+                text-transform:uppercase;letter-spacing:.09em">${esc(nl.dateLabel)}</span>` : ''}
+        </div>
+        <div class="nl-body">${body}</div>
+        ${nl.teachers ? `<p class="nl-from">From ${esc(nl.teachers)}</p>` : ''}
+    </section>`;
+}
+
 function classesOf(data) {
-    return (data.orientation?.rooms || []).map(r => ({
+    return (data.orientation?.rooms || []).map((r, i) => ({
+        key: String(i + 1),          // "1" | "2" — the same room keys carline uses
         name: r.name,
         label: r.classLabel || r.name,
         teachers: r.teachers || [],
@@ -1097,7 +1141,8 @@ function renderClassesPage(data) {
             <div style="display:flex;flex-wrap:wrap;gap:7px">
                 ${kids.map(n => `<span class="name-chip">${esc(shortName(n))}</span>`).join('')}
             </div>
-        </section>`;
+        </section>
+        ${renderNewsletter(data, c.key, c.name)}`;
     };
 
     const cards = shown.map(card).join('');
