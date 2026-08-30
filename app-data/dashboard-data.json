@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-30T13:23:34.319Z",
+  "lastUpdated": "2026-08-30T15:56:54.711Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -510,7 +510,7 @@
     "kindergartenExcerpt": "",
     "highlights": [],
     "importantDates": [],
-    "prekExcerpt": "Week 2 was all about getting to know each other, learning classroom routines, and meeting special area teachers. Students explored new classroom items including a painting easel, tangrams, and blocks. They also practiced their three-step morning routine, helper jobs, and cleaning up after snack and lunch.\n\nThis week's book: Little Blue and Little Yellow by Leo Lionni. Students explored playdough — noticing how it feels, sounds, and smells — and discovered that mixing blue and yellow makes green!\n\nStudents also watched the Secret Stories Better Alphabet song to begin building pre-reading skills around letters and sounds.\n\nNext week, students will begin the Handwriting Without Tears program, create self-portraits, and explore more of campus as they travel to the rest of their special area classes.\n\nIf your child brings a sweater or sweatshirt to school, please practice with them at home: putting it on, taking it off, and getting it right-side-out independently. This supports the self-reliance skills they're building in class.\n\nGetting only 'Good' when you ask how school was? Try these:\n• Can you tell me the name of one person in your pod?\n• What did your playdough smell like?\n• Did you like dried pineapple or freeze-dried strawberries better?\n• Where in the classroom is your rest spot?\n• What is the line-up mat? When do you use it?\n\nMonday Aug 24 and Tuesday Aug 25 are half days — dismissal at noon. Wednesday Aug 26 is the first full day (dismissal 3:00 PM) and also the first Late Start Wednesday (arrival 8:30–9:00 AM). Pursuit aftercare is available for PreK students starting Wednesday. Please begin sending lunch with your child on Wednesday.\n\nTomorrow is Edie's first full day! It's also the first Late Start Wednesday of the year.\n\n• **Early Care (optional):** Drop off 7:30–8:15 AM at the Compass Rose — enter through the side door of the cafeteria. A Harding staff member will greet students and walk them to class at 8:30 AM.\n• **Regular drop-off:** 8:30–9:00 AM in front of the WSL building as usual.\n\nSend a hearty lunch in easy-open containers — include utensils if needed. A small lovie or stuffed animal is welcome for rest time as long as it fits in their tote bag alongside their lunchbox and water bottle.\n\nLate Start Wednesdays start this week (Aug 26). School begins at 9:00 AM. Free Early Care is available 7:30–8:15 AM — PreK drop-off is at Compass Rose; students walk to the cafeteria side door where a staff member greets them. At 8:30 AM, PreK students are walked directly to their classrooms. If you arrive at or after 8:15 AM, use the regular car line.\n\nHarding confirmed they do not spray for bugs on campus. If your child is getting bug bites, you may want to apply bug repellent or patches at home before school. The NOP (Natural Outdoor Play area) is a natural environment.\n\nPreK students will be outside on the benches and ready to load into cars at 2:45 PM each day. If your schedule allows, you can line up outside WSL before 2:45 to avoid the all-school dismissal congestion — staff will be ready to accept Procare numbers. If 3 PM works better for you, that's totally fine too.\n\nMimi Beaver has signed up as the HPA PreK Communication Liaison for 2026-2027. She serves as the point person between HPA leadership and PreK families — relaying messages, encouraging participation, and helping answer questions about HPA events."
+    "prekExcerpt": "Your child completed their first full week of school! The week was spent getting to know classmates, learning classroom routines, and meeting special area teachers. Students were introduced to new classroom items including the painting easel, tangrams, and blocks. They read 'Little Blue and Little Yellow' by Leo Lionni and discovered through playdough exploration that blue + yellow = green! The Smart Board was introduced for a short, intentionally chosen video (the Secret Stories Better Alphabet Song) — one student dubbed it the 'learning TV.' Students are building self-reliance skills through a three-step morning routine, helper jobs, and cleaning up after snack and lunch. Next week: Handwriting Without Tears begins, self-portraits, and more special area classes.\n\nPreK Back to School Night is Tuesday, September 9. A Parent Party follows immediately after in the Frist Family Courtyard. RSVP via the link in the Compass Connection newsletter.\n\nAs students build self-reliance skills, please practice with your child: independently putting on and taking off a sweatshirt or sweater, and turning it right side out. They'll be proud to add this skill to their growing roster!\n\nNot getting more than 'Good' when you ask about their day? Try these: • Can you tell me the name of one person in your pod? • What did your playdough smell like? • Did you like dried pineapple or freeze-dried strawberries better? • Where in the classroom is your rest spot? • What is the line-up mat, and when do you use it?\n\nWeek 2 was all about getting to know each other, learning classroom routines, and meeting special area teachers. Students explored new classroom items including a painting easel, tangrams, and blocks. They also practiced their three-step morning routine, helper jobs, and cleaning up after snack and lunch.\n\nThis week's book: Little Blue and Little Yellow by Leo Lionni. Students explored playdough — noticing how it feels, sounds, and smells — and discovered that mixing blue and yellow makes green!\n\nStudents also watched the Secret Stories Better Alphabet song to begin building pre-reading skills around letters and sounds."
   },
   "classrooms": [
     {
@@ -698,6 +698,14 @@
       }
     ]
   },
+  "learningResources": [
+    {
+      "label": "Secret Stories Better Alphabet Song",
+      "url": "https://www.youtube.com/watch?v=q3M_rdef7sw",
+      "note": "Letters and their sounds — revisited all year in Pre-K. Shared 08.28.2026.",
+      "icon": "fa-music"
+    }
+  ],
   "classNewsletters": {
     "2": {
       "week": "Week 2",
@@ -747,13 +755,5 @@
         }
       ]
     }
-  },
-  "learningResources": [
-    {
-      "label": "Secret Stories Better Alphabet Song",
-      "url": "https://www.youtube.com/watch?v=q3M_rdef7sw",
-      "note": "Letters and their sounds — revisited all year in Pre-K. Shared 08.28.2026.",
-      "icon": "fa-music"
-    }
-  ]
+  }
 }
