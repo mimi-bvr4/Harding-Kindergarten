@@ -965,6 +965,35 @@ function renderDocuments(data, audience, title) {
     </section>`;
 }
 
+/* Things the school shares once, inside an email, that are useful all year —
+   a song, a video, a reading list. The email expires; this doesn't. Always
+   store the REAL destination, never the mailer's tracking redirect, which is
+   exactly the thing that stops working. */
+function renderLearning(data) {
+    const rows = (data.learningResources || []).filter(r => r.url && r.label);
+    if (!rows.length) return '';
+    return `
+    <section class="section-card">
+        <div class="section-header">
+            <span class="icon-pill"><i class="fas fa-graduation-cap"></i></span>
+            <span>Education Resources</span>
+        </div>
+        <p style="font-size:13px;color:#64748B;margin:0 0 12px;line-height:1.55">
+            Shared by the teachers during the year — kept here so they don't disappear
+            with the email they arrived in.</p>
+        ${rows.map(r => `
+        <a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer" class="person-row touch-row">
+            <span class="res-icon"><i class="fas ${esc(r.icon || 'fa-link')}"></i></span>
+            <span style="flex:1;min-width:0">
+                <span style="display:block;font-weight:700;font-size:14.5px;color:#1E293B">${esc(r.label)}</span>
+                ${r.note ? `<span style="display:block;font-size:12.5px;color:#94A3B8;margin-top:2px;
+                    line-height:1.4">${esc(r.note)}</span>` : ''}
+            </span>
+            <i class="fas fa-arrow-up-right-from-square" style="color:#CBD5E1;font-size:13px"></i>
+        </a>`).join('')}
+    </section>`;
+}
+
 function renderSchoolLinks(data) {
     if (!(data.schoolLinks || []).length) return '';
     return `
@@ -1087,6 +1116,7 @@ function renderInfoPage(data) {
         ${renderHandbookTile()}
         ${renderDocuments(data, 'school', 'Documents & Forms')}
         ${renderSchoolLinks(data)}
+        ${renderLearning(data)}
         ${renderInfoSections(data)}
     `);
 }

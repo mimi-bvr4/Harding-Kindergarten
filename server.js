@@ -69,6 +69,7 @@ function readData() {
     // Ensure newer fields always exist
     if (!Array.isArray(data.documents)) data.documents = [];
     if (!Array.isArray(data.schoolLinks)) data.schoolLinks = [];
+    if (!Array.isArray(data.learningResources)) data.learningResources = [];
     if (typeof data.announcement !== 'string') data.announcement = '';
     if (!Array.isArray(data.classrooms)) data.classrooms = [];
     if (!data.weeklyEmail) data.weeklyEmail = {};
@@ -542,6 +543,7 @@ async function bootSync() {
             // structure from the code that was just deployed.
             const CONTENT_KEYS = [
                 'weeklyEmail', 'announcement', 'classrooms', 'documents', 'classNewsletters',
+                'learningResources',
                 'schoolLinks', 'keyDates', 'carline', 'lastUpdated'
             ];
 
