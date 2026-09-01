@@ -561,7 +561,7 @@
         "title": "Late start tomorrow",
         "titleToday": "Late start today",
         "body": "Wednesday is a late start — the school day begins at 9:00 AM, not 8:00.",
-        "note": "",
+        "note": "School Store is open 7:30 – 9:30 AM.",
         "icon": "fa-clock",
         "color": "navy",
         "from": {
@@ -570,7 +570,8 @@
         },
         "to": {
           "day": 3,
-          "hour": 9
+          "hour": 9,
+          "minute": 30
         }
       }
     ]

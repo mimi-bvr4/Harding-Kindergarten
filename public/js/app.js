@@ -322,10 +322,10 @@ function nextKeyDate(data) {
         .sort((a, b) => a.date.localeCompare(b.date))[0] || null;
 }
 
+/* The hero is the date and the greeting, nothing more. What's next lives in
+   Key Dates, told once, as a date. */
 function renderHero(data) {
     const now = new Date();
-    const nx = nextKeyDate(data);
-    const n = nx ? daysFromToday(nx.date) : null;
     return `
     <div class="today-hero">
         <div style="position:relative;z-index:1">
@@ -339,23 +339,8 @@ function renderHero(data) {
                 </div>
                 <div class="hero-daynum">${now.getDate()}</div>
             </div>
-            ${nx && !(n !== null && n <= 14) ? `<div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:14px">
-                <span class="hero-chip"><i class="fas fa-calendar-day"></i>${esc(whenLabel(nx.date))} · ${esc(nx.label.split('—')[0].trim())}</span>
-            </div>` : ''}
         </div>
-    </div>
-    ${nx && n !== null && n <= 14 ? `
-    <div class="countdown">
-        <div>
-            <div class="countdown-num">${n === 0 ? '·' : n}</div>
-            <div class="countdown-label" style="text-align:center">${n === 0 ? 'today' : n === 1 ? 'day' : 'days'}</div>
-        </div>
-        <div style="flex:1;min-width:0">
-            <div style="font-weight:800;font-size:15px;line-height:1.25">${esc(nx.label)}</div>
-            <div style="font-size:12px;opacity:.9;margin-top:2px">
-                ${parseISO(nx.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</div>
-        </div>
-    </div>` : ''}`;
+    </div>`;
 }
 
 /* Two different things used to share one card, and the button underneath the
@@ -479,8 +464,16 @@ function renderOrientation(data) {
 }
 
 function renderKeyDates(data) {
-    const dates = (data.keyDates || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+    // Yesterday's dates are noise on a page you check in the morning. A date
+    // drops off the day after it happens; today still counts as upcoming.
+    // A date that won't parse is kept rather than silently binned.
+    const dates = (data.keyDates || [])
+        .filter(d => { const n = daysFromToday(d.date); return n === null || n >= 0; })
+        .sort((a, b) => a.date.localeCompare(b.date));
     if (!dates.length) return '';
+
+    // One row per date, all the same shape. A big countdown number beside a
+    // calendar badge showing a different number reads as two dates, not one.
     return `
     <section class="section-card">
         <div class="section-header">
@@ -491,8 +484,8 @@ function renderKeyDates(data) {
             const dt = parseISO(d.date);
             const n = daysFromToday(d.date);
             return `
-            <div class="date-row ${n !== null && n < 0 ? 'past' : ''}">
-                <div class="date-badge ${n !== null && n >= 0 && n <= 7 ? 'soon' : ''}">
+            <div class="date-row">
+                <div class="date-badge ${n !== null && n <= 7 ? 'soon' : ''}">
                     <div class="m">${dt ? MONTHS[dt.getMonth()] : '·'}</div>
                     <div class="d">${dt ? dt.getDate() : '–'}</div>
                 </div>
@@ -1077,7 +1070,11 @@ function renderHome(data) {
     const orientationLive = tabsFor(data).some(t => t.hash === '#/orientation');
     return page(data, '#/', `
         ${renderHero(data)}
+        ${/* Rhythm first when it is showing: a Spirit Dress card only appears
+              inside a one-day window, so it always outranks a date that is
+              still days out. The rest of the time Key Dates leads. */''}
         ${renderRhythm(data)}
+        ${renderKeyDates(data)}
         ${data.welcome && orientationLive ? `<div class="note-box" style="margin:0">
             <div class="n"><i class="fas fa-star"></i><span style="font-weight:600">${esc(data.welcome)}</span></div>
         </div>` : ''}
@@ -1095,7 +1092,6 @@ function renderHome(data) {
             </span>
             <i class="fas fa-chevron-right" style="opacity:.6;position:relative;z-index:1"></i>
         </a>` : ''}
-        ${renderKeyDates(data)}
     `);
 }
 
