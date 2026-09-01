@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-01T03:08:08.392Z",
+  "lastUpdated": "2026-09-01T03:19:52.739Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -139,20 +139,96 @@
     },
     {
       "date": "2026-09-07",
-      "label": "Labor Day — school holiday"
+      "label": "School Holiday — Labor Day"
     },
     {
       "date": "2026-09-09",
-      "time": "18:00",
-      "label": "Back to School Night · 6:00 PM"
+      "label": "Back to School Night · 6:00 PM",
+      "time": "18:00"
     },
     {
       "date": "2026-09-09",
-      "time": "19:00",
       "label": "PreK Parents Gathering",
+      "time": "19:00",
       "note": "Immediately following Back to School Night · Frist Family Courtyard",
       "url": "https://docs.google.com/forms/d/e/1FAIpQLSfsfkOlQlLfXppoLtj8nX4IxGetSe_hvnPvOnydtJmwpemduw/viewform",
       "urlLabel": "RSVP"
+    },
+    {
+      "date": "2026-09-21",
+      "label": "School Holiday — Yom Kippur"
+    },
+    {
+      "date": "2026-10-12",
+      "label": "Parent/Teacher Conferences",
+      "end": "2026-10-13"
+    },
+    {
+      "date": "2026-10-14",
+      "label": "Fall Break",
+      "end": "2026-10-16"
+    },
+    {
+      "date": "2026-11-24",
+      "label": "Grandparents Chocolate — early dismissal"
+    },
+    {
+      "date": "2026-11-25",
+      "label": "Thanksgiving Break",
+      "end": "2026-11-27"
+    },
+    {
+      "date": "2026-12-18",
+      "label": "Early Dismissal"
+    },
+    {
+      "date": "2026-12-21",
+      "label": "Winter Break",
+      "end": "2027-01-01"
+    },
+    {
+      "date": "2027-01-04",
+      "label": "Classes Resume"
+    },
+    {
+      "date": "2027-01-18",
+      "label": "School Holiday — MLK, Jr. Day"
+    },
+    {
+      "date": "2027-02-12",
+      "label": "School Holiday — Presidents Day Weekend",
+      "end": "2027-02-15"
+    },
+    {
+      "date": "2027-02-25",
+      "label": "Parent/Teacher Conferences",
+      "end": "2027-02-26"
+    },
+    {
+      "date": "2027-03-12",
+      "label": "Spring Break",
+      "end": "2027-03-19"
+    },
+    {
+      "date": "2027-03-26",
+      "label": "School Holiday — Good Friday"
+    },
+    {
+      "date": "2027-04-29",
+      "label": "Harding Art Show",
+      "end": "2027-05-01"
+    },
+    {
+      "date": "2027-04-30",
+      "label": "School Holiday — Harding Art Show"
+    },
+    {
+      "date": "2027-05-27",
+      "label": "Last Day of Classes — early dismissal"
+    },
+    {
+      "date": "2027-05-28",
+      "label": "Graduation"
     }
   ],
   "infoSections": [
@@ -579,7 +655,10 @@
         "to": {
           "day": 5,
           "hour": 15
-        }
+        },
+        "calendarLabel": "Spirit Dress",
+        "calendarNote": "Any Harding t-shirt with uniform bottoms.",
+        "calendarTime": ""
       },
       {
         "id": "late-start",
@@ -599,7 +678,10 @@
           "day": 3,
           "hour": 9,
           "minute": 30
-        }
+        },
+        "calendarLabel": "Late start — school begins at 9:00 AM",
+        "calendarNote": "School Store is open 7:30 – 9:30 AM.",
+        "calendarTime": "09:00"
       }
     ]
   },
