@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-31T15:56:04.361Z",
+  "lastUpdated": "2026-09-01T02:57:37.482Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -146,8 +146,23 @@
       "label": "First 3:00 PM dismissal · Pursuit becomes available for PreK"
     },
     {
+      "date": "2026-09-03",
+      "label": "Photo Day"
+    },
+    {
       "date": "2026-09-07",
       "label": "Labor Day — school holiday"
+    },
+    {
+      "date": "2026-09-09",
+      "label": "Back to School Night · 6:00 PM"
+    },
+    {
+      "date": "2026-09-09",
+      "label": "PreK Parents Gathering",
+      "note": "Immediately following Back to School Night · Frist Family Courtyard",
+      "url": "https://docs.google.com/forms/d/e/1FAIpQLSfsfkOlQlLfXppoLtj8nX4IxGetSe_hvnPvOnydtJmwpemduw/viewform",
+      "urlLabel": "RSVP"
     }
   ],
   "infoSections": [
