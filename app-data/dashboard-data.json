@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-01T02:57:48.160Z",
+  "lastUpdated": "2026-09-01T03:08:08.392Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -134,18 +134,6 @@
   },
   "keyDates": [
     {
-      "date": "2026-08-17",
-      "label": "PreK Orientation"
-    },
-    {
-      "date": "2026-08-19",
-      "label": "School begins — noon dismissal in front of the new building (through August 25)"
-    },
-    {
-      "date": "2026-08-26",
-      "label": "First 3:00 PM dismissal · Pursuit becomes available for PreK"
-    },
-    {
       "date": "2026-09-03",
       "label": "Photo Day"
     },
@@ -155,10 +143,12 @@
     },
     {
       "date": "2026-09-09",
+      "time": "18:00",
       "label": "Back to School Night · 6:00 PM"
     },
     {
       "date": "2026-09-09",
+      "time": "19:00",
       "label": "PreK Parents Gathering",
       "note": "Immediately following Back to School Night · Frist Family Courtyard",
       "url": "https://docs.google.com/forms/d/e/1FAIpQLSfsfkOlQlLfXppoLtj8nX4IxGetSe_hvnPvOnydtJmwpemduw/viewform",
@@ -598,7 +588,7 @@
         "title": "Late start tomorrow",
         "titleToday": "Late start today",
         "body": "Wednesday is a late start — the school day begins at 9:00 AM, not 8:00.",
-        "note": "",
+        "note": "School Store is open 7:30 – 9:30 AM.",
         "icon": "fa-clock",
         "color": "navy",
         "from": {
@@ -607,7 +597,8 @@
         },
         "to": {
           "day": 3,
-          "hour": 9
+          "hour": 9,
+          "minute": 30
         }
       }
     ]
