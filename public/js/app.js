@@ -486,16 +486,17 @@ function recurringDates(data) {
     return out;
 }
 
-function renderKeyDates(data) {
+function renderKeyDates(data, opts = {}) {
     // Yesterday's dates are noise on a page you check in the morning. A date
     // drops off the day after it happens; today still counts as upcoming.
     // A date that won't parse is kept rather than silently binned.
     /* Same day, clock order: a 9:00 late start belongs above a 6:00 PM event.
        Anything with no time is all-day (Photo Day, a dress code, a holiday)
-       and leads its day. */
+       and leads its day. A multi-day break stays listed until its LAST day
+       passes, so Spring Break does not vanish on the Monday morning of it. */
     const at = (d) => `${d.date} ${d.time || '00:00'}`;
     const dates = (data.keyDates || []).concat(recurringDates(data))
-        .filter(d => { const n = daysFromToday(d.date); return n === null || n >= 0; })
+        .filter(d => { const n = daysFromToday(d.end || d.date); return n === null || n >= 0; })
         .sort((a, b) => at(a).localeCompare(at(b)));
     if (!dates.length) return '';
 
@@ -514,11 +515,13 @@ function renderKeyDates(data) {
         if (dt <= nextWeekEnd) return 1;
         return 2;
     };
+    // Today is a two-week outlook. The Dates tab is the whole year.
     const groups = [
         { title: 'This Week', rows: dates.filter(d => bucket(d) === 0) },
         { title: 'Next Week', rows: dates.filter(d => bucket(d) === 1) },
-        { title: 'Later',     rows: dates.filter(d => bucket(d) === 2) }
-    ].filter(g => g.rows.length);
+        opts.full ? { title: 'Later', rows: dates.filter(d => bucket(d) === 2) } : null
+    ].filter(g => g && g.rows.length);
+    const laterCount = dates.filter(d => bucket(d) === 2).length;
 
     const row = (d) => {
         const dt = parseISO(d.date);
@@ -532,6 +535,7 @@ function renderKeyDates(data) {
                 <div style="flex:1;min-width:0;padding-top:3px">
                     <div class="date-label">
                         ${esc(d.label)}${d.repeat ? `<span class="repeat-tag">${esc(d.repeat)}</span>` : ''}</div>
+                    ${d.end ? `<div class="date-range">${esc(rangeLabel(d.date, d.end))}</div>` : ''}
                     ${d.note ? `<div class="date-note">${esc(d.note)}</div>` : ''}
                     ${d.url ? `<a href="${esc(d.url)}" target="_blank" rel="noopener noreferrer"
                         class="date-link">${esc(d.urlLabel || 'RSVP')}
@@ -546,10 +550,25 @@ function renderKeyDates(data) {
             <span class="icon-pill"><i class="fas fa-calendar-check"></i></span>
             <span>Key Dates</span>
         </div>
-        ${groups.map((g, i) => `
+        ${groups.length ? groups.map((g, i) => `
             <div class="home-section-title" style="margin:${i ? '18px' : '2px'} 0 4px 0">${esc(g.title)}</div>
-            ${g.rows.map(row).join('')}`).join('')}
+            ${g.rows.map(row).join('')}`).join('')
+            : `<p style="font-size:14px;color:#94A3B8;margin:0">Nothing in the next two weeks.</p>`}
+        ${!opts.full && laterCount ? `
+        <a href="#/dates" data-route="#/dates" class="all-dates touch-row">
+            See all ${laterCount} later date${laterCount === 1 ? '' : 's'}
+            <i class="fas fa-chevron-right" style="font-size:11px"></i></a>` : ''}
     </section>`;
+}
+
+/** "October 12 – 13" or "December 21 – January 1" — one line, no year noise. */
+function rangeLabel(startISO, endISO) {
+    const a = parseISO(startISO), b = parseISO(endISO);
+    if (!a || !b) return '';
+    const M = (d) => d.toLocaleDateString('en-US', { month: 'long' });
+    return a.getMonth() === b.getMonth()
+        ? `${M(a)} ${a.getDate()} – ${b.getDate()}`
+        : `${M(a)} ${a.getDate()} – ${M(b)} ${b.getDate()}`;
 }
 
 /**
@@ -1084,6 +1103,7 @@ function tabsFor(data) {
             ? { hash: '#/orientation', label: 'Orientation', icon: 'fa-door-open', dot: true } : null,
         (data.orientation?.rooms || []).length
             ? { hash: '#/classes', label: 'Classes', icon: 'fa-users' } : null,
+        { hash: '#/dates',      label: 'Dates',   icon: 'fa-calendar-days' },
         { hash: '#/info',       label: 'Info',    icon: 'fa-circle-info' },
         { hash: '#/team',       label: 'Teachers', icon: 'fa-people-group' },
         hasActivities(data)
@@ -1158,6 +1178,13 @@ function renderOrientationPage(data) {
 function renderWeekPage(data) {
     location.replace('#/');
     return renderHome(data);
+}
+
+function renderDatesPage(data) {
+    setTopbar('Key Dates', 'Harding PreK · 2026-27');
+    return page(data, '#/dates', renderKeyDates(data, { full: true }) ||
+        '<div class="archived-note"><i class="fas fa-calendar-days" style="margin-top:2px"></i>' +
+        '<span>No dates posted yet.</span></div>');
 }
 
 function renderInfoPage(data) {
@@ -1331,6 +1358,7 @@ function renderApp(opts = {}) {
 
     const R = {
         activities:   () => renderActivitiesPage(APP.data),
+        dates:        () => renderDatesPage(APP.data),
         orientation:  () => renderOrientationPage(APP.data),
         week:         () => renderWeekPage(APP.data),
         info:         () => renderInfoPage(APP.data),
