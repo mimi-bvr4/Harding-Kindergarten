@@ -1344,6 +1344,7 @@ function currentRoute() {
     if (hash.startsWith('/activities'))   return { name: 'activities' };
     if (hash.startsWith('/orientation'))  return { name: 'orientation' };
     if (hash.startsWith('/week'))         return { name: 'week' };
+    if (hash.startsWith('/dates'))        return { name: 'dates' };
     if (hash.startsWith('/info'))         return { name: 'info' };
     if (hash.startsWith('/classes'))      return { name: 'classes' };
     if (hash.startsWith('/team'))         return { name: 'team' };
