@@ -457,6 +457,13 @@ body {
     display: flex; align-items: center; justify-content: center; font-size: 17px;
 }
 
+.date-link {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 8px;
+    padding: 6px 12px; border-radius: 999px; text-decoration: none;
+    background: var(--navy); color: #fff; font-size: 12px; font-weight: 700;
+}
+.date-link:active { opacity: .85; }
+
 .res-icon {
     width: 42px; height: 42px; border-radius: 13px; flex: 0 0 auto;
     background: #EFF6FF; color: var(--navy); font-size: 16px;

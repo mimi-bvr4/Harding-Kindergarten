@@ -380,6 +380,19 @@ app.post('/api/data', (req, res) => {
             if (k === 'classroomExcerpts') continue;
             if (k === 'weeklyEmail' && merged.weeklyEmail) {
                 merged.weeklyEmail = { ...merged.weeklyEmail, ...incoming.weeklyEmail };
+            } else if (k === 'learningResources' && Array.isArray(incoming.learningResources)) {
+                // Merge by URL, never replace. Anything added by hand outranks
+                // anything a script found, so curation is never overwritten.
+                const byUrl = new Map();
+                for (const r of incoming.learningResources) {
+                    if (r && r.url) byUrl.set(r.url, { ...r, auto: true });
+                }
+                for (const r of (merged.learningResources || [])) {
+                    if (!r || !r.url) continue;
+                    if (r.auto && byUrl.has(r.url)) continue;   // let the fresh copy win
+                    byUrl.set(r.url, r);                        // hand-made entry stands
+                }
+                merged.learningResources = [...byUrl.values()];
             } else if (k === 'classNewsletters' && incoming.classNewsletters) {
                 // Merge per room. A push for room 2 must never wipe room 1.
                 merged.classNewsletters = { ...(merged.classNewsletters || {}),

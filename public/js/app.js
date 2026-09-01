@@ -498,7 +498,12 @@ function renderKeyDates(data) {
                 </div>
                 <div style="flex:1;min-width:0;padding-top:3px">
                     <div style="font-size:14.5px;font-weight:700;color:#1E293B;line-height:1.4">${esc(d.label)}</div>
+                    ${d.note ? `<div style="font-size:13px;color:#475569;margin-top:3px;
+                        line-height:1.5">${esc(d.note)}</div>` : ''}
                     <div style="font-size:11.5px;color:#94A3B8;margin-top:2px">${esc(whenLabel(d.date))}</div>
+                    ${d.url ? `<a href="${esc(d.url)}" target="_blank" rel="noopener noreferrer"
+                        class="date-link">${esc(d.urlLabel || 'RSVP')}
+                        <i class="fas fa-arrow-up-right-from-square" style="font-size:9.5px"></i></a>` : ''}
                 </div>
             </div>`;
         }).join('')}
