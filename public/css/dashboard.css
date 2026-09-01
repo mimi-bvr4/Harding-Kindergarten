@@ -475,12 +475,6 @@ body {
 
 .date-range { font-size: 12.5px; font-weight: 700; color: #3B6BB5; margin-top: 2px; }
 .date-row.is-repeat .date-range { font-weight: 600; color: #A9B4C4; font-size: 11.5px; }
-.all-dates {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    margin-top: 16px; padding: 12px; border-radius: 14px; text-decoration: none;
-    background: #F1F5F9; color: var(--navy); font-size: 13.5px; font-weight: 700;
-}
-.all-dates:active { background: #E2E8F0; }
 
 .repeat-tag {
     display: inline-block; margin-left: 8px; vertical-align: middle;

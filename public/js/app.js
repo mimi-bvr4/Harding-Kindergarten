@@ -521,7 +521,6 @@ function renderKeyDates(data, opts = {}) {
         { title: 'Next Week', rows: dates.filter(d => bucket(d) === 1) },
         opts.full ? { title: 'Later', rows: dates.filter(d => bucket(d) === 2) } : null
     ].filter(g => g && g.rows.length);
-    const laterCount = dates.filter(d => bucket(d) === 2).length;
 
     const row = (d) => {
         const dt = parseISO(d.date);
@@ -548,16 +547,12 @@ function renderKeyDates(data, opts = {}) {
     <section class="section-card">
         <div class="section-header">
             <span class="icon-pill"><i class="fas fa-calendar-check"></i></span>
-            <span>Key Dates</span>
+            <span>Upcoming Dates</span>
         </div>
         ${groups.length ? groups.map((g, i) => `
             <div class="home-section-title" style="margin:${i ? '18px' : '2px'} 0 4px 0">${esc(g.title)}</div>
             ${g.rows.map(row).join('')}`).join('')
             : `<p style="font-size:14px;color:#94A3B8;margin:0">Nothing in the next two weeks.</p>`}
-        ${!opts.full && laterCount ? `
-        <a href="#/dates" data-route="#/dates" class="all-dates touch-row">
-            See all ${laterCount} later date${laterCount === 1 ? '' : 's'}
-            <i class="fas fa-chevron-right" style="font-size:11px"></i></a>` : ''}
     </section>`;
 }
 
@@ -1181,7 +1176,7 @@ function renderWeekPage(data) {
 }
 
 function renderDatesPage(data) {
-    setTopbar('Key Dates', 'Harding PreK · 2026-27');
+    setTopbar('Upcoming Dates', 'Harding PreK · 2026-27');
     return page(data, '#/dates', renderKeyDates(data, { full: true }) ||
         '<div class="archived-note"><i class="fas fa-calendar-days" style="margin-top:2px"></i>' +
         '<span>No dates posted yet.</span></div>');
