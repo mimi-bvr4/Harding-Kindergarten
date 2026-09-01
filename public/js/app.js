@@ -198,6 +198,10 @@ function setupNav() {
     document.getElementById('navCloseBtn')?.addEventListener('click', close);
     scrim?.addEventListener('click', close);
     document.getElementById('refreshBtn')?.addEventListener('click', () => location.reload());
+    // Also in the drawer: the top-right corner is out of thumb reach on a big phone.
+    document.getElementById('navItems').addEventListener('click', e => {
+        if (e.target.closest('#navRefresh')) location.reload();
+    });
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape' && drawer.classList.contains('open')) close();
     });
@@ -239,6 +243,12 @@ function renderNav(data) {
         ${wk.emailUrl ? item(wk.emailUrl, 'fa-envelope-open-text', "This Week's Email", 'Open the full school email', 'new') : ''}
         <div style="height:1px;background:#F1F5F9;margin:8px 16px"></div>
         ${item('/carline', 'fa-flag-checkered', 'Run Carline', 'Teachers \u00b7 sign-in required', 'same')}
+        <button id="navRefresh" class="nav-item touch-row" style="width:100%;border:0;background:none;
+                font-family:inherit;text-align:left;cursor:pointer">
+            <span class="icon"><i class="fas fa-rotate-right"></i></span>
+            <span style="flex:1"><div>Refresh</div>
+                <div style="font-size:11px;color:#94A3B8;font-weight:500">Pull the latest from school</div></span>
+        </button>
     `;
 
     document.getElementById('navLastUpdated').textContent =
