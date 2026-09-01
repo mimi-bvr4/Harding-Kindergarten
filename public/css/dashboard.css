@@ -331,9 +331,11 @@ body {
     flex: 0 0 auto; width: 50px; text-align: center;
     border-radius: 13px; overflow: hidden; border: 1px solid #E2E8F0; background: #fff;
 }
-.date-badge .m { background: var(--navy); color: #fff; font-size: 10px; font-weight: 800; padding: 2px 0; letter-spacing: .06em; }
-.date-badge .d { font-family: 'Fredoka', sans-serif; font-size: 19px; font-weight: 600; padding: 2px 0; }
-.date-badge.soon .m { background: var(--gold); }
+/* The weekday leads: this card is read as a week outlook, so the first thing
+   in the badge is the day you are scanning for. */
+.date-badge .w { background: var(--navy); color: #fff; font-size: 10px; font-weight: 800; padding: 3px 0; letter-spacing: .07em; }
+.date-badge .m { color: #94A3B8; font-size: 9.5px; font-weight: 800; padding: 3px 0 0; letter-spacing: .06em; }
+.date-badge .d { font-family: 'Fredoka', sans-serif; font-size: 19px; font-weight: 600; padding: 0 0 4px; line-height: 1.1; }
 .date-row.past { opacity: .42; }
 
 /* ---------- info accordions ---------- */
@@ -455,6 +457,26 @@ body {
     width: 42px; height: 42px; border-radius: 14px;
     background: #EFF6FF; color: var(--navy-3);
     display: flex; align-items: center; justify-content: center; font-size: 17px;
+}
+
+.date-label { font-size: 14.5px; font-weight: 700; color: #1E293B; line-height: 1.4; }
+.date-note  { font-size: 13px; color: #475569; margin-top: 3px; line-height: 1.5; }
+
+/* Standing weekly items — late start, Spirit Dress — are reference, not news.
+   Smaller, paler and tighter so a one-off event owns the eye completely. */
+.date-row.is-repeat { padding: 7px 0; }
+.date-row.is-repeat .date-badge { border-color: #EDF1F7; }
+.date-row.is-repeat .date-badge .w { background: #EDF3FB; color: #8AA6CE; font-weight: 700; }
+.date-row.is-repeat .date-badge .m { color: #C3CBD8; }
+.date-row.is-repeat .date-badge .d { color: #A9B4C4; font-weight: 500; font-size: 17px; }
+.date-row.is-repeat .date-label { font-size: 13px; font-weight: 600; color: #94A3B8; }
+.date-row.is-repeat .date-note  { font-size: 11.5px; color: #B4BECC; margin-top: 1px; }
+.date-row.is-repeat .repeat-tag { background: #F5F8FC; color: #AEB9C7; padding: 2px 7px; font-size: 9px; }
+
+.repeat-tag {
+    display: inline-block; margin-left: 8px; vertical-align: middle;
+    font-size: 9.5px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase;
+    color: #64748B; background: #EEF2F7; border-radius: 999px; padding: 3px 8px;
 }
 
 .date-link {

@@ -59,6 +59,7 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const DAYS   = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 
 function startOfToday() { const d = new Date(); d.setHours(0,0,0,0); return d; }
 
@@ -73,16 +74,6 @@ function daysFromToday(iso) {
     const d = parseISO(iso);
     if (!d) return null;
     return Math.round((d - startOfToday()) / 86400000);
-}
-
-function whenLabel(iso) {
-    const n = daysFromToday(iso);
-    if (n === null) return '';
-    if (n === 0) return 'Today';
-    if (n === 1) return 'Tomorrow';
-    if (n < 0)  return `${Math.abs(n)} day${Math.abs(n) === 1 ? '' : 's'} ago`;
-    if (n < 7)  return `In ${n} days`;
-    return `In ${Math.round(n / 7)} week${Math.round(n / 7) === 1 ? '' : 's'}`;
 }
 
 function greeting() {
@@ -463,43 +454,101 @@ function renderOrientation(data) {
     </section>`;
 }
 
+/* The weekly things — Wednesday late start, Friday Spirit Dress — belong on
+   the calendar too, not only in their day-before reminder window. Each one
+   contributes its NEXT occurrence, so the list stays a list rather than
+   filling up with every Wednesday between now and May. */
+function recurringDates(data) {
+    const r = data.weeklyRhythm || {};
+    if (r.show === false) return [];
+
+    const today = startOfToday();
+    const pad = (x) => String(x).padStart(2, '0');
+
+    const out = [];
+    (r.items || [])
+        .filter(it => it.show !== false && typeof it.dayOf === 'number' && it.calendarLabel)
+        .forEach(it => {
+            // Two occurrences: this week's and next week's, so the Next Week
+            // section knows about its own Wednesday and Friday.
+            for (let k = 0; k < 2; k++) {
+                const d = new Date(today);
+                d.setDate(d.getDate() + ((it.dayOf - d.getDay() + 7) % 7) + k * 7);
+                out.push({
+                    date: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
+                    time: it.calendarTime || '',
+                    label: it.calendarLabel,
+                    note: it.calendarNote || '',
+                    repeat: 'Every week'
+                });
+            }
+        });
+    return out;
+}
+
 function renderKeyDates(data) {
     // Yesterday's dates are noise on a page you check in the morning. A date
     // drops off the day after it happens; today still counts as upcoming.
     // A date that won't parse is kept rather than silently binned.
-    const dates = (data.keyDates || [])
+    /* Same day, clock order: a 9:00 late start belongs above a 6:00 PM event.
+       Anything with no time is all-day (Photo Day, a dress code, a holiday)
+       and leads its day. */
+    const at = (d) => `${d.date} ${d.time || '00:00'}`;
+    const dates = (data.keyDates || []).concat(recurringDates(data))
         .filter(d => { const n = daysFromToday(d.date); return n === null || n >= 0; })
-        .sort((a, b) => a.date.localeCompare(b.date));
+        .sort((a, b) => at(a).localeCompare(at(b)));
     if (!dates.length) return '';
 
-    // One row per date, all the same shape. A big countdown number beside a
-    // calendar badge showing a different number reads as two dates, not one.
+    /* Read as a week outlook, so it is grouped the way a week is lived.
+       A week here ends on Sunday night — Monday starts a new one. */
+    const today = startOfToday();
+    const thisWeekEnd = new Date(today);
+    thisWeekEnd.setDate(thisWeekEnd.getDate() + ((7 - today.getDay()) % 7));
+    const nextWeekEnd = new Date(thisWeekEnd);
+    nextWeekEnd.setDate(nextWeekEnd.getDate() + 7);
+
+    const bucket = (d) => {
+        const dt = parseISO(d.date);
+        if (!dt) return 2;
+        if (dt <= thisWeekEnd) return 0;
+        if (dt <= nextWeekEnd) return 1;
+        return 2;
+    };
+    const groups = [
+        { title: 'This Week', rows: dates.filter(d => bucket(d) === 0) },
+        { title: 'Next Week', rows: dates.filter(d => bucket(d) === 1) },
+        { title: 'Later',     rows: dates.filter(d => bucket(d) === 2) }
+    ].filter(g => g.rows.length);
+
+    const row = (d) => {
+        const dt = parseISO(d.date);
+        return `
+            <div class="date-row ${d.repeat ? 'is-repeat' : ''}">
+                <div class="date-badge">
+                    <div class="w">${dt ? DAYS[dt.getDay()] : '·'}</div>
+                    <div class="m">${dt ? MONTHS[dt.getMonth()] : '·'}</div>
+                    <div class="d">${dt ? dt.getDate() : '–'}</div>
+                </div>
+                <div style="flex:1;min-width:0;padding-top:3px">
+                    <div class="date-label">
+                        ${esc(d.label)}${d.repeat ? `<span class="repeat-tag">${esc(d.repeat)}</span>` : ''}</div>
+                    ${d.note ? `<div class="date-note">${esc(d.note)}</div>` : ''}
+                    ${d.url ? `<a href="${esc(d.url)}" target="_blank" rel="noopener noreferrer"
+                        class="date-link">${esc(d.urlLabel || 'RSVP')}
+                        <i class="fas fa-arrow-up-right-from-square" style="font-size:9.5px"></i></a>` : ''}
+                </div>
+            </div>`;
+        };
+
     return `
     <section class="section-card">
         <div class="section-header">
             <span class="icon-pill"><i class="fas fa-calendar-check"></i></span>
             <span>Key Dates</span>
         </div>
-        ${dates.map(d => {
-            const dt = parseISO(d.date);
-            const n = daysFromToday(d.date);
-            return `
-            <div class="date-row">
-                <div class="date-badge ${n !== null && n <= 7 ? 'soon' : ''}">
-                    <div class="m">${dt ? MONTHS[dt.getMonth()] : '·'}</div>
-                    <div class="d">${dt ? dt.getDate() : '–'}</div>
-                </div>
-                <div style="flex:1;min-width:0;padding-top:3px">
-                    <div style="font-size:14.5px;font-weight:700;color:#1E293B;line-height:1.4">${esc(d.label)}</div>
-                    ${d.note ? `<div style="font-size:13px;color:#475569;margin-top:3px;
-                        line-height:1.5">${esc(d.note)}</div>` : ''}
-                    <div style="font-size:11.5px;color:#94A3B8;margin-top:2px">${esc(whenLabel(d.date))}</div>
-                    ${d.url ? `<a href="${esc(d.url)}" target="_blank" rel="noopener noreferrer"
-                        class="date-link">${esc(d.urlLabel || 'RSVP')}
-                        <i class="fas fa-arrow-up-right-from-square" style="font-size:9.5px"></i></a>` : ''}
-                </div>
-            </div>`;
-        }).join('')}
+        ${groups.map((g, i) => `
+            <div class="home-section-title" style="margin:${i ? '18px' : '2px'} 0 4px 0">${esc(g.title)}</div>
+            ${g.rows.map(row).join('')}`).join('')}
     </section>`;
 }
 
