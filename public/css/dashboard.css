@@ -85,26 +85,27 @@ body {
 
 /* ---------- section tab bar ---------- */
 
+/* Every tab visible at once. A scrolling strip hides tabs off the right edge,
+   and a tab you cannot see is a tab you do not know exists. Three per row
+   wraps to two rows at six tabs, three rows if Orientation is live. */
 .tabbar {
     position: sticky; top: 0; z-index: 20;
     background: rgba(238,242,249,.94);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(15,23,42,.07);
-    display: flex; gap: 7px;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px;
     padding: 9px 12px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
 }
-.tabbar::-webkit-scrollbar { display: none; }
 
 .tab {
-    flex: 0 0 auto; display: inline-flex; align-items: center; gap: 7px;
-    padding: 9px 15px; border: 1px solid #E2E8F0; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 9px 10px; border: 1px solid #E2E8F0; border-radius: 999px;
     background: #fff; color: #64748B; text-decoration: none;
-    font-size: 13.5px; font-weight: 700; white-space: nowrap;
+    font-size: 13px; font-weight: 700; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
     transition: background .15s, color .15s, border-color .15s;
 }
+@media (min-width: 560px) { .tabbar { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
 .tab i { font-size: 12px; opacity: .75; }
 .tab:active { background: #F1F5F9; }
 .tab.active {

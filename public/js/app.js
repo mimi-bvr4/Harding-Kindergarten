@@ -1363,10 +1363,6 @@ function renderApp(opts = {}) {
     };
     root.innerHTML = (R[route.name] || R.home)();
 
-    // Keep the active tab visible when it's off the right edge of the strip.
-    const activeTab = root.querySelector('.tab.active');
-    if (activeTab) activeTab.scrollIntoView({ block: 'nearest', inline: 'center' });
-
     if (!opts.keepScroll) window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
