@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-01T03:23:05.349Z",
+  "lastUpdated": "2026-09-01T03:23:17.548Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -223,9 +223,12 @@
       "end": "2027-05-01"
     },
     {
-      "date": "2027-04-30",
-      "label": "Harding Art Show",
-      "end": "2027-05-01"
+      "date": "2027-05-27",
+      "label": "Last Day of Classes — early dismissal"
+    },
+    {
+      "date": "2027-05-28",
+      "label": "Graduation"
     }
   ],
   "infoSections": [
