@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-01T03:23:17.548Z",
+  "lastUpdated": "2026-09-01T03:24:57.885Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -214,13 +214,13 @@
       "label": "School Holiday — Good Friday"
     },
     {
-      "date": "2027-04-30",
-      "label": "School Holiday — Harding Art Show"
+      "date": "2027-04-29",
+      "label": "Harding Art Show",
+      "end": "2027-05-01"
     },
     {
       "date": "2027-04-30",
-      "label": "Harding Art Show",
-      "end": "2027-05-01"
+      "label": "School Holiday — Harding Art Show"
     },
     {
       "date": "2027-05-27",
