@@ -117,6 +117,15 @@ app.post('/api/hold/end', gate.requireStaff, (req, res) => {
     res.json(writeJSON(HOLD_FILE, hold));
 });
 
+// Reset returns the board to a clean idle state — no calls, no clock. It is
+// not "end dismissal": the next number typed starts a fresh hold on its own,
+// so a reset in the middle of a real event costs nothing but the scrollback.
+app.post('/api/hold/reset', gate.requireStaff, (req, res) => {
+    const cleared = readHold().calls.length;
+    writeJSON(HOLD_FILE, { active: false, startedAt: null, calls: [] });
+    res.json({ ok: true, cleared });
+});
+
 app.post('/api/hold/call', gate.requireStaff, (req, res) => {
     const number = String((req.body || {}).number || '').trim();
     if (!/^\d{1,5}$/.test(number)) return res.status(400).json({ error: 'Digits only.' });

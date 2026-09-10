@@ -138,6 +138,7 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:2vw;padding:1.3vh 2.2vw
    elStale.classList.toggle('hidden', Date.now()-lastOk < 20000);
    if(started){ var s=Math.floor((Date.now()-started)/1000);
      elElapse.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+   else { elElapse.textContent='0:00'; }   // after a reset, don't freeze the old clock
  },1000);
 
  poll(); setInterval(poll,2000);

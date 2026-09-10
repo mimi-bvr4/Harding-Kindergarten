@@ -13,13 +13,22 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
  border-bottom:1px solid var(--line);background:rgba(0,0,0,.25)}
 .badge{font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#06132E;
  background:var(--gold);padding:5px 10px;border-radius:99px}
-.hcount{margin-left:auto;font-size:12px;font-weight:800;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.hcount{margin-left:auto;font-size:12px;font-weight:800;color:var(--dim);letter-spacing:.08em;
+ text-transform:uppercase;white-space:nowrap}
+.hcount[hidden]{display:none}
 /* One nav, identical on every staff page, so nobody is ever stranded. */
 .nav{display:flex;gap:5px;align-items:center;min-width:0;overflow-x:auto;scrollbar-width:none}
 .nav::-webkit-scrollbar{display:none}
 .nav a{flex:0 0 auto;color:var(--dim);font-size:12px;font-weight:800;text-decoration:none;
  border:1px solid var(--line);padding:6px 10px;border-radius:99px;white-space:nowrap}
 .nav a.on{background:var(--gold);color:#06132E;border-color:transparent}
+/* Clearing the board is two taps, never one: the first arms it and names the
+   cost ("Confirm 12"), the second does it. It disarms itself after 5s so a
+   pocket tap can never sit there waiting to be completed by accident. */
+.reset{flex:0 0 auto;border:1px solid var(--line);background:transparent;color:var(--dim);
+ border-radius:99px;padding:6px 10px;font:inherit;font-size:12px;font-weight:800;
+ cursor:pointer;white-space:nowrap}
+.reset.armed{background:var(--red);border-color:var(--red);color:#fff}
 
 /* the number being typed — huge, because it is checked at a glance in bad light */
 .entry{flex:0 0 auto;text-align:center;padding:14px 10px 6px}
@@ -66,6 +75,7 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
     <a href="/roster">Roster</a>
   </nav>
   <span class="hcount" id="count">0 called</span>
+  <button class="reset" id="reset">Reset</button>
 </header>
 
 <div class="entry">
@@ -96,7 +106,8 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
  var elNum=document.getElementById('num'), elHint=document.getElementById('hint'),
      elRecent=document.getElementById('recent'), elCount=document.getElementById('count'),
      elOff=document.getElementById('off'),
-     elUndo=document.getElementById('undo'), elUndoNum=document.getElementById('undoNum');
+     elUndo=document.getElementById('undo'), elUndoNum=document.getElementById('undoNum'),
+     elReset=document.getElementById('reset');
 
  function paint(){
    elNum.textContent = buf || '—';
@@ -153,6 +164,35 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
     .catch(function(){ sending=false; elOff.classList.remove('hidden'); });
  }
 
+ var armTimer=null;
+ function disarm(){
+   clearTimeout(armTimer); armTimer=null;
+   elReset.classList.remove('armed'); elReset.textContent='Reset';
+   elCount.hidden=false;
+ }
+ function tapReset(){
+   if(!armTimer){
+     if(!calls.length){ hint('Nothing to reset'); return; }
+     elReset.classList.add('armed');
+     elReset.textContent='Confirm '+calls.length;
+     // The armed pill already names the count; two of them squeeze the nav.
+     elCount.hidden=true;
+     armTimer=setTimeout(disarm,5000);
+     hint('Tap again to clear the board','dupe');
+     return;
+   }
+   disarm();
+   fetch('/api/hold/reset',{method:'POST'})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(j){
+       myAts={}; pendingMine=null; buf='';
+       elOff.classList.add('hidden');
+       hint('Board cleared — '+j.cleared+' removed');
+       load();
+    })
+    .catch(function(){ elOff.classList.remove('hidden'); });
+ }
+
  function load(){
    fetch('/api/hold',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
      calls=j.calls||[];
@@ -171,6 +211,9 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
    if(k.id==='go')  return send();
  });
  elUndo.addEventListener('click',undo);
+ elReset.addEventListener('click',tapReset);
+ // Typing a number while Reset is armed means they meant to keep working.
+ document.getElementById('pad').addEventListener('click',disarm);
  // A keyboard is faster than a touchscreen when there is one.
  document.addEventListener('keydown',function(e){
    if(e.key>='0'&&e.key<='9') return press(e.key);
