@@ -1,0 +1,133 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><title>Roster · Carline Hold</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#06132E;--panel:#0C1F45;--line:rgba(255,255,255,.12);--gold:#FFC72C;--dim:#7E93BC;--red:#FF3B30;--green:#22C55E}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--navy);color:#fff;padding-bottom:120px}
+header{position:sticky;top:0;z-index:5;background:rgba(6,19,46,.96);border-bottom:1px solid var(--line);
+ padding:calc(12px + env(safe-area-inset-top)) 14px 12px;display:flex;align-items:center;gap:10px}
+.badge{font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#06132E;
+ background:var(--gold);padding:5px 10px;border-radius:99px}
+.count{margin-left:auto;font-size:12px;font-weight:800;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
+main{max-width:900px;margin:0 auto;padding:14px}
+.hint{font-size:13.5px;color:var(--dim);line-height:1.6;margin-bottom:14px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:10.5px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;
+ color:var(--dim);padding:0 8px 6px}
+td{padding:3px 4px}
+input{width:100%;font:inherit;font-size:15px;padding:10px 11px;border:1px solid var(--line);
+ border-radius:10px;background:var(--panel);color:#fff}
+input:focus{outline:none;border-color:var(--gold)}
+td.num input{text-align:center;font-weight:900}
+.del{border:0;background:none;color:var(--dim);font-size:20px;cursor:pointer;padding:0 6px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:rgba(6,19,46,.97);border-top:1px solid var(--line);
+ padding:12px 14px calc(12px + env(safe-area-inset-bottom));display:flex;gap:8px;justify-content:center}
+button.b{border:0;border-radius:12px;font:inherit;font-size:14.5px;font-weight:800;padding:13px 20px;cursor:pointer}
+.b-add{background:var(--panel);color:#fff;border:1px solid var(--line)}
+.b-save{background:var(--gold);color:#06132E}
+.msg{position:fixed;left:50%;transform:translateX(-50%);bottom:84px;border-radius:99px;padding:10px 18px;
+ font-size:13.5px;font-weight:800;z-index:6}
+.msg.ok{background:var(--green);color:#04240F}.msg.bad{background:var(--red);color:#2A0A00}
+.msg.hidden{display:none}
+details{margin:16px 0;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+summary{padding:12px 14px;font-size:14px;font-weight:800;cursor:pointer}
+details .in{padding:0 14px 14px}
+textarea{width:100%;min-height:150px;font:inherit;font-size:13.5px;padding:11px;border-radius:10px;
+ border:1px solid var(--line);background:#06132E;color:#fff;resize:vertical}
+code{background:#06132E;padding:1px 5px;border-radius:4px;font-size:12.5px}
+</style></head><body>
+
+<header>
+  <span class="badge">Roster</span>
+  <span style="font-size:13px;font-weight:800;color:#C9D8F5">Car number → children</span>
+  <span class="count" id="count">0 numbers</span>
+</header>
+
+<main>
+  <p class="hint">One row per car number. A household with two children gets both names on the
+  one number. The class is what lets a teacher filter the called list to their own students —
+  without it their phone shows every child in the school.</p>
+
+  <details>
+    <summary>Paste a list instead</summary>
+    <div class="in">
+      <p class="hint">One per line: <code>number, class, child, child</code><br>
+      Pasting replaces everything below — check it before you save.</p>
+      <textarea id="bulk" placeholder="26, Pre-K 2, Noah Patel&#10;212, 3rd Grade, Owen Barrett, Clara Barrett"></textarea>
+      <button class="b b-add" id="parse" style="margin-top:10px">Load into the table</button>
+    </div>
+  </details>
+
+  <table><thead><tr>
+    <th style="width:78px">Number</th><th style="width:30%">Class</th><th>Children</th><th style="width:36px"></th>
+  </tr></thead><tbody id="rows"></tbody></table>
+</main>
+
+<div class="bar">
+  <button class="b b-add" id="add">+ Add row</button>
+  <button class="b b-save" id="save">Save roster</button>
+</div>
+<div class="msg hidden" id="msg"></div>
+
+<script>
+(function(){
+ var rows=[], elRows=document.getElementById('rows'), elCount=document.getElementById('count'),
+     elMsg=document.getElementById('msg');
+ function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+   return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];});}
+
+ function paint(){
+   elCount.textContent = rows.length+' number'+(rows.length===1?'':'s');
+   elRows.innerHTML = rows.map(function(r,i){
+     return '<tr>'+
+       '<td class="num"><input value="'+esc(r.number)+'" data-i="'+i+'" data-f="number" inputmode="numeric"></td>'+
+       '<td><input value="'+esc(r.room)+'" data-i="'+i+'" data-f="room" placeholder="Pre-K 2"></td>'+
+       '<td><input value="'+esc((r.names||[]).join(', '))+'" data-i="'+i+'" data-f="names" placeholder="Child, Child"></td>'+
+       '<td><button class="del" data-del="'+i+'" aria-label="Remove">×</button></td></tr>';
+   }).join('');
+ }
+ function flash(t,ok){ elMsg.textContent=t; elMsg.className='msg '+(ok?'ok':'bad');
+   setTimeout(function(){elMsg.className='msg hidden';},2600); }
+
+ elRows.addEventListener('input',function(e){
+   var el=e.target; if(!el.dataset.f) return;
+   var r=rows[el.dataset.i];
+   if(el.dataset.f==='names') r.names=el.value.split(',').map(function(s){return s.trim();}).filter(Boolean);
+   else r[el.dataset.f]=el.value;
+ });
+ elRows.addEventListener('click',function(e){
+   var b=e.target.closest('[data-del]'); if(!b) return;
+   rows.splice(Number(b.dataset.del),1); paint();
+ });
+ document.getElementById('add').addEventListener('click',function(){
+   rows.push({number:'',room:'',names:[]}); paint();
+   var last=elRows.querySelector('tr:last-child input'); if(last) last.focus();
+ });
+ document.getElementById('parse').addEventListener('click',function(){
+   var out=document.getElementById('bulk').value.split('\n').map(function(line){
+     var p=line.split(',').map(function(s){return s.trim();});
+     if(!p[0]) return null;
+     return { number:p[0], room:p[1]||'', names:p.slice(2).filter(Boolean) };
+   }).filter(Boolean);
+   if(!out.length) return flash('Nothing to load',false);
+   rows=out; paint(); flash('Loaded '+out.length+' rows — not saved yet',true);
+ });
+ document.getElementById('save').addEventListener('click',function(){
+   var bad=rows.filter(function(r){return !/^\d{1,5}$/.test(String(r.number).trim());});
+   if(bad.length) return flash(bad.length+' row(s) have no valid number',false);
+   fetch('/api/roster',{method:'PUT',headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({roster:rows})})
+    .then(function(r){return r.json();})
+    .then(function(j){ j.ok? flash('Saved '+j.count+' numbers',true) : flash(j.error||'Save failed',false); })
+    .catch(function(){ flash('Could not reach the server',false); });
+ });
+
+ fetch('/api/roster').then(function(r){return r.json();}).then(function(j){
+   rows=(j.roster||[]).map(function(r){return {number:r.number,room:r.room||'',names:r.names||[]};});
+   if(!rows.length) rows=[{number:'',room:'',names:[]}];
+   paint();
+ }).catch(function(){ flash('Could not load the roster',false); });
+})();
+</script></body></html>

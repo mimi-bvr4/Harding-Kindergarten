@@ -1,0 +1,140 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#06132E">
+<title>Called List · Carline Hold</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#06132E;--panel:#0C1F45;--line:rgba(255,255,255,.12);--gold:#FFC72C;--dim:#7E93BC;--mine:#22C55E}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--navy);color:#fff;
+ display:flex;flex-direction:column;overflow:hidden;font-variant-numeric:tabular-nums}
+
+header{flex:0 0 auto;padding:calc(10px + env(safe-area-inset-top)) 12px 8px;
+ border-bottom:1px solid var(--line);background:rgba(0,0,0,.28)}
+.top{display:flex;align-items:center;gap:10px}
+.badge{font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;
+ color:#06132E;background:var(--gold);padding:5px 10px;border-radius:99px}
+.meta{margin-left:auto;font-size:12px;font-weight:800;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
+.rooms{display:flex;gap:6px;overflow-x:auto;margin-top:9px;scrollbar-width:none;padding-bottom:2px}
+.rooms::-webkit-scrollbar{display:none}
+.room{flex:0 0 auto;border:1px solid var(--line);background:var(--panel);color:#C9D8F5;
+ border-radius:99px;padding:8px 14px;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer;white-space:nowrap}
+.room.on{background:#fff;color:#06132E;border-color:#fff}
+
+/* When a class is chosen, its children jump out of the list without hiding
+   the rest — a teacher still needs to see the line moving. */
+.list{flex:1 1 auto;overflow-y:auto;padding:8px 12px calc(16px + env(safe-area-inset-bottom));
+ -webkit-overflow-scrolling:touch}
+.row{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);
+ border-radius:14px;padding:12px 14px;margin-bottom:7px}
+.row .n{font-size:26px;font-weight:900;line-height:1;min-width:64px}
+.row .w{flex:1;min-width:0}
+.row .w b{display:block;font-size:16.5px;font-weight:800;line-height:1.25}
+.row .w s{display:block;font-size:12px;font-weight:800;color:var(--dim);text-decoration:none;
+ letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.row .ago{font-size:12px;font-weight:800;color:var(--dim);flex:0 0 auto}
+.row.mine{background:#0B2E1B;border-color:rgba(34,197,94,.55)}
+.row.mine .n{color:var(--mine)}
+.row.mine .w s{color:#7BE0A3}
+.row.dim{opacity:.5}
+.row.unknown .w b{color:var(--dim);font-style:italic;font-weight:700}
+
+.empty{text-align:center;color:var(--dim);padding:14vh 20px;font-size:15px;font-weight:700;line-height:1.6}
+.off{position:fixed;left:0;right:0;top:0;background:#FF3B30;color:#2A0A00;text-align:center;
+ font-size:12px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:7px;z-index:9}
+.off.hidden{display:none}
+.jump{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom));
+ background:var(--gold);color:#06132E;border:0;border-radius:99px;padding:11px 20px;font:inherit;
+ font-size:14px;font-weight:900;box-shadow:0 10px 24px -10px rgba(0,0,0,.7);cursor:pointer}
+.jump.hidden{display:none}
+</style></head><body>
+
+<div class="off hidden" id="off">Not updating — check with the office</div>
+
+<header>
+  <div class="top">
+    <span class="badge">Called</span>
+    <span id="who" style="font-size:13px;font-weight:800;color:#C9D8F5"></span>
+    <span class="meta" id="meta">0 called</span>
+  </div>
+  <div class="rooms" id="rooms"></div>
+</header>
+
+<div class="list" id="list"><div class="empty">Nothing called yet.<br>Your class will highlight here.</div></div>
+<button class="jump hidden" id="jump">New calls ↑</button>
+
+<script>
+(function(){
+ var KEY='hold.myRoom', myRoom=null, rooms=[], calls=[], lastTop=null;
+ try{ myRoom=localStorage.getItem(KEY)||null; }catch(e){}
+
+ var elRooms=document.getElementById('rooms'), elList=document.getElementById('list'),
+     elMeta=document.getElementById('meta'), elWho=document.getElementById('who'),
+     elOff=document.getElementById('off'), elJump=document.getElementById('jump');
+
+ function esc(s){return String(s).replace(/[&<>]/g,function(c){
+   return({'&':'&amp;','<':'&lt;','>':'&gt;'})[c];});}
+
+ function ago(iso){
+   var s=Math.floor((Date.now()-new Date(iso).getTime())/1000);
+   if(s<60) return s+'s';
+   return Math.floor(s/60)+'m';
+ }
+
+ function paintRooms(){
+   elRooms.innerHTML = ['<button class="room'+(myRoom?'':' on')+'" data-r="">All classes</button>']
+     .concat(rooms.map(function(r){
+       return '<button class="room'+(myRoom===r?' on':'')+'" data-r="'+esc(r)+'">'+esc(r)+'</button>';
+     })).join('');
+   elWho.textContent = myRoom ? myRoom : '';
+ }
+
+ function paintList(){
+   elMeta.textContent = calls.length+' called';
+   if(!calls.length){
+     elList.innerHTML='<div class="empty">Nothing called yet.<br>Your class will highlight here.</div>';
+     return;
+   }
+   elList.innerHTML = calls.map(function(c){
+     var mine = myRoom && c.room===myRoom;
+     var known = (c.names||[]).length;
+     var cls = 'row'+(mine?' mine':'')+(myRoom&&!mine?' dim':'')+(known?'':' unknown');
+     return '<div class="'+cls+'"><span class="n">'+esc(c.number)+'</span>'+
+            '<span class="w"><b>'+(known?esc(c.names.join(' & ')):'No name on file')+'</b>'+
+            (c.room?'<s>'+esc(c.room)+'</s>':'')+'</span>'+
+            '<span class="ago">'+ago(c.at)+'</span></div>';
+   }).join('');
+ }
+
+ function atTop(){ return elList.scrollTop < 40; }
+
+ function load(){
+   fetch('/api/hold',{cache:'no-store'}).then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(d){
+      elOff.classList.add('hidden');
+      rooms=d.rooms||[]; 
+      var wasTop=atTop(), prevTop=lastTop;
+      calls=d.calls||[];
+      lastTop = calls.length? calls[0].at : null;
+      paintRooms(); paintList();
+      // Don't yank the list out from under someone who scrolled back.
+      if(wasTop) elList.scrollTop=0;
+      else if(prevTop!==lastTop) elJump.classList.remove('hidden');
+    })
+    .catch(function(){ elOff.classList.remove('hidden'); });
+ }
+
+ elRooms.addEventListener('click',function(e){
+   var b=e.target.closest('.room'); if(!b) return;
+   myRoom = b.dataset.r || null;
+   try{ myRoom? localStorage.setItem(KEY,myRoom) : localStorage.removeItem(KEY); }catch(x){}
+   paintRooms(); paintList(); elList.scrollTop=0;
+ });
+ elJump.addEventListener('click',function(){ elList.scrollTop=0; elJump.classList.add('hidden'); });
+ elList.addEventListener('scroll',function(){ if(atTop()) elJump.classList.add('hidden'); });
+
+ load(); setInterval(load,3000);
+ setInterval(paintList,15000);   // keep the "2m ago" column honest
+})();
+</script></body></html>

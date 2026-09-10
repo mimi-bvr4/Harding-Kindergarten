@@ -1,0 +1,124 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Dismissal Hold</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06132E;--panel:#0C1F45;--line:rgba(255,255,255,.10);--gold:#FFC72C;--dim:#7E93BC;--older:#5E76A3;--alert:#FF3B30}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:#fff;font-family:'Inter',-apple-system,sans-serif;
+ font-variant-numeric:tabular-nums;overflow:hidden;display:flex;flex-direction:column}
+header{flex:0 0 auto;display:flex;align-items:center;gap:2vw;padding:1.3vh 2.2vw;
+ border-bottom:2px solid var(--line);background:rgba(0,0,0,.22)}
+.badge{font-size:1.4vw;font-weight:900;letter-spacing:.16em;text-transform:uppercase;
+ color:#06132E;background:var(--gold);padding:.5vh 1.1vw;border-radius:99px}
+.title{font-size:1.4vw;font-weight:800;letter-spacing:.05em;color:#C9D8F5}
+.stats{margin-left:auto;display:flex;gap:2.4vw}
+.stat{text-align:right}
+.stat b{display:block;font-size:2vw;font-weight:900;line-height:1}
+.stat s{display:block;font-size:.9vw;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+ color:var(--dim);text-decoration:none;margin-top:.3vh}
+.now{flex:0 0 auto;display:flex;align-items:center;gap:3.5vw;padding:2vh 3vw 1.6vh}
+.now-label{writing-mode:vertical-rl;transform:rotate(180deg);font-size:1.5vw;font-weight:900;
+ letter-spacing:.3em;text-transform:uppercase;color:var(--gold);flex:0 0 auto}
+.now-num{font-size:21vw;font-weight:900;line-height:.8;letter-spacing:-.02em;flex:0 0 auto;
+ text-shadow:0 0 8vw rgba(255,199,44,.2)}
+.now-names{flex:1 1 auto;min-width:0}
+.now-names div{font-size:6.4vw;font-weight:900;line-height:1.04;white-space:nowrap;
+ overflow:hidden;text-overflow:ellipsis;color:var(--gold)}
+.now.flash{animation:pop .45s ease-out}
+@keyframes pop{0%{transform:scale(.9);opacity:.4}100%{transform:scale(1);opacity:1}}
+.prev-label{flex:0 0 auto;font-size:1vw;font-weight:900;letter-spacing:.22em;text-transform:uppercase;
+ color:var(--dim);padding:0 2.2vw .7vh}
+.grid{flex:1 1 auto;min-height:0;display:grid;gap:.7vw;align-content:start;padding:0 2.2vw 2vh;
+ grid-template-columns:repeat(3,1fr)}
+.cell{background:var(--panel);border:2px solid var(--line);border-radius:1vw;padding:.9vh 1vw;
+ display:flex;align-items:baseline;gap:.8vw;overflow:hidden}
+.cell .n{font-weight:900;line-height:1;flex:0 0 auto;font-size:4.2vw}
+.cell .w{font-weight:800;line-height:1.1;color:#C9D8F5;font-size:2.4vw;white-space:nowrap;
+ overflow:hidden;text-overflow:ellipsis}
+.cell.old{background:rgba(12,31,69,.5)}
+.cell.old .n,.cell.old .w{color:var(--older)}
+.idle{flex:1 1 auto;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5vh;text-align:center}
+.idle b{font-size:5vw;font-weight:900;color:#3E5A8F}
+.idle s{font-size:1.6vw;color:var(--dim);text-decoration:none;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.stale{position:fixed;top:0;left:0;right:0;background:var(--alert);color:#2A0A00;text-align:center;
+ font-size:1.3vw;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:.8vh;z-index:9}
+.stale.hidden{display:none}
+</style></head><body>
+
+<div class="stale hidden" id="stale">Screen not updating — use the loudspeaker</div>
+
+<header>
+  <span class="badge">Dismissal Hold</span>
+  <span class="title">Listen for your number — it stays on screen</span>
+  <div class="stats">
+    <div class="stat"><b id="count">0</b><s>Called</s></div>
+    <div class="stat"><b id="elapsed">0:00</b><s>Elapsed</s></div>
+  </div>
+</header>
+
+<div class="now" id="now" hidden>
+  <div class="now-label">Now</div>
+  <div class="now-num" id="nowNum">—</div>
+  <div class="now-names" id="nowNames"></div>
+</div>
+
+<div class="prev-label" id="prevLabel" hidden>Just called</div>
+<div class="grid" id="grid" hidden></div>
+
+<div class="idle" id="idle"><b>Waiting</b><s>No numbers called yet</s></div>
+
+<script>
+(function(){
+ var DEPTH=12, started=null, lastOk=Date.now(), lastTop=null;
+ var elNow=document.getElementById('now'),elNum=document.getElementById('nowNum'),
+     elNames=document.getElementById('nowNames'),elGrid=document.getElementById('grid'),
+     elPrev=document.getElementById('prevLabel'),elIdle=document.getElementById('idle'),
+     elCount=document.getElementById('count'),elElapse=document.getElementById('elapsed'),
+     elStale=document.getElementById('stale');
+
+ function esc(s){return String(s).replace(/[&<>]/g,function(c){
+   return ({'&':'&amp;','<':'&lt;','>':'&gt;'})[c];});}
+
+ function render(d){
+   var calls=d.calls||[];
+   started = d.startedAt ? new Date(d.startedAt).getTime() : null;
+   elCount.textContent=calls.length;
+
+   var empty = calls.length===0;
+   elIdle.hidden=!empty; elNow.hidden=empty; elPrev.hidden=empty; elGrid.hidden=empty;
+   if(empty) return;
+
+   var top=calls[0];
+   elNum.textContent=top.number;
+   elNames.innerHTML=(top.names||[]).map(function(n){return '<div>'+esc(n)+'</div>';}).join('');
+   if(top.at!==lastTop){ lastTop=top.at; elNow.classList.remove('flash');
+     void elNow.offsetWidth; elNow.classList.add('flash'); }
+
+   var rest=calls.slice(1,DEPTH+1);
+   elGrid.innerHTML=rest.map(function(c,i){
+     var old=i>=Math.floor(rest.length*0.66);
+     return '<div class="cell'+(old?' old':'')+'"><span class="n">'+esc(c.number)+'</span>'+
+            '<span class="w">'+esc((c.names||[]).join(' & '))+'</span></div>';}).join('');
+   elPrev.textContent = rest.length? 'Just called · last '+rest.length : 'Just called';
+ }
+
+ function poll(){
+   fetch('/api/hold',{cache:'no-store'}).then(function(r){
+     if(!r.ok) throw 0; return r.json();
+   }).then(function(d){ lastOk=Date.now(); elStale.classList.add('hidden'); render(d); })
+     .catch(function(){ /* the staleness banner below is the only alarm */ });
+ }
+
+ // A frozen screen is more dangerous than a blank one: it looks authoritative.
+ // If nothing has come back for 20 seconds, say so on the screen.
+ setInterval(function(){
+   elStale.classList.toggle('hidden', Date.now()-lastOk < 20000);
+   if(started){ var s=Math.floor((Date.now()-started)/1000);
+     elElapse.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+ },1000);
+
+ poll(); setInterval(poll,2000);
+})();
+</script></body></html>

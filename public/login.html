@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><title>Sign In · Carline Hold</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#06132E;--deep:#020B1D;--gold:#FFC72C}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;min-height:100dvh;display:flex;align-items:center;
+ justify-content:center;padding:24px;background:linear-gradient(160deg,var(--navy),var(--deep));color:#fff}
+.card{width:100%;max-width:400px;background:#fff;color:#0B1D3F;border-radius:22px;padding:34px 26px 28px;text-align:center}
+h1{font-size:1.4rem;font-weight:900;color:var(--navy)}
+.sub{font-size:.9rem;color:#5B6577;margin-top:6px;line-height:1.45}
+label{display:block;text-align:left;font-size:.75rem;font-weight:900;text-transform:uppercase;
+ letter-spacing:.08em;color:#6B7484;margin:24px 0 8px}
+input{width:100%;font:inherit;font-size:1.05rem;padding:15px 16px;border:2px solid #DDE2EA;border-radius:14px;background:#F7F9FC}
+input:focus{outline:none;border-color:var(--navy);background:#fff}
+button{width:100%;margin-top:16px;font:inherit;font-size:1rem;font-weight:800;padding:15px;border:0;
+ border-radius:14px;background:var(--navy);color:#fff;cursor:pointer}
+.err{margin-top:14px;font-size:.88rem;font-weight:700;color:#B3261E;background:#FDECEA;border-radius:12px;padding:11px 13px;text-align:left}
+.hidden{display:none}.help{margin-top:20px;font-size:.78rem;color:#8A92A1;line-height:1.5}
+</style></head><body>
+<main class="card">
+  <h1>Carline Hold</h1>
+  <p class="sub">Emergency dismissal display.<br>Staff password to call numbers, display password for the gym screen.</p>
+  <form id="f"><label for="pw">Password</label>
+    <input id="pw" type="password" autocomplete="current-password" autocapitalize="off" required>
+    <button type="submit" id="b">Sign In</button></form>
+  <div id="e" class="err hidden"></div>
+  <p class="help">Signed in for 30 days on this device.</p>
+</main>
+<script>
+(function(){
+ var f=document.getElementById('f'),pw=document.getElementById('pw'),b=document.getElementById('b'),e=document.getElementById('e');
+ function next(){var m=/[?&]next=([^&]+)/.exec(location.search);if(!m)return'/';
+   try{var d=decodeURIComponent(m[1]);return d.charAt(0)==='/'&&d.charAt(1)!=='/'?d:'/';}catch(x){return'/';}}
+ f.addEventListener('submit',function(ev){ev.preventDefault();e.classList.add('hidden');b.disabled=true;b.textContent='Signing in…';
+  fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw.value})})
+   .then(function(r){return r.json().then(function(j){return{s:r.status,j:j};});})
+   .then(function(r){if(r.s!==200){e.textContent=r.j.error||'Wrong password.';e.classList.remove('hidden');
+     b.disabled=false;b.textContent='Sign In';pw.select();return;} location.replace(next());})
+   .catch(function(){e.textContent='Could not reach the server.';e.classList.remove('hidden');b.disabled=false;b.textContent='Sign In';});});
+ pw.focus();
+})();
+</script></body></html>
