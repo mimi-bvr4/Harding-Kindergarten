@@ -34,6 +34,21 @@ app.get('/healthz', (req, res) => res.json({ ok: true, defaults: gate.usingDefau
 
 if (!fs.existsSync(DATA)) fs.mkdirSync(DATA, { recursive: true });
 
+// A Railway volume mounted at /app/data starts EMPTY and masks whatever the
+// repo shipped there, so a bundled roster is invisible on a fresh service —
+// the screen shows bare numbers and no names. The seed therefore lives
+// OUTSIDE the mount, and is copied in exactly once, when the volume is bare.
+// After that the volume is the only source of truth and is never overwritten.
+const SEED_FILE = path.join(__dirname, 'seed', 'roster.json');
+if (!fs.existsSync(ROSTER_FILE) && fs.existsSync(SEED_FILE)) {
+    try {
+        fs.copyFileSync(SEED_FILE, ROSTER_FILE);
+        console.log('Roster seeded from seed/roster.json — edit it at /roster.');
+    } catch (err) {
+        console.warn('Could not seed roster:', err.message);
+    }
+}
+
 function readJSON(file, fallback) {
     try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch (_) { return fallback; }
 }
