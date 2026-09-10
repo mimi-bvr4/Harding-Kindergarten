@@ -14,8 +14,12 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
 .badge{font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#06132E;
  background:var(--gold);padding:5px 10px;border-radius:99px}
 .hcount{margin-left:auto;font-size:12px;font-weight:800;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
-a.disp{color:var(--dim);font-size:12px;font-weight:800;text-decoration:none;border:1px solid var(--line);
- padding:6px 10px;border-radius:99px}
+/* One nav, identical on every staff page, so nobody is ever stranded. */
+.nav{display:flex;gap:5px;align-items:center;min-width:0;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{flex:0 0 auto;color:var(--dim);font-size:12px;font-weight:800;text-decoration:none;
+ border:1px solid var(--line);padding:6px 10px;border-radius:99px;white-space:nowrap}
+.nav a.on{background:var(--gold);color:#06132E;border-color:transparent}
 
 /* the number being typed — huge, because it is checked at a glance in bad light */
 .entry{flex:0 0 auto;text-align:center;padding:14px 10px 6px}
@@ -33,9 +37,19 @@ a.disp{color:var(--dim);font-size:12px;font-weight:800;text-decoration:none;bord
 .key.go{background:var(--gold);color:#06132E;font-size:min(5.6vw,24px)}
 .key.go:active{filter:brightness(.92)}
 
-.recent{flex:0 0 auto;display:flex;gap:6px;overflow-x:auto;padding:6px 10px calc(10px + env(safe-area-inset-bottom));
- border-top:1px solid var(--line);scrollbar-width:none}
+.strip{flex:0 0 auto;display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);
+ padding:6px 10px calc(10px + env(safe-area-inset-bottom))}
+.recent{flex:1 1 auto;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;min-width:0}
 .recent::-webkit-scrollbar{display:none}
+/* Undo removes the newest call and only ever the newest call. It is enabled
+   only when this phone is the one that sent it — two typists share this
+   queue, and pulling back someone else's car is worse than a typo. */
+.undo{flex:0 0 auto;border:1px solid rgba(255,59,48,.55);background:rgba(255,59,48,.12);color:#FF8A80;
+ border-radius:10px;padding:7px 11px;font:inherit;font-size:12.5px;font-weight:900;cursor:pointer;white-space:nowrap}
+.undo b{color:#fff;font-size:16px;font-weight:900}
+.undo:disabled{opacity:.4;border-color:var(--line);background:transparent;color:var(--dim);cursor:default}
+.undo:disabled b{color:var(--dim);font-size:14px}
+.undo.hidden{display:none}
 .chip{flex:0 0 auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;
  padding:7px 11px;font-size:17px;font-weight:900}
 .chip.first{background:var(--gold);color:#06132E}
@@ -45,8 +59,12 @@ a.disp{color:var(--dim);font-size:12px;font-weight:800;text-decoration:none;bord
 </style></head><body>
 
 <header>
-  <span class="badge">Calling</span>
-  <a class="disp" href="/display" target="_blank" rel="noopener">Gym screen ↗</a>
+  <nav class="nav">
+    <a class="on" href="/type">Keypad</a>
+    <a href="/staff">Staff</a>
+    <a href="/display">Gym</a>
+    <a href="/roster">Roster</a>
+  </nav>
   <span class="hcount" id="count">0 called</span>
 </header>
 
@@ -63,15 +81,22 @@ a.disp{color:var(--dim);font-size:12px;font-weight:800;text-decoration:none;bord
   <button class="key go" id="go">Call</button>
 </div>
 
-<div class="recent" id="recent"></div>
+<div class="strip">
+  <button class="undo hidden" id="undo">↶ Undo <b id="undoNum"></b></button>
+  <div class="recent" id="recent"></div>
+</div>
 <div class="off hidden" id="off">Offline — the last calls may not have sent</div>
 
 <script>
 (function(){
  var buf='', calls=[], sending=false;
+ // Calls this phone produced, keyed by the server's timestamp. Undo is
+ // offered only for these — never for a car another typist just sent.
+ var myAts={}, pendingMine=null;
  var elNum=document.getElementById('num'), elHint=document.getElementById('hint'),
      elRecent=document.getElementById('recent'), elCount=document.getElementById('count'),
-     elOff=document.getElementById('off');
+     elOff=document.getElementById('off'),
+     elUndo=document.getElementById('undo'), elUndoNum=document.getElementById('undoNum');
 
  function paint(){
    elNum.textContent = buf || '—';
@@ -79,6 +104,18 @@ a.disp{color:var(--dim);font-size:12px;font-weight:800;text-decoration:none;bord
    elCount.textContent = calls.length + ' called';
    elRecent.innerHTML = calls.slice(0,24).map(function(c,i){
      return '<span class="chip'+(i===0?' first':'')+'">'+c.number+'</span>'; }).join('');
+   paintUndo();
+ }
+
+ function paintUndo(){
+   var top = calls[0];
+   elUndo.classList.toggle('hidden', !top);
+   if(!top) return;
+   var can = !!myAts[top.at];
+   elUndo.disabled = !can;
+   elUndo.firstChild.nodeValue = can ? '↶ Undo ' : '↶ Last ';
+   elUndoNum.textContent = top.number;
+   elUndo.title = can ? 'Remove '+top.number : 'The last call came from another phone';
  }
  function hint(t,cls){ elHint.textContent=t; elHint.className='hint'+(cls?' '+cls:''); }
 
@@ -94,15 +131,36 @@ a.disp{color:var(--dim);font-size:12px;font-weight:800;text-decoration:none;bord
     .then(function(j){
        sending=false; elOff.classList.add('hidden');
        if(j.duplicate){ hint('Already called just now','dupe'); }
-       else { hint('Called '+n); }
+       else { hint('Called '+n); pendingMine=n; }
        buf=''; paint(); load();
     })
     .catch(function(){ sending=false; elOff.classList.remove('hidden'); });
  }
 
+ function undo(){
+   var top=calls[0];
+   if(!top || !myAts[top.at] || sending) return;
+   sending=true;
+   fetch('/api/hold/undo',{method:'POST',headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({number:top.number})})
+    .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, j:j}; }); })
+    .then(function(x){
+       sending=false; elOff.classList.add('hidden');
+       if(x.ok){ delete myAts[top.at]; hint('Removed '+x.j.removed,'dupe'); }
+       else { hint(x.j.error || 'Could not undo','dupe'); }
+       load();
+    })
+    .catch(function(){ sending=false; elOff.classList.remove('hidden'); });
+ }
+
  function load(){
-   fetch('/api/hold').then(function(r){return r.json();}).then(function(j){
-     calls=j.calls||[]; paint(); elOff.classList.add('hidden');
+   fetch('/api/hold',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
+     calls=j.calls||[];
+     // Claim the call we just sent, so Undo knows it is ours.
+     if(pendingMine && calls.length && String(calls[0].number)===pendingMine){
+       myAts[calls[0].at]=true; pendingMine=null;
+     }
+     paint(); elOff.classList.add('hidden');
    }).catch(function(){ elOff.classList.remove('hidden'); });
  }
 
@@ -112,11 +170,13 @@ a.disp{color:var(--dim);font-size:12px;font-weight:800;text-decoration:none;bord
    if(k.id==='del') return del();
    if(k.id==='go')  return send();
  });
+ elUndo.addEventListener('click',undo);
  // A keyboard is faster than a touchscreen when there is one.
  document.addEventListener('keydown',function(e){
    if(e.key>='0'&&e.key<='9') return press(e.key);
    if(e.key==='Backspace'){e.preventDefault();return del();}
    if(e.key==='Enter') return send();
+   if(e.key==='u'||e.key==='U'){e.preventDefault();return undo();}
  });
 
  load(); setInterval(load,4000); paint();

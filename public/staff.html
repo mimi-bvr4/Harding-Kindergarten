@@ -16,6 +16,12 @@ header{flex:0 0 auto;padding:calc(10px + env(safe-area-inset-top)) 12px 8px;
 .badge{font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;
  color:#06132E;background:var(--gold);padding:5px 10px;border-radius:99px}
 .meta{margin-left:auto;font-size:12px;font-weight:800;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
+/* One nav, identical on every staff page, so nobody is ever stranded. */
+.nav{display:flex;gap:5px;align-items:center;min-width:0;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{flex:0 0 auto;color:var(--dim);font-size:12px;font-weight:800;text-decoration:none;
+ border:1px solid var(--line);padding:6px 10px;border-radius:99px;white-space:nowrap}
+.nav a.on{background:var(--gold);color:#06132E;border-color:transparent}
 .rooms{display:flex;gap:6px;overflow-x:auto;margin-top:9px;scrollbar-width:none;padding-bottom:2px}
 .rooms::-webkit-scrollbar{display:none}
 .room{flex:0 0 auto;border:1px solid var(--line);background:var(--panel);color:#C9D8F5;
@@ -54,10 +60,15 @@ header{flex:0 0 auto;padding:calc(10px + env(safe-area-inset-top)) 12px 8px;
 
 <header>
   <div class="top">
-    <span class="badge">Called</span>
-    <span id="who" style="font-size:13px;font-weight:800;color:#C9D8F5"></span>
+    <nav class="nav">
+      <a href="/type">Keypad</a>
+      <a class="on" href="/staff">Staff</a>
+      <a href="/display">Gym</a>
+      <a href="/roster">Roster</a>
+    </nav>
     <span class="meta" id="meta">0 called</span>
   </div>
+  <span id="who" hidden></span>
   <div class="rooms" id="rooms"></div>
 </header>
 

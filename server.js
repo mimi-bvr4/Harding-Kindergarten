@@ -123,8 +123,20 @@ app.post('/api/hold/call', gate.requireStaff, (req, res) => {
 
 app.post('/api/hold/undo', gate.requireStaff, (req, res) => {
     const hold = readHold();
+    const last = hold.calls[hold.calls.length - 1];
+    if (!last) return res.status(409).json({ error: 'Nothing to undo.' });
+
+    // The client says which number it believes is last. If another typist
+    // called a car in the meantime, popping blindly would erase a family
+    // that is still sitting in the line. Refuse instead.
+    const expected = String((req.body || {}).number || '').trim();
+    if (expected && String(last.number) !== expected) {
+        return res.status(409).json({ error: `${last.number} was called since — nothing removed.` });
+    }
+
     hold.calls.pop();
-    res.json(writeJSON(HOLD_FILE, hold));
+    writeJSON(HOLD_FILE, hold);
+    res.json({ ok: true, removed: last.number, calls: hold.calls.length });
 });
 
 // ==================== ROSTER ====================

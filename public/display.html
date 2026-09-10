@@ -5,6 +5,10 @@
 <style>
 :root{--bg:#06132E;--panel:#0C1F45;--line:rgba(255,255,255,.10);--gold:#FFC72C;--dim:#7E93BC;--older:#5E76A3;--alert:#FF3B30}
 *{box-sizing:border-box;margin:0;padding:0}
+/* .now and .grid set display:flex/grid, which outranks the browser's rule for
+   [hidden]. Without this, an empty queue paints a phantom "NOW —" over the
+   Waiting screen. */
+[hidden]{display:none!important}
 html,body{height:100%}
 body{background:var(--bg);color:#fff;font-family:'Inter',-apple-system,sans-serif;
  font-variant-numeric:tabular-nums;overflow:hidden;display:flex;flex-direction:column}
@@ -45,6 +49,14 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:2vw;padding:1.3vh 2.2vw
 .stale{position:fixed;top:0;left:0;right:0;background:var(--alert);color:#2A0A00;text-align:center;
  font-size:1.3vw;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:.8vh;z-index:9}
 .stale.hidden{display:none}
+/* A way off this page for the person who set it up, without putting chrome
+   on a screen a gym full of parents is reading. Staff sessions only, and it
+   leaves entirely once the screen is thrown to fullscreen. */
+.back{position:fixed;left:1.2vw;bottom:1.2vh;z-index:8;color:var(--dim);opacity:.35;
+ font-size:1.1vw;font-weight:800;text-decoration:none;border:1px solid var(--line);
+ padding:.6vh 1.1vw;border-radius:99px;background:rgba(0,0,0,.35)}
+.back:hover,.back:focus{opacity:1;color:#fff}
+.back.hidden{display:none}
 </style></head><body>
 
 <div class="stale hidden" id="stale">Screen not updating — use the loudspeaker</div>
@@ -69,14 +81,22 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:2vw;padding:1.3vh 2.2vw
 
 <div class="idle" id="idle"><b>Waiting</b><s>No numbers called yet</s></div>
 
+<a class="back hidden" id="back" href="/type">← Keypad</a>
+
 <script>
 (function(){
- var DEPTH=12, started=null, lastOk=Date.now(), lastTop=null;
+ var DEPTH=12, started=null, lastOk=Date.now(), lastTop=null, lastRole=null;
  var elNow=document.getElementById('now'),elNum=document.getElementById('nowNum'),
      elNames=document.getElementById('nowNames'),elGrid=document.getElementById('grid'),
      elPrev=document.getElementById('prevLabel'),elIdle=document.getElementById('idle'),
      elCount=document.getElementById('count'),elElapse=document.getElementById('elapsed'),
-     elStale=document.getElementById('stale');
+     elStale=document.getElementById('stale'),elBack=document.getElementById('back');
+
+ function showBack(role){
+   var staff = role==='staff' && !document.fullscreenElement && !document.webkitFullscreenElement;
+   elBack.classList.toggle('hidden', !staff);
+ }
+ document.addEventListener('fullscreenchange',function(){ showBack(lastRole); });
 
  function esc(s){return String(s).replace(/[&<>]/g,function(c){
    return ({'&':'&amp;','<':'&lt;','>':'&gt;'})[c];});}
@@ -85,6 +105,7 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:2vw;padding:1.3vh 2.2vw
    var calls=d.calls||[];
    started = d.startedAt ? new Date(d.startedAt).getTime() : null;
    elCount.textContent=calls.length;
+   lastRole = d.role; showBack(lastRole);
 
    var empty = calls.length===0;
    elIdle.hidden=!empty; elNow.hidden=empty; elPrev.hidden=empty; elGrid.hidden=empty;
