@@ -57,22 +57,23 @@ code{background:#06132E;padding:1px 5px;border-radius:4px;font-size:12.5px}
 </header>
 
 <main>
-  <p class="hint">One row per car number. A household with two children gets both names on the
-  one number. The class is what lets a teacher filter the called list to their own students —
-  without it their phone shows every child in the school.</p>
+  <p class="hint">One row per car number, mapped to a homeroom teacher and a grade.
+  <b>No child names</b> — the homeroom is what lets a teacher filter the called list to
+  their own students, and it is all this system stores. A pickup with no car number is
+  entered by name on the keypad at the time, not kept here.</p>
 
   <details>
     <summary>Paste a list instead</summary>
     <div class="in">
-      <p class="hint">One per line: <code>number, class, child, child</code><br>
+      <p class="hint">One per line: <code>number, homeroom teacher, grade</code><br>
       Pasting replaces everything below — check it before you save.</p>
-      <textarea id="bulk" placeholder="26, Pre-K 2, Noah Patel&#10;212, 3rd Grade, Owen Barrett, Clara Barrett"></textarea>
+      <textarea id="bulk" placeholder="26, Nye, Pre-K&#10;212, Lindqvist, 3rd Grade"></textarea>
       <button class="b b-add" id="parse" style="margin-top:10px">Load into the table</button>
     </div>
   </details>
 
   <table><thead><tr>
-    <th style="width:78px">Number</th><th style="width:30%">Class</th><th>Children</th><th style="width:36px"></th>
+    <th style="width:78px">Number</th><th>Homeroom teacher</th><th style="width:32%">Grade</th><th style="width:36px"></th>
   </tr></thead><tbody id="rows"></tbody></table>
 </main>
 
@@ -94,8 +95,8 @@ code{background:#06132E;padding:1px 5px;border-radius:4px;font-size:12.5px}
    elRows.innerHTML = rows.map(function(r,i){
      return '<tr>'+
        '<td class="num"><input value="'+esc(r.number)+'" data-i="'+i+'" data-f="number" inputmode="numeric"></td>'+
-       '<td><input value="'+esc(r.room)+'" data-i="'+i+'" data-f="room" placeholder="Pre-K 2"></td>'+
-       '<td><input value="'+esc((r.names||[]).join(', '))+'" data-i="'+i+'" data-f="names" placeholder="Child, Child"></td>'+
+       '<td><input value="'+esc(r.teacher)+'" data-i="'+i+'" data-f="teacher" placeholder="Nye"></td>'+
+       '<td><input value="'+esc(r.grade)+'" data-i="'+i+'" data-f="grade" placeholder="Pre-K"></td>'+
        '<td><button class="del" data-del="'+i+'" aria-label="Remove">×</button></td></tr>';
    }).join('');
  }
@@ -105,22 +106,21 @@ code{background:#06132E;padding:1px 5px;border-radius:4px;font-size:12.5px}
  elRows.addEventListener('input',function(e){
    var el=e.target; if(!el.dataset.f) return;
    var r=rows[el.dataset.i];
-   if(el.dataset.f==='names') r.names=el.value.split(',').map(function(s){return s.trim();}).filter(Boolean);
-   else r[el.dataset.f]=el.value;
+   r[el.dataset.f]=el.value;
  });
  elRows.addEventListener('click',function(e){
    var b=e.target.closest('[data-del]'); if(!b) return;
    rows.splice(Number(b.dataset.del),1); paint();
  });
  document.getElementById('add').addEventListener('click',function(){
-   rows.push({number:'',room:'',names:[]}); paint();
+   rows.push({number:'',teacher:'',grade:''}); paint();
    var last=elRows.querySelector('tr:last-child input'); if(last) last.focus();
  });
  document.getElementById('parse').addEventListener('click',function(){
    var out=document.getElementById('bulk').value.split('\n').map(function(line){
      var p=line.split(',').map(function(s){return s.trim();});
      if(!p[0]) return null;
-     return { number:p[0], room:p[1]||'', names:p.slice(2).filter(Boolean) };
+     return { number:p[0], teacher:p[1]||'', grade:p[2]||'' };
    }).filter(Boolean);
    if(!out.length) return flash('Nothing to load',false);
    rows=out; paint(); flash('Loaded '+out.length+' rows — not saved yet',true);
@@ -136,8 +136,8 @@ code{background:#06132E;padding:1px 5px;border-radius:4px;font-size:12.5px}
  });
 
  fetch('/api/roster').then(function(r){return r.json();}).then(function(j){
-   rows=(j.roster||[]).map(function(r){return {number:r.number,room:r.room||'',names:r.names||[]};});
-   if(!rows.length) rows=[{number:'',room:'',names:[]}];
+   rows=(j.roster||[]).map(function(r){return {number:r.number,teacher:r.teacher||'',grade:r.grade||''};});
+   if(!rows.length) rows=[{number:'',teacher:'',grade:''}];
    paint();
  }).catch(function(){ flash('Could not load the roster',false); });
 })();

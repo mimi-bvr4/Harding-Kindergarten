@@ -10,7 +10,10 @@
  *   /staff     staff   — every teacher's phone: the running list, filtered to
  *                        their own class, so they send their kids to the line
  *   /display   either  — the gym screen, read-only
- *   /roster    staff   — car number -> children, and which class each is in
+ *   /roster    staff   — car number -> homeroom teacher and grade. No child
+ *                        names live anywhere in this system, by decision of the
+ *                        school's security review: a number identifies a car,
+ *                        and a homeroom tells a teacher it is theirs.
  *   /report    staff   — the after-action record: every number, every time
  *
  * The screen is redundancy for the loudspeaker, never a replacement. If it
@@ -51,6 +54,24 @@ if (!fs.existsSync(ROSTER_FILE) && fs.existsSync(SEED_FILE)) {
     }
 }
 
+// The security review removed child names from the record entirely. Any
+// roster written before that decision still has them sitting in the volume,
+// so strip them once, on boot, rather than merely hiding them in the UI.
+(function purgeLegacyNames() {
+    try {
+        const rows = JSON.parse(fs.readFileSync(ROSTER_FILE, 'utf8'));
+        if (!Array.isArray(rows) || !rows.some(r => r && r.names)) return;
+        const clean = rows.map(r => ({
+            number: String(r.number || ''),
+            // "room" was the old column and usually held the homeroom already.
+            teacher: String(r.teacher || r.room || ''),
+            grade: String(r.grade || '')
+        }));
+        fs.writeFileSync(ROSTER_FILE, JSON.stringify(clean, null, 2));
+        console.log('Purged child names from ' + rows.length + ' roster rows.');
+    } catch (_) { /* no roster yet, or unreadable — the seed will handle it */ }
+})();
+
 function readJSON(file, fallback) {
     try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch (_) { return fallback; }
 }
@@ -60,6 +81,13 @@ function writeJSON(file, value) {
 }
 
 const readRoster = () => readJSON(ROSTER_FILE, []);
+
+// A queue entry is either a car number or a manually typed name. Everything
+// downstream — display, staff list, report — only ever needs the one string
+// that gets called out, so normalise it here rather than in four places.
+const labelOf = (c) => (c && c.number != null && c.number !== '')
+    ? String(c.number) : String((c && c.name) || '');
+const isManual = (c) => !!(c && c.name);
 const readHold   = () => readJSON(HOLD_FILE, { active: false, startedAt: null, calls: [] });
 
 // ==================== SIGN IN ====================
@@ -100,11 +128,11 @@ app.get('/api/hold', (req, res) => {
         // Newest first: the display reads position 0 as "now calling".
         calls: hold.calls.slice().reverse().map(c => {
             const r = byNumber.get(String(c.number));
-            return { number: c.number, at: c.at,
-                     names: (r && r.names) || [], room: (r && r.room) || '' };
+            return { label: labelOf(c), manual: isManual(c), at: c.at, repeat: !!c.repeat,
+                     teacher: (r && r.teacher) || '', grade: (r && r.grade) || '' };
         }),
-        // The staff view filters by class, so it needs the list of classes.
-        rooms: [...new Set(roster.map(r => r.room).filter(Boolean))].sort(),
+        // The staff view filters to one homeroom, so it needs the list.
+        teachers: [...new Set(roster.map(r => r.teacher).filter(Boolean))].sort(),
         role: req.role
     });
 });
@@ -164,7 +192,9 @@ function decorateReport(r) {
     const byNumber = new Map(roster.map(x => [String(x.number), x]));
     const attach = (c) => {
         const m = byNumber.get(String(c.number));
-        return Object.assign({}, c, { names: (m && m.names) || [], room: (m && m.room) || '' });
+        return { label: labelOf(c), manual: isManual(c), at: c.at, removedAt: c.removedAt,
+                 repeat: !!c.repeat,
+                 teacher: (m && m.teacher) || '', grade: (m && m.grade) || '' };
     };
     return Object.assign({}, r, {
         calls: (r.calls || []).map(attach),
@@ -205,31 +235,60 @@ app.get('/api/report/:id', gate.requireStaff, (req, res) => {
     res.json(decorateReport(d));
 });
 
-app.post('/api/hold/call', gate.requireStaff, (req, res) => {
-    const number = String((req.body || {}).number || '').trim();
-    if (!/^\d{1,5}$/.test(number)) return res.status(400).json({ error: 'Digits only.' });
-
+/** Shared by the keypad and the manual-name entry. */
+function pushToQueue(entry, res) {
     const hold = readHold();
     if (!hold.active) { hold.active = true; hold.startedAt = new Date().toISOString(); }
 
-    // Two typists working the same line will both see the same car. Ignore a
-    // repeat inside 60s rather than calling a child out twice.
-    const last = hold.calls[hold.calls.length - 1];
-    const recent = hold.calls.slice(-8).some(c =>
-        String(c.number) === number && Date.now() - new Date(c.at).getTime() < 60000);
-    if (recent) return res.json({ duplicate: true, calls: hold.calls.length });
+    // Anything already called in THIS dismissal is a duplicate, however long
+    // ago. The old rule only looked back 60 seconds and 8 entries, so a car
+    // the other typist called five minutes earlier went in again silently —
+    // and on the screen a repeat reads as "they missed me the first time".
+    // A genuine re-call is still possible; it just has to be deliberate.
+    const label = labelOf(entry);
+    const force = entry.force === true;
+    delete entry.force;
 
-    hold.calls.push({ number, at: new Date().toISOString() });
+    const prior = hold.calls.filter(c => labelOf(c).toLowerCase() === label.toLowerCase());
+    if (prior.length && !force) {
+        const last = prior[prior.length - 1];
+        return res.json({ duplicate: true, calledAt: last.at, times: prior.length,
+                          calls: hold.calls.length });
+    }
+    if (prior.length) entry.repeat = true;   // flagged in the record
+
+    entry.at = new Date().toISOString();
+    hold.calls.push(entry);
     writeJSON(HOLD_FILE, hold);
 
-    // Hand the match back so the typist sees who they just called. A number
-    // with nobody behind it is usually a typo, and the only person who can
-    // catch it is the one who typed it — the gym screen just shows a number.
-    const match = readRoster().find(r => String(r.number) === number);
+    // Hand the roster match back so the typist sees whose car they just
+    // called. A number with no homeroom behind it is usually a typo, and the
+    // only person who can catch it is the one who typed it — the staging
+    // screen just shows the number.
+    const match = entry.number ? readRoster().find(r => String(r.number) === entry.number) : null;
     res.json({
-        ok: true, calls: hold.calls.length,
-        names: (match && match.names) || [], room: (match && match.room) || ''
+        ok: true, calls: hold.calls.length, label, manual: isManual(entry),
+        repeat: !!entry.repeat,
+        teacher: (match && match.teacher) || '', grade: (match && match.grade) || ''
     });
+}
+
+app.post('/api/hold/call', gate.requireStaff, (req, res) => {
+    const number = String((req.body || {}).number || '').trim();
+    if (!/^\d{1,5}$/.test(number)) return res.status(400).json({ error: 'Digits only.' });
+    pushToQueue({ number, force: (req.body || {}).force === true }, res);
+});
+
+// A pickup with no car number — a grandparent, a rideshare, a neighbour on a
+// one-off. The name is typed rather than matched: a teacher in a rainstorm
+// cannot be asked to spell a name closely enough for fuzzy matching to be
+// safe, so this queues exactly what was typed and the verification stays
+// where it belongs, at the car.
+app.post('/api/hold/name', gate.requireStaff, (req, res) => {
+    const name = String((req.body || {}).name || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+    if (name.length < 2) return res.status(400).json({ error: 'Type a name.' });
+    if (/^\d+$/.test(name)) return res.status(400).json({ error: 'That is a number — use the keypad.' });
+    pushToQueue({ name, force: (req.body || {}).force === true }, res);
 });
 
 app.post('/api/hold/undo', gate.requireStaff, (req, res) => {
@@ -237,23 +296,23 @@ app.post('/api/hold/undo', gate.requireStaff, (req, res) => {
     const last = hold.calls[hold.calls.length - 1];
     if (!last) return res.status(409).json({ error: 'Nothing to undo.' });
 
-    // The client says which number it believes is last. If another typist
+    // The client says which entry it believes is last. If another typist
     // called a car in the meantime, popping blindly would erase a family
     // that is still sitting in the line. Refuse instead.
-    const expected = String((req.body || {}).number || '').trim();
-    if (expected && String(last.number) !== expected) {
-        return res.status(409).json({ error: `${last.number} was called since — nothing removed.` });
+    const expected = String((req.body || {}).label || (req.body || {}).number || '').trim();
+    if (expected && labelOf(last) !== expected) {
+        return res.status(409).json({ error: `${labelOf(last)} was called since — nothing removed.` });
     }
 
     hold.calls.pop();
     // A retraction is part of the record. An emergency-dismissal log that
     // quietly omits "we called 412 and pulled it back" is a worse record than
     // no log at all, so keep it and show it on the report.
-    hold.removed = (hold.removed || []).concat([{
-        number: last.number, at: last.at, removedAt: new Date().toISOString()
-    }]);
+    hold.removed = (hold.removed || []).concat([
+        Object.assign({}, last, { removedAt: new Date().toISOString() })
+    ]);
     writeJSON(HOLD_FILE, hold);
-    res.json({ ok: true, removed: last.number, calls: hold.calls.length });
+    res.json({ ok: true, removed: labelOf(last), calls: hold.calls.length });
 });
 
 // ==================== ROSTER ====================
@@ -263,11 +322,13 @@ app.get('/api/roster', gate.requireStaff, (req, res) => res.json({ roster: readR
 app.put('/api/roster', gate.requireStaff, (req, res) => {
     const incoming = Array.isArray((req.body || {}).roster) ? req.body.roster : null;
     if (!incoming) return res.status(400).json({ error: 'roster array required.' });
+    // Number, homeroom teacher, grade. Nothing else is accepted — a child
+    // name posted by an old client or a stale tab is dropped on the floor
+    // rather than written to the volume.
     const clean = incoming.slice(0, 2000).map(r => ({
         number: String(r.number || '').trim().slice(0, 5),
-        room: String(r.room || '').trim().slice(0, 40),
-        names: (Array.isArray(r.names) ? r.names : [])
-            .map(n => String(n || '').trim().slice(0, 60)).filter(Boolean).slice(0, 6)
+        teacher: String(r.teacher || '').trim().slice(0, 40),
+        grade: String(r.grade || '').trim().slice(0, 24)
     })).filter(r => /^\d{1,5}$/.test(r.number));
     writeJSON(ROSTER_FILE, clean);
     res.json({ ok: true, count: clean.length });

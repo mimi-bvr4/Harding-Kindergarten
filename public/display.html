@@ -36,17 +36,28 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:2vw;padding:1.3vh 2.2vw
 .now-names{flex:1 1 auto;min-width:0}
 .now-names div{font-size:6.4vw;font-weight:900;line-height:1.04;white-space:nowrap;
  overflow:hidden;text-overflow:ellipsis;color:var(--gold)}
+.now-names .sub{font-size:2.6vw;color:#C9D8F5;letter-spacing:.08em;text-transform:uppercase;margin-top:.8vh}
+/* A manual pickup has a name where a number would be. Never truncate it —
+   the name IS the call. It wraps and shrinks to fit instead; the size is set
+   from its length in render(). */
+.now-num.isname{line-height:1.02;max-width:64vw;white-space:normal;word-break:break-word;
+ text-shadow:none}
+.manual-tag{display:inline-block;background:var(--alert);color:#2A0A00;font-size:1.1vw;font-weight:900;
+ letter-spacing:.16em;text-transform:uppercase;padding:.4vh 1vw;border-radius:99px;margin-bottom:.8vh}
+/* A manual pickup is the one block that isn't a number. The red border says
+   so; the name gets the whole box and wraps rather than truncating. */
+.cell.man{border-color:rgba(255,59,48,.55)}
+.cell.man .n{font-size:1.8vw;line-height:1.15;white-space:normal;word-break:break-word;
+ text-align:center;max-height:3.4em;overflow:hidden}
 .now.flash{animation:pop .45s ease-out}
 @keyframes pop{0%{transform:scale(.9);opacity:.4}100%{transform:scale(1);opacity:1}}
 .prev-label{flex:0 0 auto;font-size:1vw;font-weight:900;letter-spacing:.22em;text-transform:uppercase;
  color:var(--dim);padding:0 2.2vw .7vh}
-.grid{flex:1 1 auto;min-height:0;display:grid;gap:.7vw;align-content:start;padding:0 2.2vw 2vh;
- grid-template-columns:repeat(3,1fr)}
-.cell{background:var(--panel);border:2px solid var(--line);border-radius:1vw;padding:.9vh 1vw;
- display:flex;align-items:baseline;gap:.8vw;overflow:hidden}
-.cell .n{font-weight:900;line-height:1;flex:0 0 auto;font-size:4.2vw}
-.cell .w{font-weight:800;line-height:1.1;color:#C9D8F5;font-size:2.4vw;white-space:nowrap;
- overflow:hidden;text-overflow:ellipsis}
+.grid{flex:1 1 auto;min-height:0;display:grid;gap:.8vw;align-content:start;padding:0 2.2vw 2vh;
+ grid-template-columns:repeat(4,1fr);padding-bottom:5vh}
+.cell{background:var(--panel);border:2px solid var(--line);border-radius:1vw;padding:1.1vh 1vw;
+ display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:9vh}
+.cell .n{font-weight:900;line-height:1;font-size:5.4vw;letter-spacing:-.01em}
 .cell.old{background:rgba(12,31,69,.5)}
 .cell.old .n,.cell.old .w{color:var(--older)}
 .idle{flex:1 1 auto;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5vh;text-align:center}
@@ -118,16 +129,29 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:2vw;padding:1.3vh 2.2vw
    if(empty) return;
 
    var top=calls[0];
-   elNum.textContent=top.number;
-   elNames.innerHTML=(top.names||[]).map(function(n){return '<div>'+esc(n)+'</div>';}).join('');
+   elNum.textContent=top.label;
+   elNum.classList.toggle('isname', !!top.manual);
+   // Shrink a long name to fit rather than cutting it off. A car number is
+   // 1-5 characters and keeps the full hero size.
+   if(top.manual){
+     var n=top.label.length;
+     var vw = n<=8 ? 12 : n<=13 ? 9 : n<=20 ? 6.6 : n<=30 ? 5 : 4;
+     elNum.style.fontSize='min('+vw+'vw,'+Math.round(vw*13)+'px)';
+   } else {
+     elNum.style.fontSize='';
+   }
+   // Numbers only. Homeroom and grade exist to sort the roster and fill the
+   // report; nothing on this wall needs to say anything but the number.
+   elNames.innerHTML = top.manual
+     ? '<span class="manual-tag">No car number</span>' : '';
    if(top.at!==lastTop){ lastTop=top.at; elNow.classList.remove('flash');
      void elNow.offsetWidth; elNow.classList.add('flash'); }
 
    var rest=calls.slice(1,DEPTH+1);
    elGrid.innerHTML=rest.map(function(c,i){
      var old=i>=Math.floor(rest.length*0.66);
-     return '<div class="cell'+(old?' old':'')+'"><span class="n">'+esc(c.number)+'</span>'+
-            '<span class="w">'+esc((c.names||[]).join(' & '))+'</span></div>';}).join('');
+     return '<div class="cell'+(old?' old':'')+(c.manual?' man':'')+'">'+
+            '<span class="n">'+esc(c.label)+'</span></div>';}).join('');
    elPrev.textContent = rest.length? 'Just called · last '+rest.length : 'Just called';
  }
 

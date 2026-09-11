@@ -55,6 +55,11 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
 .key.act{background:#123063;font-size:min(4.4vw,19px);letter-spacing:.06em;text-transform:uppercase}
 .key.go{background:var(--gold);color:#06132E;font-size:min(5.6vw,24px)}
 .key.go:active{filter:brightness(.92)}
+/* Typing a number that is already in the queue turns Send red BEFORE it is
+   pressed. A second press sends it anyway — a car that circled back is a real
+   thing; it just has to be deliberate. */
+.key.go.warn{background:var(--red);color:#fff}
+.chip.dup{border-color:rgba(255,59,48,.7)}
 
 .strip{flex:0 0 auto;display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);
  padding:6px 10px calc(10px + env(safe-area-inset-bottom))}
@@ -69,9 +74,29 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
 .undo:disabled{opacity:.4;border-color:var(--line);background:transparent;color:var(--dim);cursor:default}
 .undo:disabled b{color:var(--dim);font-size:14px}
 .undo.hidden{display:none}
+/* A pickup with no car number. Kept out of the keypad grid on purpose: the
+   keys are muscle memory in bad weather and must not move. */
+.namebtn{flex:0 0 auto;border:1px solid var(--line);background:#123063;color:#fff;border-radius:10px;
+ padding:7px 11px;font:inherit;font-size:12.5px;font-weight:900;cursor:pointer;white-space:nowrap}
+.sheet{position:fixed;inset:0;background:rgba(2,11,29,.82);z-index:20;display:flex;
+ align-items:center;justify-content:center;padding:18px}
+.sheet.hidden{display:none}
+.card{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--line);
+ border-radius:18px;padding:18px}
+.card h3{font-size:16px;font-weight:900;margin-bottom:6px}
+.card p{font-size:13px;font-weight:700;color:var(--dim);line-height:1.5;margin-bottom:12px}
+.card input{width:100%;font:inherit;font-size:19px;font-weight:800;padding:14px;border-radius:12px;
+ border:1px solid var(--line);background:#06132E;color:#fff}
+.card input:focus{outline:none;border-color:var(--gold)}
+.card .err{color:var(--red);font-size:12.5px;font-weight:800;margin-top:8px;min-height:1.2em}
+.card .row{display:flex;gap:8px;margin-top:12px}
+.card .row button{flex:1;border:1px solid var(--line);background:transparent;color:#fff;
+ border-radius:12px;font:inherit;font-size:15px;font-weight:900;padding:13px;cursor:pointer}
+.card .row button.go{background:var(--gold);color:#06132E;border-color:transparent}
 .chip{flex:0 0 auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;
  padding:7px 11px;font-size:17px;font-weight:900}
 .chip.first{background:var(--gold);color:#06132E}
+.chip.man{font-size:13px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .off{position:fixed;inset:0;background:rgba(2,11,29,.92);display:flex;align-items:center;justify-content:center;
  font-size:16px;font-weight:800;color:var(--red);z-index:9}
 .off.hidden{display:none}
@@ -103,8 +128,25 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
 </div>
 
 <div class="strip">
+  <button class="namebtn" id="nameBtn">+ Name</button>
   <button class="undo hidden" id="undo">↶ Undo <b id="undoNum"></b></button>
   <div class="recent" id="recent"></div>
+</div>
+
+<div class="sheet hidden" id="sheet">
+  <div class="card">
+    <h3>Name entry</h3>
+    <p>For a pickup with no car number. Type it exactly as it should be called
+       out — it goes into the queue like any other entry.</p>
+    <input id="nameIn" type="text" inputmode="text" autocomplete="off"
+           autocapitalize="words" autocorrect="off" spellcheck="false"
+           placeholder="Name to call" maxlength="60">
+    <div class="err" id="nameErr"></div>
+    <div class="row">
+      <button id="nameCancel">Cancel</button>
+      <button class="go" id="nameSend">Send</button>
+    </div>
+  </div>
 </div>
 <div class="off hidden" id="off">Offline — the last calls may not have sent</div>
 
@@ -114,19 +156,30 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
  // Calls this phone produced, keyed by the server's timestamp. Undo is
  // offered only for these — never for a car another typist just sent.
  var myAts={}, pendingMine=null;
+ // label -> time it was last called, so the keypad can warn while you type
+ // rather than only after you have already sent it.
+ var called={}, dupArm=null, dupTimer=null;
+ var elGo=null;   // set after the DOM refs below
  var elNum=document.getElementById('num'), elHint=document.getElementById('hint'),
      elRecent=document.getElementById('recent'), elCount=document.getElementById('count'),
      elOff=document.getElementById('off'),
      elUndo=document.getElementById('undo'), elUndoNum=document.getElementById('undoNum'),
-     elReset=document.getElementById('reset');
+     elReset=document.getElementById('reset'),
+     elSheet=document.getElementById('sheet'), elNameIn=document.getElementById('nameIn'),
+     elNameErr=document.getElementById('nameErr');
+
+ function esc(s){return String(s==null?'':s).replace(/[&<>]/g,function(c){
+   return({'&':'&amp;','<':'&lt;','>':'&gt;'})[c];});}
 
  function paint(){
    elNum.textContent = buf;
    elNum.classList.toggle('empty', !buf);
    elCount.textContent = calls.length + ' called';
    elRecent.innerHTML = calls.slice(0,24).map(function(c,i){
-     return '<span class="chip'+(i===0?' first':'')+'">'+c.number+'</span>'; }).join('');
+     return '<span class="chip'+(i===0?' first':'')+(c.manual?' man':'')+
+            (c.repeat?' dup':'')+'">'+esc(c.label)+'</span>'; }).join('');
    paintUndo();
+   checkDup();
  }
 
  function paintUndo(){
@@ -136,29 +189,73 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
    var can = !!myAts[top.at];
    elUndo.disabled = !can;
    elUndo.firstChild.nodeValue = can ? '↶ Undo ' : '↶ Last ';
-   elUndoNum.textContent = top.number;
-   elUndo.title = can ? 'Remove '+top.number : 'The last call came from another phone';
+   elUndoNum.textContent = top.label;
+   elUndo.title = can ? 'Remove '+top.label : 'The last call came from another phone';
  }
+ function ago(iso){
+   var s=Math.floor((Date.now()-new Date(iso).getTime())/1000);
+   if(s<60) return s+'s ago';
+   return Math.floor(s/60)+' min ago';
+ }
+ function disarmDup(){ clearTimeout(dupTimer); dupTimer=null; dupArm=null; }
+
+ // Warn on the number being typed, before Send is pressed.
+ function checkDup(){
+   if(!elGo) return null;          // paint() can fire before the DOM refs are wired
+   var hit = buf && called[buf];
+   elGo.classList.toggle('warn', !!hit || (dupArm && dupArm===buf));
+   return hit;
+ }
+
  function hint(t,cls){ elHint.textContent=t; elHint.className='hint'+(cls?' '+cls:''); }
 
- function press(d){ if(buf.length<5){ buf+=d; paint(); hint('Press Send'); } }
- function del(){ buf=buf.slice(0,-1); paint(); hint(buf?'Press Send':'Type a car number'); }
+ function say(){
+   if(!buf) return hint('Type a car number');
+   var hit=called[buf];
+   if(hit) return hint('Already called · '+ago(hit),'dupe');
+   hint('Press Send');
+ }
+ function press(d){ if(buf.length<5){ if(dupArm!==buf) disarmDup(); buf+=d; paint(); say(); } }
+ function del(){ disarmDup(); buf=buf.slice(0,-1); paint(); say(); }
 
  function send(){
    if(!buf || sending) return;
-   var n=buf; sending=true;
+   var n=buf;
+
+   // First press on a number already in the queue only arms it.
+   if(called[n] && dupArm!==n){
+     dupArm=n; clearTimeout(dupTimer);
+     dupTimer=setTimeout(function(){ disarmDup(); checkDup(); say(); },6000);
+     checkDup();
+     hint('Called '+ago(called[n])+' — Send again to repeat','dupe');
+     return;
+   }
+   var forced = dupArm===n;
+   disarmDup();
+
+   sending=true;
    fetch('/api/hold/call',{method:'POST',headers:{'Content-Type':'application/json'},
-     body:JSON.stringify({number:n})})
+     body:JSON.stringify({number:n, force:forced})})
     .then(function(r){return r.json();})
     .then(function(j){
        sending=false; elOff.classList.add('hidden');
-       if(j.duplicate){ hint('Already called just now','dupe'); }
+       if(j.duplicate){
+         // Another phone called it between our check and our press.
+         called[n]=j.calledAt||new Date().toISOString();
+         dupArm=n; clearTimeout(dupTimer);
+         dupTimer=setTimeout(function(){ disarmDup(); checkDup(); say(); },6000);
+         checkDup();
+         hint('Called '+ago(called[n])+' — Send again to repeat','dupe');
+         return;
+       }
        else {
          pendingMine=n;
-         var who=(j.names||[]).join(' & ');
-         // Naming the child back is the typo check. Silence is the warning.
-         if(who) hint(n+' · '+who);
-         else    hint(n+' · no name on file','dupe');
+         // The typist still needs to know a typo landed on a real car, but
+         // nothing about that car needs to be read back at them.
+         var known = !!(j.teacher || j.grade);
+         if(j.repeat)    hint('Sent '+n+' again','dupe');
+         else if(known)  hint('Sent '+n);
+         else            hint(n+' · not on the roster','dupe');
        }
        buf=''; paint(); load();
     })
@@ -170,11 +267,12 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
    if(!top || !myAts[top.at] || sending) return;
    sending=true;
    fetch('/api/hold/undo',{method:'POST',headers:{'Content-Type':'application/json'},
-     body:JSON.stringify({number:top.number})})
+     body:JSON.stringify({label:top.label})})
     .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, j:j}; }); })
     .then(function(x){
        sending=false; elOff.classList.add('hidden');
-       if(x.ok){ delete myAts[top.at]; hint('Removed '+x.j.removed,'dupe'); }
+       if(x.ok){ delete myAts[top.at]; delete called[x.j.removed]; disarmDup();
+                 hint('Removed '+x.j.removed,'dupe'); }
        else { hint(x.j.error || 'Could not undo','dupe'); }
        load();
     })
@@ -215,26 +313,83 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
  function load(){
    fetch('/api/hold',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
      calls=j.calls||[];
+     called={};
+     for(var i=calls.length-1;i>=0;i--) called[calls[i].label]=calls[i].at;
      // Claim the call we just sent, so Undo knows it is ours.
-     if(pendingMine && calls.length && String(calls[0].number)===pendingMine){
+     if(pendingMine && calls.length && String(calls[0].label)===pendingMine){
        myAts[calls[0].at]=true; pendingMine=null;
      }
      paint(); elOff.classList.add('hidden');
    }).catch(function(){ elOff.classList.remove('hidden'); });
  }
 
+ elGo=document.getElementById('go');
  document.getElementById('pad').addEventListener('click',function(e){
    var k=e.target.closest('.key'); if(!k) return;
+   // A tapped key keeps focus, and then a physical Enter re-fires THAT key
+   // instead of Send — tap Delete, press Enter, and you delete again.
+   k.blur();
    if(k.dataset.d) return press(k.dataset.d);
    if(k.id==='del') return del();
    if(k.id==='go')  return send();
  });
+ // ---- name entry ----
+ var nameArm=null;
+ function sheetOpen(){ return !elSheet.classList.contains('hidden'); }
+ function openSheet(){
+   disarm();
+   elNameErr.textContent=''; elNameIn.value=''; nameArm=null;
+   elSheet.classList.remove('hidden');
+   // iOS will not raise the keyboard from a focus() that isn't in the tap's
+   // own task, so focus on the next frame rather than after a timeout.
+   requestAnimationFrame(function(){ elNameIn.focus(); });
+ }
+ function closeSheet(){ elSheet.classList.add('hidden'); elNameIn.blur(); }
+ function sendName(){
+   var v=elNameIn.value.replace(/\s+/g,' ').trim();
+   if(v.length<2){ elNameErr.textContent='Type a name.'; return; }
+   if(/^\d+$/.test(v)){ elNameErr.textContent='That is a number — use the keypad.'; return; }
+   if(sending) return;
+   sending=true; elNameErr.textContent='';
+   var forcedName = (nameArm===v);
+   fetch('/api/hold/name',{method:'POST',headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({name:v, force:forcedName})})
+    .then(function(r){ return r.json().then(function(j){ return {ok:r.ok,j:j}; }); })
+    .then(function(x){
+       sending=false;
+       if(!x.ok){ elNameErr.textContent=x.j.error||'Could not send.'; return; }
+       elOff.classList.add('hidden');
+       if(x.j.duplicate){
+         nameArm=v;
+         elNameErr.textContent='Already called '+ago(x.j.calledAt)+' — Send again to repeat.';
+         return;                      // stay in the sheet so the second press is here
+       }
+       nameArm=null;
+       pendingMine=x.j.label; hint(x.j.label+' · manual pickup','dupe');
+       closeSheet(); load();
+    })
+    .catch(function(){ sending=false; elNameErr.textContent='Could not reach the server.'; });
+ }
+ document.getElementById('nameBtn').addEventListener('click',openSheet);
+ document.getElementById('nameCancel').addEventListener('click',closeSheet);
+ document.getElementById('nameSend').addEventListener('click',sendName);
+ elNameIn.addEventListener('keydown',function(e){
+   // Stop the page's digit shortcuts from firing while a name is being typed.
+   e.stopPropagation();
+   if(e.key==='Enter'){ e.preventDefault(); sendName(); }
+   if(e.key==='Escape'){ e.preventDefault(); closeSheet(); }
+ });
+ // Tapping the dimmed backdrop is the expected way out of a sheet.
+ elSheet.addEventListener('click',function(e){ if(e.target===elSheet) closeSheet(); });
+
  elUndo.addEventListener('click',undo);
  elReset.addEventListener('click',tapReset);
  // Typing a number while Reset is armed means they meant to keep working.
  document.getElementById('pad').addEventListener('click',disarm);
  // A keyboard is faster than a touchscreen when there is one.
  document.addEventListener('keydown',function(e){
+   // Never let the keypad eat keystrokes meant for the name field.
+   if(sheetOpen() || /^(INPUT|TEXTAREA)$/.test((e.target||{}).tagName||'')) return;
    if(e.key>='0'&&e.key<='9') return press(e.key);
    if(e.key==='Backspace'){e.preventDefault();return del();}
    if(e.key==='Enter') return send();

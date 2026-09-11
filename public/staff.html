@@ -40,7 +40,7 @@ header{flex:0 0 auto;padding:calc(10px + env(safe-area-inset-top)) 12px 8px;
  -webkit-overflow-scrolling:touch}
 .row{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);
  border-radius:14px;padding:12px 14px;margin-bottom:7px}
-.row .n{font-size:26px;font-weight:900;line-height:1;min-width:64px}
+.row .n{font-size:34px;font-weight:900;line-height:1;min-width:64px}
 .row .w{flex:1;min-width:0}
 .row .w b{display:block;font-size:16.5px;font-weight:800;line-height:1.25}
 .row .w s{display:block;font-size:12px;font-weight:800;color:var(--dim);text-decoration:none;
@@ -51,6 +51,9 @@ header{flex:0 0 auto;padding:calc(10px + env(safe-area-inset-top)) 12px 8px;
 .row.mine .w s{color:#7BE0A3}
 .row.dim{opacity:.5}
 .row.unknown .w b{color:var(--dim);font-style:italic;font-weight:700}
+.row.man{border-color:rgba(255,59,48,.55)}
+.row.man .n{font-size:19px;line-height:1.2;min-width:0;max-width:52%;word-break:break-word}
+.row.man .w b{color:#FF8A80}
 
 .empty{text-align:center;color:var(--dim);padding:14vh 20px;font-size:15px;font-weight:700;line-height:1.6}
 .off{position:fixed;left:0;right:0;top:0;background:#FF3B30;color:#2A0A00;text-align:center;
@@ -79,12 +82,12 @@ header{flex:0 0 auto;padding:calc(10px + env(safe-area-inset-top)) 12px 8px;
   <div class="rooms" id="rooms"></div>
 </header>
 
-<div class="list" id="list"><div class="empty">Nothing called yet.<br>Your class will highlight here.</div></div>
+<div class="list" id="list"><div class="empty">Nothing called yet.<br>Your homeroom will highlight here.</div></div>
 <button class="jump hidden" id="jump">New calls ↑</button>
 
 <script>
 (function(){
- var KEY='hold.myRoom', myRoom=null, rooms=[], calls=[], lastTop=null;
+ var KEY='hold.myRoom', myRoom=null, teachers=[], calls=[], lastTop=null;
  try{ myRoom=localStorage.getItem(KEY)||null; }catch(e){}
 
  var elRooms=document.getElementById('rooms'), elList=document.getElementById('list'),
@@ -101,8 +104,8 @@ header{flex:0 0 auto;padding:calc(10px + env(safe-area-inset-top)) 12px 8px;
  }
 
  function paintRooms(){
-   elRooms.innerHTML = ['<button class="room'+(myRoom?'':' on')+'" data-r="">All classes</button>']
-     .concat(rooms.map(function(r){
+   elRooms.innerHTML = ['<button class="room'+(myRoom?'':' on')+'" data-r="">All homerooms</button>']
+     .concat(teachers.map(function(r){
        return '<button class="room'+(myRoom===r?' on':'')+'" data-r="'+esc(r)+'">'+esc(r)+'</button>';
      })).join('');
    elWho.textContent = myRoom ? myRoom : '';
@@ -111,16 +114,23 @@ header{flex:0 0 auto;padding:calc(10px + env(safe-area-inset-top)) 12px 8px;
  function paintList(){
    elMeta.textContent = calls.length+' called';
    if(!calls.length){
-     elList.innerHTML='<div class="empty">Nothing called yet.<br>Your class will highlight here.</div>';
+     elList.innerHTML='<div class="empty">Nothing called yet.<br>Your homeroom will highlight here.</div>';
      return;
    }
    elList.innerHTML = calls.map(function(c){
-     var mine = myRoom && c.room===myRoom;
-     var known = (c.names||[]).length;
-     var cls = 'row'+(mine?' mine':'')+(myRoom&&!mine?' dim':'')+(known?'':' unknown');
-     return '<div class="'+cls+'"><span class="n">'+esc(c.number)+'</span>'+
-            '<span class="w"><b>'+(known?esc(c.names.join(' & ')):'No name on file')+'</b>'+
-            (c.room?'<s>'+esc(c.room)+'</s>':'')+'</span>'+
+     var mine = myRoom && c.teacher===myRoom;
+     var known = !!(c.teacher||c.grade);
+     // A manual pickup belongs to a homeroom nobody can look up, so it is
+     // never dimmed away — every teacher needs to see the exceptions.
+     var cls = 'row'+(mine?' mine':'')+(myRoom&&!mine&&!c.manual?' dim':'')+
+               ((known||c.manual)?'':' unknown')+(c.manual?' man':'');
+     // The teacher drives the filter chips above and the green highlight; it
+     // is never printed on a row. Grade is what a reader actually needs.
+     // Numbers only. The homeroom still decides what turns green and what
+     // dims — it just never gets printed on the row.
+     var head = c.manual ? 'No car number — check at the car' : '';
+     return '<div class="'+cls+'"><span class="n">'+esc(c.label)+'</span>'+
+            (head?'<span class="w"><b>'+esc(head)+'</b></span>':'<span class="w"></span>')+
             '<span class="ago">'+ago(c.at)+'</span></div>';
    }).join('');
  }
@@ -131,7 +141,7 @@ header{flex:0 0 auto;padding:calc(10px + env(safe-area-inset-top)) 12px 8px;
    fetch('/api/hold',{cache:'no-store'}).then(function(r){ if(!r.ok) throw 0; return r.json(); })
     .then(function(d){
       elOff.classList.add('hidden');
-      rooms=d.rooms||[]; 
+      teachers=d.teachers||[];
       var wasTop=atTop(), prevTop=lastTop;
       calls=d.calls||[];
       lastTop = calls.length? calls[0].at : null;
