@@ -142,7 +142,15 @@ app.post('/api/hold/call', gate.requireStaff, (req, res) => {
 
     hold.calls.push({ number, at: new Date().toISOString() });
     writeJSON(HOLD_FILE, hold);
-    res.json({ ok: true, calls: hold.calls.length });
+
+    // Hand the match back so the typist sees who they just called. A number
+    // with nobody behind it is usually a typo, and the only person who can
+    // catch it is the one who typed it — the gym screen just shows a number.
+    const match = readRoster().find(r => String(r.number) === number);
+    res.json({
+        ok: true, calls: hold.calls.length,
+        names: (match && match.names) || [], room: (match && match.room) || ''
+    });
 });
 
 app.post('/api/hold/undo', gate.requireStaff, (req, res) => {

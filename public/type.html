@@ -16,6 +16,9 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
 .hcount{margin-left:auto;font-size:12px;font-weight:800;color:var(--dim);letter-spacing:.08em;
  text-transform:uppercase;white-space:nowrap}
 .hcount[hidden]{display:none}
+/* On a phone the nav plus Reset already fills the bar, and the count was
+   squeezing "Roster" down to "Rost". The chips below show the same thing. */
+@media (max-width:430px){ .hcount{display:none} }
 /* One nav, identical on every staff page, so nobody is ever stranded. */
 .nav{display:flex;gap:5px;align-items:center;min-width:0;overflow-x:auto;scrollbar-width:none}
 .nav::-webkit-scrollbar{display:none}
@@ -142,7 +145,13 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
     .then(function(j){
        sending=false; elOff.classList.add('hidden');
        if(j.duplicate){ hint('Already called just now','dupe'); }
-       else { hint('Called '+n); pendingMine=n; }
+       else {
+         pendingMine=n;
+         var who=(j.names||[]).join(' & ');
+         // Naming the child back is the typo check. Silence is the warning.
+         if(who) hint(n+' · '+who);
+         else    hint(n+' · no name on file','dupe');
+       }
        buf=''; paint(); load();
     })
     .catch(function(){ sending=false; elOff.classList.remove('hidden'); });
