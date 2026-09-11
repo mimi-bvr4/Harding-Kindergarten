@@ -11,6 +11,7 @@
  *                        their own class, so they send their kids to the line
  *   /display   either  — the gym screen, read-only
  *   /roster    staff   — car number -> children, and which class each is in
+ *   /report    staff   — the after-action record: every number, every time
  *
  * The screen is redundancy for the loudspeaker, never a replacement. If it
  * fails, dismissal falls back to exactly how it works today.
@@ -25,6 +26,7 @@ const PORT = process.env.PORT || 3000;
 const DATA = path.join(__dirname, 'data');
 const ROSTER_FILE = path.join(DATA, 'roster.json');
 const HOLD_FILE   = path.join(DATA, 'hold.json');
+const LOG_DIR     = path.join(DATA, 'log');   // one archived session per dismissal
 
 app.disable('x-powered-by');
 app.use(express.json({ limit: '512kb' }));
@@ -121,9 +123,86 @@ app.post('/api/hold/end', gate.requireStaff, (req, res) => {
 // not "end dismissal": the next number typed starts a fresh hold on its own,
 // so a reset in the middle of a real event costs nothing but the scrollback.
 app.post('/api/hold/reset', gate.requireStaff, (req, res) => {
-    const cleared = readHold().calls.length;
-    writeJSON(HOLD_FILE, { active: false, startedAt: null, calls: [] });
-    res.json({ ok: true, cleared });
+    const hold = readHold();
+    const cleared = hold.calls.length;
+    const retracted = (hold.removed || []).length;
+
+    // Archive BEFORE clearing. Reset used to be the only way to end a
+    // dismissal and it destroyed the evidence with it; the log is the whole
+    // reason a report can exist after everyone has gone home.
+    let archived = null;
+    if (cleared || retracted) {
+        try {
+            if (!fs.existsSync(LOG_DIR)) fs.mkdirSync(LOG_DIR, { recursive: true });
+            const startedAt = hold.startedAt || (hold.calls[0] && hold.calls[0].at) || new Date().toISOString();
+            // Filename-safe and sortable, and with no dots or slashes it can
+            // never be walked back out of the log directory by a crafted id.
+            const id = startedAt.replace(/[:.]/g, '-');
+            writeJSON(path.join(LOG_DIR, id + '.json'), {
+                id, startedAt, endedAt: new Date().toISOString(),
+                calls: hold.calls, removed: hold.removed || []
+            });
+            archived = id;
+        } catch (err) {
+            // Never let a logging failure block the reset — the board clearing
+            // is the operational need; the log is the paperwork.
+            console.warn('Could not archive dismissal:', err.message);
+        }
+    }
+
+    writeJSON(HOLD_FILE, { active: false, startedAt: null, calls: [], removed: [] });
+    res.json({ ok: true, cleared, archived });
+});
+
+// ==================== REPORTS ====================
+
+const SAFE_ID = /^[0-9A-Za-z-]{1,40}$/;
+
+/** Attach the roster match to every call, as the display does. */
+function decorateReport(r) {
+    const roster = readRoster();
+    const byNumber = new Map(roster.map(x => [String(x.number), x]));
+    const attach = (c) => {
+        const m = byNumber.get(String(c.number));
+        return Object.assign({}, c, { names: (m && m.names) || [], room: (m && m.room) || '' });
+    };
+    return Object.assign({}, r, {
+        calls: (r.calls || []).map(attach),
+        removed: (r.removed || []).map(attach)
+    });
+}
+
+app.get('/api/reports', gate.requireStaff, (req, res) => {
+    let files = [];
+    try { files = fs.readdirSync(LOG_DIR).filter(f => f.endsWith('.json')); } catch (_) {}
+    const reports = files.sort().reverse().slice(0, 400).map(f => {
+        const d = readJSON(path.join(LOG_DIR, f), null);
+        if (!d) return null;
+        return { id: d.id, startedAt: d.startedAt, endedAt: d.endedAt,
+                 count: (d.calls || []).length, retracted: (d.removed || []).length };
+    }).filter(Boolean);
+
+    const hold = readHold();
+    res.json({
+        reports,
+        current: { count: hold.calls.length, startedAt: hold.startedAt,
+                   retracted: (hold.removed || []).length }
+    });
+});
+
+app.get('/api/report/:id', gate.requireStaff, (req, res) => {
+    const id = String(req.params.id || '');
+    if (id === 'current') {
+        const hold = readHold();
+        return res.json(decorateReport({
+            id: 'current', startedAt: hold.startedAt, endedAt: null,
+            calls: hold.calls, removed: hold.removed || []
+        }));
+    }
+    if (!SAFE_ID.test(id)) return res.status(400).json({ error: 'Bad report id.' });
+    const d = readJSON(path.join(LOG_DIR, id + '.json'), null);
+    if (!d) return res.status(404).json({ error: 'No such report.' });
+    res.json(decorateReport(d));
 });
 
 app.post('/api/hold/call', gate.requireStaff, (req, res) => {
@@ -167,6 +246,12 @@ app.post('/api/hold/undo', gate.requireStaff, (req, res) => {
     }
 
     hold.calls.pop();
+    // A retraction is part of the record. An emergency-dismissal log that
+    // quietly omits "we called 412 and pulled it back" is a worse record than
+    // no log at all, so keep it and show it on the report.
+    hold.removed = (hold.removed || []).concat([{
+        number: last.number, at: last.at, removedAt: new Date().toISOString()
+    }]);
     writeJSON(HOLD_FILE, hold);
     res.json({ ok: true, removed: last.number, calls: hold.calls.length });
 });
@@ -196,6 +281,7 @@ app.get('/display', page('display.html'));
 app.get('/type',   (req, res, next) => req.role === 'staff' ? next() : res.redirect(302, '/login?next=%2Ftype'), page('type.html'));
 app.get('/staff',  (req, res, next) => req.role === 'staff' ? next() : res.redirect(302, '/login?next=%2Fstaff'), page('staff.html'));
 app.get('/roster', (req, res, next) => req.role === 'staff' ? next() : res.redirect(302, '/login?next=%2Froster'), page('roster.html'));
+app.get('/report', (req, res, next) => req.role === 'staff' ? next() : res.redirect(302, '/login?next=%2Freport'), page('report.html'));
 
 // A display-only session has exactly one place to be.
 app.get('/', (req, res) => res.redirect(302, req.role === 'staff' ? '/type' : '/display'));

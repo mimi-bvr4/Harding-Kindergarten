@@ -83,6 +83,7 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
     <a href="/staff">Staff</a>
     <a href="/display">Staging</a>
     <a href="/roster">Roster</a>
+    <a href="/report">Report</a>
   </nav>
   <span class="hcount" id="count">0 called</span>
   <button class="reset" id="reset">Reset</button>
@@ -203,7 +204,9 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
     .then(function(j){
        myAts={}; pendingMine=null; buf='';
        elOff.classList.add('hidden');
-       hint('Board cleared — '+j.cleared+' removed');
+       // Reset is no longer destructive — say so, or nobody will dare press it.
+       hint(j.archived ? 'Cleared — '+j.cleared+' saved to Report'
+                       : 'Board cleared');
        load();
     })
     .catch(function(){ elOff.classList.remove('hidden'); });

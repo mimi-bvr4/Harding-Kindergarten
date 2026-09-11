@@ -1,0 +1,319 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#06132E">
+<title>Dismissal Report · Carline Hold</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#06132E;--panel:#0C1F45;--line:rgba(255,255,255,.12);--gold:#FFC72C;--dim:#7E93BC;
+ --red:#FF3B30;--green:#22C55E}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--navy);color:#fff;
+ font-variant-numeric:tabular-nums;padding-bottom:40px}
+header{position:sticky;top:0;z-index:5;background:rgba(6,19,46,.97);border-bottom:1px solid var(--line);
+ padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;gap:10px}
+/* One nav, identical on every staff page, so nobody is ever stranded. */
+.nav{display:flex;gap:5px;align-items:center;min-width:0;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{flex:0 0 auto;color:var(--dim);font-size:12px;font-weight:800;text-decoration:none;
+ border:1px solid var(--line);padding:6px 10px;border-radius:99px;white-space:nowrap}
+.nav a.on{background:var(--gold);color:#06132E;border-color:transparent}
+
+main{max-width:900px;margin:0 auto;padding:14px}
+.picker{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+select{font:inherit;font-size:14px;font-weight:800;padding:10px 12px;border-radius:10px;
+ border:1px solid var(--line);background:var(--panel);color:#fff;max-width:100%}
+select:focus{outline:none;border-color:var(--gold)}
+
+/* The four numbers anyone asks first: when, how long, how many, what went wrong. */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:16px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.tile b{display:block;font-size:25px;font-weight:900;line-height:1.1}
+.tile s{display:block;font-size:10.5px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;
+ color:var(--dim);text-decoration:none;margin-top:3px}
+.tile.warn b{color:var(--gold)}
+
+/* The table is wider than a phone. Let IT scroll sideways rather than the
+   page — a page that slides under your thumb is how the nav got lost before. */
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:8px}
+table{width:100%;min-width:560px;border-collapse:collapse}
+th{text-align:left;font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;
+ color:var(--dim);padding:0 8px 7px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px;font-weight:700;
+ vertical-align:baseline}
+td.n{font-weight:900;font-size:18px;width:64px}
+td.t{color:#C9D8F5;white-space:nowrap;width:92px}
+td.el,td.gap{color:var(--dim);white-space:nowrap;font-size:12.5px;width:70px}
+td.room{color:var(--dim);font-size:12px;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+tr.unknown td.w{color:var(--dim);font-style:italic;font-weight:700}
+tr.retracted td{color:#FF8A80;text-decoration:line-through}
+tr.retracted td.why{text-decoration:none;color:var(--red);font-size:11.5px;font-weight:900;
+ letter-spacing:.08em;text-transform:uppercase}
+/* A long gap is where the line stalled — worth seeing without reading every row. */
+td.gap.slow{color:var(--gold);font-weight:900}
+
+h2{font-size:12px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+ margin:22px 0 9px}
+.empty{text-align:center;color:var(--dim);padding:10vh 20px;font-size:15px;font-weight:700;line-height:1.7}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+button.b{border:1px solid var(--line);background:var(--panel);color:#fff;border-radius:11px;
+ font:inherit;font-size:13.5px;font-weight:800;padding:11px 16px;cursor:pointer}
+button.b.go{background:var(--gold);color:#06132E;border-color:transparent}
+.msg{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;border-radius:99px;padding:10px 18px;
+ font-size:13.5px;font-weight:800;background:var(--green);color:#04240F;z-index:6}
+.msg.hidden{display:none}
+.live{display:inline-block;background:var(--green);color:#04240F;font-size:10px;font-weight:900;
+ letter-spacing:.12em;text-transform:uppercase;padding:4px 8px;border-radius:99px}
+
+/* Printing is how this becomes a piece of paper for a binder or an incident
+   file, so the screen chrome goes and the ink turns black on white. */
+@media print{
+  header,.bar,.picker,.msg{display:none!important}
+  body{background:#fff;color:#000;padding:0}
+  main{max-width:none;padding:0}
+  .tile{background:#fff;border:1px solid #999}
+  .scroll{overflow:visible}
+  table{min-width:0}
+  .tile s,td.t,td.el,td.gap,td.room,h2{color:#444}
+  th{color:#000;border-bottom:1px solid #000}
+  td{border-bottom:1px solid #ddd}
+  tr.retracted td{color:#000}
+  .print-head{display:block!important}
+}
+.print-head{display:none;margin-bottom:14px}
+.print-head b{font-size:18px;font-weight:900}
+.print-head s{display:block;text-decoration:none;font-size:12px;margin-top:2px}
+</style></head><body>
+
+<header>
+  <nav class="nav">
+    <a href="/type">Keypad</a>
+    <a href="/staff">Staff</a>
+    <a href="/display">Staging</a>
+    <a href="/roster">Roster</a>
+    <a class="on" href="/report">Report</a>
+  </nav>
+</header>
+
+<main>
+  <div class="print-head"><b>Carline Hold — Dismissal Report</b><s id="printWhen"></s></div>
+
+  <div class="picker">
+    <select id="pick"><option value="current">Loading…</option></select>
+    <span id="liveTag"></span>
+  </div>
+
+  <div id="body"><div class="empty">Loading…</div></div>
+
+  <div class="bar">
+    <button class="b go" id="csv">Download CSV</button>
+    <button class="b" id="copy">Copy as text</button>
+    <button class="b" id="print">Print / Save PDF</button>
+  </div>
+</main>
+
+<div class="msg hidden" id="msg"></div>
+
+<script>
+(function(){
+ var TZ='America/Chicago';
+ var cur=null;   // the report currently on screen
+ var elPick=document.getElementById('pick'), elBody=document.getElementById('body'),
+     elMsg=document.getElementById('msg'), elLive=document.getElementById('liveTag'),
+     elPrintWhen=document.getElementById('printWhen');
+
+ function esc(s){return String(s==null?'':s).replace(/[&<>]/g,function(c){
+   return({'&':'&amp;','<':'&lt;','>':'&gt;'})[c];});}
+
+ // The server stores UTC; the school runs on Central. Format at read time so
+ // the stored record stays unambiguous and the page stays readable.
+ function clock(iso){
+   if(!iso) return '—';
+   try{ return new Date(iso).toLocaleTimeString('en-US',
+     {timeZone:TZ,hour:'numeric',minute:'2-digit',second:'2-digit'}); }
+   catch(e){ return iso; }
+ }
+ function dayLabel(iso){
+   if(!iso) return '';
+   try{
+     var d=new Date(iso);
+     var p=new Intl.DateTimeFormat('en-US',{timeZone:TZ,month:'2-digit',day:'2-digit',year:'numeric'})
+            .formatToParts(d).reduce(function(o,x){o[x.type]=x.value;return o;},{});
+     return p.month+'.'+p.day+'.'+p.year;          // MM.DD.YYYY
+   }catch(e){ return iso.slice(0,10); }
+ }
+ function mmss(ms){
+   if(ms==null||isNaN(ms)) return '—';
+   var s=Math.max(0,Math.round(ms/1000));
+   return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+ }
+ function flash(t){ elMsg.textContent=t; elMsg.className='msg';
+   setTimeout(function(){elMsg.className='msg hidden';},2400); }
+
+ // ---- rows, shared by the table, the CSV and the plain-text copy ----
+ function rows(r){
+   var calls=(r.calls||[]).slice().sort(function(a,b){return a.at.localeCompare(b.at);});
+   var t0 = r.startedAt ? new Date(r.startedAt).getTime()
+                        : (calls[0] ? new Date(calls[0].at).getTime() : null);
+   var prev=null;
+   return calls.map(function(c,i){
+     var t=new Date(c.at).getTime();
+     var gap = prev==null ? null : t-prev;
+     prev=t;
+     return { i:i+1, at:c.at, time:clock(c.at), number:c.number,
+              names:(c.names||[]).join(' & '), room:c.room||'',
+              elapsed: t0==null?null:t-t0, gap:gap };
+   });
+ }
+
+ function render(r){
+   cur=r;
+   var rs=rows(r);
+   var unknown=rs.filter(function(x){return !x.names;}).length;
+   var retracted=(r.removed||[]).length;
+   var t0=r.startedAt?new Date(r.startedAt).getTime():(rs[0]?new Date(rs[0].at).getTime():null);
+   var last=rs.length?new Date(rs[rs.length-1].at).getTime():null;
+   var end=r.endedAt?new Date(r.endedAt).getTime():last;
+   var dur=(t0!=null&&end!=null)?end-t0:null;
+
+   elLive.innerHTML = r.id==='current' ? '<span class="live">Live — not yet reset</span>' : '';
+   elPrintWhen.textContent = dayLabel(r.startedAt)+'  ·  '+clock(r.startedAt)+' – '+
+     (r.endedAt?clock(r.endedAt):'in progress');
+
+   if(!rs.length && !retracted){
+     elBody.innerHTML='<div class="empty">No numbers called in this session.</div>';
+     return;
+   }
+
+   // Median gap is the honest "pace" number; a couple of long stalls would
+   // drag a mean around and make a smooth dismissal look slow.
+   var gaps=rs.map(function(x){return x.gap;}).filter(function(g){return g!=null;}).sort(function(a,b){return a-b;});
+   var med=gaps.length?gaps[Math.floor(gaps.length/2)]:null;
+   var slow=med!=null?Math.max(med*3,60000):60000;   // flag a gap 3x the median, min 1 min
+
+   var html='<div class="tiles">'+
+     tile(dayLabel(r.startedAt)||'—', 'Date')+
+     tile(clock(r.startedAt)+(r.endedAt?' – '+clock(r.endedAt):''), r.endedAt?'Start – End':'Started')+
+     tile(mmss(dur), 'Duration')+
+     tile(rs.length, 'Cars called')+
+     tile(med==null?'—':mmss(med), 'Median gap')+
+     (unknown?tile(unknown,'No name on file',true):'')+
+     (retracted?tile(retracted,'Retracted',true):'')+
+   '</div>';
+
+   html+='<h2>Every number, in order</h2><div class="scroll"><table><thead><tr>'+
+     '<th>#</th><th>Time</th><th>Into</th><th>Number</th><th>Children</th><th>Class</th><th>Gap</th>'+
+     '</tr></thead><tbody>'+
+     rs.map(function(x){
+       return '<tr'+(x.names?'':' class="unknown"')+'>'+
+         '<td class="el">'+x.i+'</td>'+
+         '<td class="t">'+esc(x.time)+'</td>'+
+         '<td class="el">'+mmss(x.elapsed)+'</td>'+
+         '<td class="n">'+esc(x.number)+'</td>'+
+         '<td class="w">'+(x.names?esc(x.names):'No name on file')+'</td>'+
+         '<td class="room">'+esc(x.room)+'</td>'+
+         '<td class="gap'+(x.gap!=null&&x.gap>slow?' slow':'')+'">'+(x.gap==null?'—':mmss(x.gap))+'</td>'+
+       '</tr>';
+     }).join('')+'</tbody></table></div>';
+
+   if(retracted){
+     html+='<h2>Retracted — called, then pulled back</h2><div class="scroll"><table><thead><tr>'+
+       '<th>Called</th><th>Pulled</th><th>Number</th><th>Children</th><th></th>'+
+       '</tr></thead><tbody>'+
+       (r.removed||[]).map(function(c){
+         return '<tr class="retracted">'+
+           '<td class="t">'+esc(clock(c.at))+'</td>'+
+           '<td class="t">'+esc(clock(c.removedAt))+'</td>'+
+           '<td class="n">'+esc(c.number)+'</td>'+
+           '<td class="w">'+esc((c.names||[]).join(' & ')||'No name on file')+'</td>'+
+           '<td class="why">Undone</td></tr>';
+       }).join('')+'</tbody></table></div>';
+   }
+
+   elBody.innerHTML=html;
+ }
+ function tile(v,label,warn){
+   return '<div class="tile'+(warn?' warn':'')+'"><b>'+esc(v)+'</b><s>'+esc(label)+'</s></div>';
+ }
+
+ // ---- exports ----
+ function csv(){
+   var rs=rows(cur);
+   var q=function(v){ v=String(v==null?'':v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; };
+   var out=[['#','Time (Central)','Into dismissal','Car number','Children','Class','Gap','Status'].join(',')];
+   rs.forEach(function(x){
+     out.push([x.i,x.time,mmss(x.elapsed),x.number,x.names,x.room,mmss(x.gap),'Called'].map(q).join(','));
+   });
+   (cur.removed||[]).forEach(function(c){
+     out.push(['',clock(c.at),'',c.number,(c.names||[]).join(' & '),c.room||'',
+               '','Retracted at '+clock(c.removedAt)].map(q).join(','));
+   });
+   return out.join('\n');
+ }
+ function textReport(){
+   var rs=rows(cur);
+   var lines=['Carline Hold — dismissal '+dayLabel(cur.startedAt),
+              clock(cur.startedAt)+' – '+(cur.endedAt?clock(cur.endedAt):'in progress')+
+              '   ·   '+rs.length+' cars called',''];
+   rs.forEach(function(x){
+     lines.push(String(x.i).padStart(3,' ')+'  '+x.time+'  '+String(x.number).padStart(5,' ')+
+                '  '+(x.names||'(no name on file)')+(x.room?'  ['+x.room+']':''));
+   });
+   (cur.removed||[]).forEach(function(c){
+     lines.push('     '+clock(c.at)+'  '+String(c.number).padStart(5,' ')+
+                '  RETRACTED at '+clock(c.removedAt));
+   });
+   return lines.join('\n');
+ }
+
+ document.getElementById('csv').addEventListener('click',function(){
+   if(!cur) return;
+   var blob=new Blob([csv()],{type:'text/csv;charset=utf-8'});
+   var a=document.createElement('a');
+   a.href=URL.createObjectURL(blob);
+   a.download='dismissal-'+(dayLabel(cur.startedAt)||'report')+'.csv';
+   document.body.appendChild(a); a.click();
+   setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1000);
+ });
+ document.getElementById('copy').addEventListener('click',function(){
+   if(!cur) return;
+   var t=textReport();
+   if(navigator.clipboard&&navigator.clipboard.writeText){
+     navigator.clipboard.writeText(t).then(function(){flash('Copied');},function(){fallback(t);});
+   } else fallback(t);
+ });
+ function fallback(t){
+   var ta=document.createElement('textarea'); ta.value=t;
+   ta.style.position='fixed'; ta.style.opacity='0';
+   document.body.appendChild(ta); ta.select();
+   try{ document.execCommand('copy'); flash('Copied'); }catch(e){ flash('Could not copy'); }
+   ta.remove();
+ }
+ document.getElementById('print').addEventListener('click',function(){ window.print(); });
+
+ // ---- load ----
+ function loadOne(id){
+   fetch('/api/report/'+encodeURIComponent(id),{cache:'no-store'})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(render)
+    .catch(function(){ elBody.innerHTML='<div class="empty">Could not load that report.</div>'; });
+ }
+
+ fetch('/api/reports',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+   var opts=[];
+   var c=d.current||{};
+   opts.push('<option value="current">Current session — '+(c.count||0)+
+             ' called'+(c.startedAt?' · started '+clock(c.startedAt):'')+'</option>');
+   (d.reports||[]).forEach(function(r){
+     opts.push('<option value="'+esc(r.id)+'">'+dayLabel(r.startedAt)+' · '+clock(r.startedAt)+
+               ' · '+r.count+' called'+(r.retracted?' · '+r.retracted+' retracted':'')+'</option>');
+   });
+   elPick.innerHTML=opts.join('');
+   // Land on the live session if one is running, otherwise the newest archive.
+   var start = (c.count ? 'current' : ((d.reports||[])[0] ? d.reports[0].id : 'current'));
+   elPick.value=start;
+   loadOne(start);
+ }).catch(function(){ elBody.innerHTML='<div class="empty">Could not reach the server.</div>'; });
+
+ elPick.addEventListener('change',function(){ loadOne(elPick.value); });
+})();
+</script></body></html>
