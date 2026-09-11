@@ -7,6 +7,12 @@
 :root{--navy:#06132E;--panel:#0C1F45;--line:rgba(255,255,255,.12);--gold:#FFC72C;--dim:#7E93BC;--red:#FF3B30}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
+/* iOS Safari: height:100% is the LAYOUT viewport, which is taller than what
+   you can see while the URL bar is showing — so the page scrolled and pushed
+   the nav up behind the address bar. 100dvh tracks the visible area instead.
+   overflow:hidden on <html> stops the document scrolling at all. */
+html{overflow:hidden;overscroll-behavior:none}
+@supports (height:100dvh){ html,body{height:100dvh} }
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--navy);color:#fff;
  display:flex;flex-direction:column;overflow:hidden;font-variant-numeric:tabular-nums}
 header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;
@@ -35,12 +41,13 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
 
 /* the number being typed — huge, because it is checked at a glance in bad light */
 .entry{flex:0 0 auto;text-align:center;padding:14px 10px 6px}
-.entry .num{font-size:22vw;font-weight:900;line-height:1;letter-spacing:.02em;min-height:1em}
+.entry .num{font-size:min(22vw,150px);font-weight:900;line-height:1;letter-spacing:.02em;min-height:1em}
 .entry .num.empty{color:#28406F}
 .entry .hint{font-size:13px;font-weight:800;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;min-height:1.2em}
 .entry .hint.dupe{color:var(--gold)}
 
 .pad{flex:1 1 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 10px;min-height:0}
+.entry,.pad,.strip{width:100%;max-width:560px;margin-left:auto;margin-right:auto}
 .key{border:0;border-radius:16px;background:var(--panel);color:#fff;font:inherit;font-size:min(9vw,42px);
  font-weight:900;cursor:pointer;border:1px solid var(--line)}
 .key:active{background:#16305F}
@@ -82,7 +89,7 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
 </header>
 
 <div class="entry">
-  <div class="num empty" id="num">—</div>
+  <div class="num empty" id="num"></div>
   <div class="hint" id="hint">Type a car number</div>
 </div>
 
@@ -91,7 +98,7 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
   <button class="key" data-d="4">4</button><button class="key" data-d="5">5</button><button class="key" data-d="6">6</button>
   <button class="key" data-d="7">7</button><button class="key" data-d="8">8</button><button class="key" data-d="9">9</button>
   <button class="key act" id="del">Delete</button><button class="key" data-d="0">0</button>
-  <button class="key go" id="go">Call</button>
+  <button class="key go" id="go">Send</button>
 </div>
 
 <div class="strip">
@@ -113,7 +120,7 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
      elReset=document.getElementById('reset');
 
  function paint(){
-   elNum.textContent = buf || '—';
+   elNum.textContent = buf;
    elNum.classList.toggle('empty', !buf);
    elCount.textContent = calls.length + ' called';
    elRecent.innerHTML = calls.slice(0,24).map(function(c,i){
@@ -133,8 +140,8 @@ header{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:calc(10px 
  }
  function hint(t,cls){ elHint.textContent=t; elHint.className='hint'+(cls?' '+cls:''); }
 
- function press(d){ if(buf.length<5){ buf+=d; paint(); hint('Press Call'); } }
- function del(){ buf=buf.slice(0,-1); paint(); hint(buf?'Press Call':'Type a car number'); }
+ function press(d){ if(buf.length<5){ buf+=d; paint(); hint('Press Send'); } }
+ function del(){ buf=buf.slice(0,-1); paint(); hint(buf?'Press Send':'Type a car number'); }
 
  function send(){
    if(!buf || sending) return;

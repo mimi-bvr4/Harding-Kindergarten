@@ -7,6 +7,12 @@
 :root{--navy:#06132E;--panel:#0C1F45;--line:rgba(255,255,255,.12);--gold:#FFC72C;--dim:#7E93BC;--mine:#22C55E}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
+/* iOS Safari: height:100% is the LAYOUT viewport, which is taller than what
+   you can see while the URL bar is showing — so the page scrolled and pushed
+   the nav up behind the address bar. 100dvh tracks the visible area instead.
+   overflow:hidden on <html> stops the document scrolling at all. */
+html{overflow:hidden;overscroll-behavior:none}
+@supports (height:100dvh){ html,body{height:100dvh} }
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--navy);color:#fff;
  display:flex;flex-direction:column;overflow:hidden;font-variant-numeric:tabular-nums}
 

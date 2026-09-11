@@ -10,6 +10,12 @@
    Waiting screen. */
 [hidden]{display:none!important}
 html,body{height:100%}
+/* iOS Safari: height:100% is the LAYOUT viewport, which is taller than what
+   you can see while the URL bar is showing — so the page scrolled and pushed
+   the nav up behind the address bar. 100dvh tracks the visible area instead.
+   overflow:hidden on <html> stops the document scrolling at all. */
+html{overflow:hidden;overscroll-behavior:none}
+@supports (height:100dvh){ html,body{height:100dvh} }
 body{background:var(--bg);color:#fff;font-family:'Inter',-apple-system,sans-serif;
  font-variant-numeric:tabular-nums;overflow:hidden;display:flex;flex-direction:column}
 header{flex:0 0 auto;display:flex;align-items:center;gap:2vw;padding:1.3vh 2.2vw;
