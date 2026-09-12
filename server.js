@@ -264,6 +264,10 @@ app.post('/api/admin/update', requireAdmin, (req, res) => {
             data.schoolLinks = sanitizeLinks(req.body.links);
             message = 'Update school-wide links';
 
+        } else if (action === 'key-dates') {
+            data.keyDates = sanitizeDates(req.body.dates);
+            message = 'Update upcoming dates';
+
         } else if (action === 'announcement') {
             data.announcement = String(req.body.text || '').slice(0, 1000);
             message = data.announcement ? 'Post announcement' : 'Clear announcement';
@@ -293,6 +297,34 @@ function sanitizeLinks(links) {
         url: sanitizeUrl(String(l.url || '')),
         icon: String(l.icon || 'fa-link').slice(0, 60)
     })).filter(l => l.label);
+}
+
+/**
+ * Upcoming dates. The parent page renders the weekday from the date itself,
+ * so a bad date shows the wrong day rather than failing loudly — everything
+ * here is validated by shape, and anything unrecognised is dropped.
+ */
+function sanitizeDates(dates) {
+    if (!Array.isArray(dates)) return [];
+    const day  = (v) => /^\d{4}-\d{2}-\d{2}$/.test(String(v || '').trim()) ? String(v).trim() : '';
+    const time = (v) => /^\d{2}:\d{2}$/.test(String(v || '').trim()) ? String(v).trim() : '';
+    return dates.slice(0, 300).map(d => {
+        const row = { date: day(d.date), label: String(d.label || '').trim().slice(0, 140) };
+        const end = day(d.end);
+        if (end && end > row.date) row.end = end;              // multi-day only
+        const t = time(d.time);
+        if (t) row.time = t;
+        const note = String(d.note || '').trim().slice(0, 300);
+        if (note) row.note = note;
+        // An RSVP or details link rides along untouched if one is already there.
+        const url = sanitizeUrl(String(d.url || ''));
+        if (url) {
+            row.url = url;
+            row.urlLabel = String(d.urlLabel || 'Details').trim().slice(0, 40) || 'Details';
+        }
+        return row;
+    }).filter(d => d.date && d.label)
+      .sort((a, b) => (a.date + ' ' + (a.time || '00:00')).localeCompare(b.date + ' ' + (b.time || '00:00')));
 }
 
 function sanitizeUrl(url) {

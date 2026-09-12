@@ -105,6 +105,7 @@ function render() {
     else if (v.name === 'notes-edit') root.innerHTML = viewNoteEditor(v.classroomId);
     else if (v.name === 'links-pick') root.innerHTML = viewPickClassroom('links', 'Which links do you want to update?', true);
     else if (v.name === 'links-edit') root.innerHTML = viewLinks(v.target);
+    else if (v.name === 'dates') root.innerHTML = viewDates();
     else if (v.name === 'docs') root.innerHTML = viewDocs();
     else if (v.name === 'announce') root.innerHTML = viewAnnouncement();
     wireView();
@@ -123,6 +124,14 @@ function viewHome() {
             <span>
                 <h2>Weekly Classroom Notes</h2>
                 <p>Write or change the note parents see for each classroom.</p>
+            </span>
+            <i class="fas fa-chevron-right go"></i>
+        </button>
+        <button class="menu-card" data-go="dates">
+            <span class="emoji tint-gold">📅</span>
+            <span>
+                <h2>Upcoming Dates</h2>
+                <p>Add a field trip, holiday, or early dismissal. Shows on the home page and the Dates tab.</p>
             </span>
             <i class="fas fa-chevron-right go"></i>
         </button>
@@ -254,6 +263,79 @@ function viewLinks(target) {
     </div>`;
 }
 
+function viewDates() {
+    const dates = [...(ADMIN.data.keyDates || [])].sort(
+        (a, b) => (a.date + ' ' + (a.time || '00:00')).localeCompare(b.date + ' ' + (b.time || '00:00')));
+    const today = new Date().toISOString().slice(0, 10);
+
+    // Read the weekday off the date itself — same as the parent page does, so
+    // what you see here is exactly what a family will see.
+    const pretty = (iso) => {
+        try {
+            const d = new Date(iso + 'T12:00:00');
+            return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        } catch (_) { return iso; }
+    };
+    const clock = (hhmm) => {
+        if (!hhmm) return '';
+        const [h, m] = hhmm.split(':').map(Number);
+        const ap = h >= 12 ? 'PM' : 'AM';
+        return ((h % 12) || 12) + ':' + String(m).padStart(2, '0') + ' ' + ap;
+    };
+
+    const row = (d, i) => {
+        const past = (d.end || d.date) < today;
+        const when = pretty(d.date) + (d.end ? ' – ' + pretty(d.end) : '') +
+                     (d.time ? ' · ' + clock(d.time) : '');
+        return `
+        <div class="link-row"${past ? ' style="opacity:.5"' : ''}>
+            <span class="link-icon"><i class="fas fa-calendar-day"></i></span>
+            <span class="link-main">
+                <div class="link-label">${esc(d.label)}${past ? ' — past' : ''}</div>
+                <div class="link-url">${esc(when)}${d.note ? ' · ' + esc(d.note) : ''}</div>
+            </span>
+            <button class="icon-btn" data-edit-date="${i}" title="Change this date"><i class="fas fa-pencil"></i></button>
+            <button class="icon-btn danger" data-del-date="${i}" title="Remove this date"><i class="fas fa-trash-can"></i></button>
+        </div>`;
+    };
+
+    return `
+    <button class="back-link" data-go="home"><i class="fas fa-arrow-left"></i> Back to main menu</button>
+    <h1 class="page-title">Upcoming Dates</h1>
+    <p class="page-sub">These show in the week outlook on the home page and on the Dates tab.</p>
+
+    <div class="panel">
+        <h3>What's on the calendar</h3>
+        <p class="hint">Tap the pencil ✏️ to change one, or the trash can 🗑️ to remove it.
+           Past dates are faded — parents don't see them.</p>
+        <div id="dateList">${dates.length ? dates.map(row).join('') : '<p class="hint">Nothing on the calendar yet.</p>'}</div>
+    </div>
+
+    <div class="panel" id="dateFormPanel">
+        <h3 id="dateFormTitle">➕ Add a date</h3>
+
+        <label class="field-label">What is it?</label>
+        <input id="dateLabel" class="big-input" placeholder="Field Trip — Frist Art Museum">
+
+        <label class="field-label" style="margin-top:0.9rem;">Which day?</label>
+        <input id="dateDay" class="big-input" type="date">
+
+        <label class="field-label" style="margin-top:0.9rem;">Start time <span class="hint">(leave blank for an all-day thing)</span></label>
+        <input id="dateTime" class="big-input" type="time">
+
+        <label class="field-label" style="margin-top:0.9rem;">Last day <span class="hint">(only if it runs more than one day, like a break)</span></label>
+        <input id="dateEnd" class="big-input" type="date">
+
+        <label class="field-label" style="margin-top:0.9rem;">Anything parents need to bring or know?</label>
+        <input id="dateNote" class="big-input" placeholder="Send a booster seat in with your child that day.">
+
+        <div class="save-row">
+            <button id="saveDateBtn" class="btn btn-green"><i class="fas fa-check"></i> Save Date</button>
+            <button id="cancelDateBtn" class="btn btn-quiet hidden">Cancel</button>
+        </div>
+    </div>`;
+}
+
 function viewDocs() {
     const docs = ADMIN.data.documents || [];
     const classrooms = ADMIN.data.classrooms || [];
@@ -323,6 +405,7 @@ function viewAnnouncement() {
 // ==================== WIRING ====================
 
 let editingLinkIndex = null;
+let editingDateIndex = null;
 
 function wireView() {
     // generic nav
@@ -335,6 +418,14 @@ function wireView() {
             if (ADMIN.view.name === 'notes-pick') go({ name: 'notes-edit', classroomId: id });
             else go({ name: 'links-edit', target: id });
         }));
+
+    // dates
+    document.querySelectorAll('[data-edit-date]').forEach(el =>
+        el.addEventListener('click', () => startEditDate(Number(el.getAttribute('data-edit-date')))));
+    document.querySelectorAll('[data-del-date]').forEach(el =>
+        el.addEventListener('click', () => onDeleteDate(Number(el.getAttribute('data-del-date')))));
+    $('saveDateBtn')?.addEventListener('click', () => withBusy($('saveDateBtn'), onSaveDate));
+    $('cancelDateBtn')?.addEventListener('click', () => { editingDateIndex = null; render(); });
 
     // notes
     $('saveNoteBtn')?.addEventListener('click', async () => {
@@ -421,6 +512,71 @@ function wireView() {
         await saveUpdate({ action: 'announcement', text: '' }, 'Banner taken down. ✓');
         render();
     });
+}
+
+// ---- dates ----
+
+function sortedDates() {
+    return [...(ADMIN.data.keyDates || [])].sort(
+        (a, b) => (a.date + ' ' + (a.time || '00:00')).localeCompare(b.date + ' ' + (b.time || '00:00')));
+}
+
+async function pushDates(dates, msg) {
+    try {
+        await saveUpdate({ action: 'key-dates', dates }, msg);
+        editingDateIndex = null;
+        render();
+    } catch (e) { toast(e.message, true); }
+}
+
+function startEditDate(i) {
+    const d = sortedDates()[i];
+    if (!d) return;
+    editingDateIndex = i;
+    $('dateLabel').value = d.label || '';
+    $('dateDay').value   = d.date || '';
+    $('dateTime').value  = d.time || '';
+    $('dateEnd').value   = d.end || '';
+    $('dateNote').value  = d.note || '';
+    $('dateFormTitle').textContent = '✏️ Change this date';
+    $('cancelDateBtn').classList.remove('hidden');
+    $('dateFormPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function onDeleteDate(i) {
+    const dates = sortedDates();
+    const d = dates[i];
+    if (!d) return;
+    if (!confirm('Remove "' + d.label + '"?')) return;
+    dates.splice(i, 1);
+    await pushDates(dates, 'Date removed. ✓');
+}
+
+async function onSaveDate() {
+    const label = $('dateLabel').value.trim();
+    const day   = $('dateDay').value.trim();
+    if (!label) return toast('Give it a name first.', true);
+    if (!day)   return toast('Pick which day it is.', true);
+
+    const end = $('dateEnd').value.trim();
+    if (end && end < day) return toast('The last day comes before the first day.', true);
+
+    const dates = sortedDates();
+    // Start from the existing row so an RSVP link already attached to it
+    // survives an edit made through this form.
+    const base = editingDateIndex !== null ? { ...dates[editingDateIndex] } : {};
+    const row = { ...base, label, date: day };
+
+    const time = $('dateTime').value.trim();
+    if (time) row.time = time; else delete row.time;
+    if (end)  row.end  = end;  else delete row.end;
+    const note = $('dateNote').value.trim();
+    if (note) row.note = note; else delete row.note;
+
+    if (editingDateIndex !== null) dates[editingDateIndex] = row;
+    else dates.push(row);
+
+    await pushDates(dates, editingDateIndex !== null ? 'Date updated. ✓' : 'Date added — parents can see it now. ✓');
 }
 
 function currentLinks() {
