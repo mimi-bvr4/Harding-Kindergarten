@@ -609,5 +609,19 @@
         "teacher": ""
       }
     ]
+  },
+  "emergency": {
+    "title": "Reaching us in an emergency",
+    "blurb": "Should an emergency arise and you need to reach us, please call one of the Harding Academy Pre-K cell phones.",
+    "phones": [
+      {
+        "label": "PreK cell",
+        "number": "615.854.5665"
+      },
+      {
+        "label": "PreK cell",
+        "number": "615.854.2142"
+      }
+    ]
   }
 }

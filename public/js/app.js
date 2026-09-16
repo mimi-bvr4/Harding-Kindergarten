@@ -666,6 +666,28 @@ function renderHandbookTile() {
     </a>`;
 }
 
+function renderEmergency(data) {
+    const e = data.emergency || {};
+    const phones = (e.phones || []).filter(x => x && x.number);
+    if (!phones.length) return '';
+    // Parents read this on a phone, standing in a parking lot. The numbers are
+    // tap-to-call, and this card sits above everything else on the Info page.
+    return `
+    <section class="section-card" style="border:1px solid #FECACA;background:#FEF2F2">
+        <div class="section-header">
+            <span class="icon-pill" style="background:#DC2626"><i class="fas fa-phone-volume"></i></span>
+            <span>${esc(e.title || 'Reaching us in an emergency')}</span>
+        </div>
+        ${e.blurb ? `<p style="font-size:14px;line-height:1.6;color:#475569;margin:0 0 14px">${esc(e.blurb)}</p>` : ''}
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+            ${phones.map(pn => `<a href="tel:${esc(String(pn.number).replace(/[^\d+]/g, ''))}"
+                style="display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;
+                       font-size:15px;font-weight:800;color:#fff;background:#DC2626;text-decoration:none">
+                <i class="fas fa-phone"></i>${esc(pn.label ? pn.label + ' · ' : '')}${esc(pn.number)}</a>`).join('')}
+        </div>
+    </section>`;
+}
+
 function renderInfoSections(data) {
     return (data.infoSections || []).map(sec => `
     <section class="section-card">
@@ -1195,6 +1217,7 @@ function renderDatesPage(data) {
 function renderInfoPage(data) {
     setTopbar('Info', 'Harding PreK');
     return page(data, '#/info', `
+        ${renderEmergency(data)}
         ${renderHandbookTile()}
         ${renderDocuments(data, 'school', 'Documents & Forms')}
         ${renderSchoolLinks(data)}
