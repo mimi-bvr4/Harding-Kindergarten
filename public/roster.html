@@ -85,7 +85,7 @@ code{background:#06132E;padding:1px 5px;border-radius:4px;font-size:12.5px}
 
 <script>
 (function(){
- var rows=[], elRows=document.getElementById('rows'), elCount=document.getElementById('count'),
+ var rows=[], rev=null, elRows=document.getElementById('rows'), elCount=document.getElementById('count'),
      elMsg=document.getElementById('msg');
  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){
    return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];});}
@@ -100,8 +100,10 @@ code{background:#06132E;padding:1px 5px;border-radius:4px;font-size:12.5px}
        '<td><button class="del" data-del="'+i+'" aria-label="Remove">×</button></td></tr>';
    }).join('');
  }
- function flash(t,ok){ elMsg.textContent=t; elMsg.className='msg '+(ok?'ok':'bad');
-   setTimeout(function(){elMsg.className='msg hidden';},2600); }
+ var flashTimer=null;
+ function flash(t,ok,stay){ clearTimeout(flashTimer);
+   elMsg.textContent=t; elMsg.className='msg '+(ok?'ok':'bad');
+   if(!stay) flashTimer=setTimeout(function(){elMsg.className='msg hidden';},2600); }
 
  elRows.addEventListener('input',function(e){
    var el=e.target; if(!el.dataset.f) return;
@@ -129,13 +131,22 @@ code{background:#06132E;padding:1px 5px;border-radius:4px;font-size:12.5px}
    var bad=rows.filter(function(r){return !/^\d{1,5}$/.test(String(r.number).trim());});
    if(bad.length) return flash(bad.length+' row(s) have no valid number',false);
    fetch('/api/roster',{method:'PUT',headers:{'Content-Type':'application/json'},
-     body:JSON.stringify({roster:rows})})
-    .then(function(r){return r.json();})
-    .then(function(j){ j.ok? flash('Saved '+j.count+' numbers',true) : flash(j.error||'Save failed',false); })
+     body:JSON.stringify({roster:rows,rev:rev})})
+    .then(function(r){return r.json().then(function(j){ j._status=r.status; return j; });})
+    .then(function(j){
+      if(j.ok){ rev=j.rev||rev; return flash('Saved '+j.count+' numbers',true); }
+      if(j._status===409){
+        // Stale tab, or a save that would wipe most of the roster. Do not
+        // let it through on a second click — make them reload and look.
+        return flash(j.error+' (server has '+j.currentCount+')',false,true);
+      }
+      flash(j.error||'Save failed',false);
+    })
     .catch(function(){ flash('Could not reach the server',false); });
  });
 
- fetch('/api/roster').then(function(r){return r.json();}).then(function(j){
+ fetch('/api/roster',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
+   rev=j.rev||null;
    rows=(j.roster||[]).map(function(r){return {number:r.number,teacher:r.teacher||'',grade:r.grade||''};});
    if(!rows.length) rows=[{number:'',teacher:'',grade:''}];
    paint();

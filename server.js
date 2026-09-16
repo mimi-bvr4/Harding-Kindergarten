@@ -317,11 +317,42 @@ app.post('/api/hold/undo', gate.requireStaff, (req, res) => {
 
 // ==================== ROSTER ====================
 
-app.get('/api/roster', gate.requireStaff, (req, res) => res.json({ roster: readRoster() }));
+// Every write stamps the file; a tab that loaded an older stamp is stale and
+// its save is refused. A roster tab left open from the morning once wrote its
+// in-memory copy back over a roster that had been rebuilt since.
+function rosterRev() {
+    try { return String(Math.round(fs.statSync(ROSTER_FILE).mtimeMs)); }
+    catch (_) { return '0'; }
+}
+
+app.get('/api/roster', gate.requireStaff, (req, res) =>
+    res.json({ roster: readRoster(), rev: rosterRev() }));
 
 app.put('/api/roster', gate.requireStaff, (req, res) => {
-    const incoming = Array.isArray((req.body || {}).roster) ? req.body.roster : null;
+    const body = req.body || {};
+    const incoming = Array.isArray(body.roster) ? body.roster : null;
     if (!incoming) return res.status(400).json({ error: 'roster array required.' });
+
+    const current = readRoster();
+    const force = body.force === true;
+    const rev = rosterRev();
+
+    // A browser always sends the rev it loaded. A script may omit it.
+    if (body.rev != null && String(body.rev) !== rev && !force) {
+        return res.status(409).json({
+            stale: true, rev, currentCount: current.length,
+            error: 'The roster changed since this page loaded. Reload before saving.'
+        });
+    }
+    // Losing most of the roster is almost always an accident, not an edit.
+    if (!force && current.length >= 25 && incoming.length < current.length / 2) {
+        return res.status(409).json({
+            shrink: true, rev, currentCount: current.length, incoming: incoming.length,
+            error: 'That would cut the roster from ' + current.length + ' to ' +
+                   incoming.length + '. Reload to check before saving.'
+        });
+    }
+
     // Number, homeroom teacher, grade. Nothing else is accepted — a child
     // name posted by an old client or a stale tab is dropped on the floor
     // rather than written to the volume.
@@ -331,7 +362,7 @@ app.put('/api/roster', gate.requireStaff, (req, res) => {
         grade: String(r.grade || '').trim().slice(0, 24)
     })).filter(r => /^\d{1,5}$/.test(r.number));
     writeJSON(ROSTER_FILE, clean);
-    res.json({ ok: true, count: clean.length });
+    res.json({ ok: true, count: clean.length, rev: rosterRev() });
 });
 
 // ==================== PAGES ====================
