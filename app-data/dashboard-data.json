@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-18T20:45:22.921Z",
+  "lastUpdated": "2026-09-18T23:24:56.143Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -853,42 +853,34 @@
   ],
   "classNewsletters": {
     "2": {
-      "week": "Week 4",
-      "subject": "Pre-K Newsletter: Week 4",
-      "date": "2026-09-11",
-      "dateLabel": "09.11.2026",
+      "week": "This week",
+      "subject": "Pre-K Newsletter",
+      "date": "2026-09-18",
+      "dateLabel": "09.18.2026",
       "blocks": [
         {
           "type": "p",
-          "text": "Good Afternoon Pre-K Families,"
+          "text": "Good Afternoon Pre-K Families!"
         },
         {
           "type": "p",
-          "text": "Thank you so much for joining us on Wednesday evening! It was a joy to spend time with you. We truly appreciate your participation, your curiosity, and especially your creativity during our paint mixing activity. The children were thrilled to read your notes and loved seeing their unique paint colors!"
+          "text": "What an incredible week of firsts! On Monday, we gathered with Kindergarten for our first full Primary Division Morning Meeting of the year. On Thursday, we took our very first Harding bus ride for a wonderful trip to the Frist Art Museum. To top it all off, on Friday we met this year’s Artist in Residence, Mandy Rogers Horton, who introduced us to the creative concept of \"Mapping Time.\""
         },
         {
           "type": "p",
-          "text": "We had a wonderful and busy four-day week in Pre-K! Our theme this week was feelings, and we explored much more than just happy and sad. The children identified and expressed a wide range of emotions, including feeling relaxed, worried, and loved. We took expressive \"feelings photos,\" which will be displayed in our classroom. It was such a joy to see your children share their emotions through these photos. One of the books we read, How Are You [Peeling?](https://www.youtube.com/watch?v=GsLR1lfeVfM), helped us explore feelings in a playful and creative way, using expressive fruits and vegetables."
+          "text": "As part of our Responsive Classroom approach, our Pre-K class gathered to brainstorm and create our classroom rules for the year, rooted directly in each student’s hopes and dreams. Once we agreed on our rules, every child added their fingerprint in a special ceremony, committing to a safe, fun, and supportive year of learning and growing together!"
         },
         {
           "type": "p",
-          "text": "Our letter of the week was F. We practiced building the letter, learned the sound it makes, and worked on writing it in our Handwriting Without Tears workbook."
+          "text": "In the Discovery Lab with Ms. Perkins, your children became true engineers! They began by exploring aluminum foil through sight (shiny), sound (crunchy), and touch (bendy). Everyone wrapped foil around their finger to shape a merperson tail, leading into our engineering challenge: design a merperson tail that floats while balancing three beads on top. It was an amazing way to practice fine motor skills, problem-solving, and perseverance!"
         },
         {
           "type": "p",
-          "text": "We also spent time learning about families and celebrating how every family is unique. Using the family photos you provided, the children drew their own family portraits and had the chance to share about the special people in their lives. We read Who Is In My [Family](https://www.youtube.com/watch?v=FtWIOY_YUKA), which helped reinforce the idea that families come in all shapes and sizes."
+          "text": "The letter of the week was E. Students brainstormed E-words and practiced writing it in their Handwriting Without Tears workbook. Children quickly noticed how similar E is to the letter F, what a great connection!"
         },
         {
           "type": "p",
-          "text": "As discussed at Back to School Night, PreK will launch our snack curriculum next week. This initiative serves as a hands-on extension of our health and nutrition curriculum, and social studies learning goals. Throughout the year, students will explore snack ideas designed to help them build a deeper connection to their food sources while learning practical ways to reduce waste."
-        },
-        {
-          "type": "p",
-          "text": "Below is the digital link for the Sign-up Genius snack calendar. There are opportunities to send in snack on Monday or Friday, as well as help launder the reusable napkins. This is purely voluntary and hopefully fun!"
-        },
-        {
-          "type": "p",
-          "text": "Bidez/Nye Sign [Up](https://www.signupgenius.com/go/20F0945A5AD28ABF94-65539391-prek)"
+          "text": "The \"Me Box\" begins on Tuesday! Each day, the box will travel home with a different student. Please guide your child in choosing 2–3 items that hold personal meaning to bring back the next day. A few great ideas include a favorite seashell from a trip, a sports jersey, or a photo of a family pet. Your child will then have the opportunity to present their items to the class and share why those objects are special to them."
         },
         {
           "type": "p",
@@ -897,14 +889,31 @@
         {
           "type": "ul",
           "items": [
-            "Thursday, September 17 - Field trip to the Frist Art Museum",
-            "Friday, September 18 - Conference Sign-Ups Open at Noon",
-            "Monday, September 21 - No School, Yom Kippur"
+            "Monday, September 21 - No School, Yom Kippur",
+            "There are still plenty of opportunities to sign up to help in Pre-K!"
           ]
         },
         {
           "type": "p",
-          "text": "Happy Weekend!"
+          "text": "BIDEZ/NYE: Snack [Volunteer](https://www.signupgenius.com/go/20F0945A5AD28ABF94-65539391-prek), More Volunteer [Options!](https://www.signupgenius.com/go/30E0945A9A828A57-65550701-prek#/) (Art, Classroom, NOP, Weekly Reader)"
+        },
+        {
+          "type": "p",
+          "text": "HUTTCHSON/COLLINS: Snack [Volunteer](https://www.signupgenius.com/go/10C054AA8AF2EA0FDC34-65133915-prek), More Volunteer [Options!](https://www.signupgenius.com/go/30E0945A9A828A57-65550701-prek#/) (Art, Classroom, NOP, Weekly Reader)"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "Thursday, November 5 - NOP Parent’s Party: Save the date and book an evening"
+          ]
+        },
+        {
+          "type": "p",
+          "text": "sitter! Details coming soon."
+        },
+        {
+          "type": "p",
+          "text": "Happy Long Weekend!"
         },
         {
           "type": "p",
@@ -913,6 +922,66 @@
       ],
       "teachers": "Bidez & Nye",
       "archive": [
+        {
+          "week": "Week 4",
+          "subject": "Pre-K Newsletter: Week 4",
+          "date": "2026-09-11",
+          "dateLabel": "09.11.2026",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Good Afternoon Pre-K Families,"
+            },
+            {
+              "type": "p",
+              "text": "Thank you so much for joining us on Wednesday evening! It was a joy to spend time with you. We truly appreciate your participation, your curiosity, and especially your creativity during our paint mixing activity. The children were thrilled to read your notes and loved seeing their unique paint colors!"
+            },
+            {
+              "type": "p",
+              "text": "We had a wonderful and busy four-day week in Pre-K! Our theme this week was feelings, and we explored much more than just happy and sad. The children identified and expressed a wide range of emotions, including feeling relaxed, worried, and loved. We took expressive \"feelings photos,\" which will be displayed in our classroom. It was such a joy to see your children share their emotions through these photos. One of the books we read, How Are You [Peeling?](https://www.youtube.com/watch?v=GsLR1lfeVfM), helped us explore feelings in a playful and creative way, using expressive fruits and vegetables."
+            },
+            {
+              "type": "p",
+              "text": "Our letter of the week was F. We practiced building the letter, learned the sound it makes, and worked on writing it in our Handwriting Without Tears workbook."
+            },
+            {
+              "type": "p",
+              "text": "We also spent time learning about families and celebrating how every family is unique. Using the family photos you provided, the children drew their own family portraits and had the chance to share about the special people in their lives. We read Who Is In My [Family](https://www.youtube.com/watch?v=FtWIOY_YUKA), which helped reinforce the idea that families come in all shapes and sizes."
+            },
+            {
+              "type": "p",
+              "text": "As discussed at Back to School Night, PreK will launch our snack curriculum next week. This initiative serves as a hands-on extension of our health and nutrition curriculum, and social studies learning goals. Throughout the year, students will explore snack ideas designed to help them build a deeper connection to their food sources while learning practical ways to reduce waste."
+            },
+            {
+              "type": "p",
+              "text": "Below is the digital link for the Sign-up Genius snack calendar. There are opportunities to send in snack on Monday or Friday, as well as help launder the reusable napkins. This is purely voluntary and hopefully fun!"
+            },
+            {
+              "type": "p",
+              "text": "Bidez/Nye Sign [Up](https://www.signupgenius.com/go/20F0945A5AD28ABF94-65539391-prek)"
+            },
+            {
+              "type": "p",
+              "text": "Reminders/Announcements"
+            },
+            {
+              "type": "ul",
+              "items": [
+                "Thursday, September 17 - Field trip to the Frist Art Museum",
+                "Friday, September 18 - Conference Sign-Ups Open at Noon",
+                "Monday, September 21 - No School, Yom Kippur"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Happy Weekend!"
+            },
+            {
+              "type": "p",
+              "text": "Lauren and Greg"
+            }
+          ]
+        },
         {
           "week": "Week 3",
           "subject": "Pre-K Newsletter: Week 3",
