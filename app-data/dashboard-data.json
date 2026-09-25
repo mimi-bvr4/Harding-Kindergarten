@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-25T20:45:22.869Z",
+  "lastUpdated": "2026-09-25T23:25:00.259Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -817,6 +817,13 @@
   },
   "learningResources": [
     {
+      "label": "We continued our map exploration by reading Rosie’s Walk",
+      "url": "https://www.simonandschuster.com/books/Rosies-Walk/Pat-Hutchins/Classic-Board-Books/9781481422758",
+      "note": "Shared in 9/22-9/25 · 09.25.2026",
+      "icon": "fa-link",
+      "auto": true
+    },
+    {
       "label": "One of the books we read, How Are You Peeling?, helped us explore feelings in a…",
       "url": "https://www.youtube.com/watch?v=GsLR1lfeVfM",
       "note": "Shared in Week 4 · 09.11.2026",
@@ -853,10 +860,10 @@
   ],
   "classNewsletters": {
     "2": {
-      "week": "This week",
-      "subject": "Pre-K Newsletter",
-      "date": "2026-09-18",
-      "dateLabel": "09.18.2026",
+      "week": "9/22-9/25",
+      "subject": "Pre-K Newsletter: 9/22-9/25",
+      "date": "2026-09-25",
+      "dateLabel": "09.25.2026",
       "blocks": [
         {
           "type": "p",
@@ -864,23 +871,19 @@
         },
         {
           "type": "p",
-          "text": "What an incredible week of firsts! On Monday, we gathered with Kindergarten for our first full Primary Division Morning Meeting of the year. On Thursday, we took our very first Harding bus ride for a wonderful trip to the Frist Art Museum. To top it all off, on Friday we met this year’s Artist in Residence, Mandy Rogers Horton, who introduced us to the creative concept of \"Mapping Time.\""
+          "text": "This week, our learning centered around the theme \"Where We Live.\" We explored concepts of home and community, sharing ideas like how maps help us when we’re lost, that homes are strong and safe, and that we can use maps on phones to find fun places to go! Using repurposed wooden blocks, the children designed their own houses, drawing detailed doors and windows, before adding beautiful watercolor details. These special creations are heading to our block center, where they are sure to spark plenty of imaginative play."
         },
         {
           "type": "p",
-          "text": "As part of our Responsive Classroom approach, our Pre-K class gathered to brainstorm and create our classroom rules for the year, rooted directly in each student’s hopes and dreams. Once we agreed on our rules, every child added their fingerprint in a special ceremony, committing to a safe, fun, and supportive year of learning and growing together!"
+          "text": "We continued our map exploration by reading Rosie’s [Walk](https://www.simonandschuster.com/books/Rosies-Walk/Pat-Hutchins/Classic-Board-Books/9781481422758). As one teacher read the story aloud, the other drew a live map tracking the fox’s misadventures along the way. Afterwards, students brainstormed and developed maps that held personal meaning for them. We prompted them with a question: “What map can you make to share your interests?” Using the newly introduced medium of oil pastels, they brought their ideas to life by creating everything from imaginative treasure maps to detailed layouts of their own homes and bedrooms. To cap off our mapping unit, students worked collaboratively to create an aerial bird's-eye view of our classroom!"
         },
         {
           "type": "p",
-          "text": "In the Discovery Lab with Ms. Perkins, your children became true engineers! They began by exploring aluminum foil through sight (shiny), sound (crunchy), and touch (bendy). Everyone wrapped foil around their finger to shape a merperson tail, leading into our engineering challenge: design a merperson tail that floats while balancing three beads on top. It was an amazing way to practice fine motor skills, problem-solving, and perseverance!"
+          "text": "In science, we explored various seeds around campus. Ms. Perkins challenged everyone to open a stubborn sycamore seed, a process that took stomping, pressing, and ultimately a hammer to crack open!  Students then carefully used tweezers to pick through the fibers and reveal the seed hidden in the center."
         },
         {
           "type": "p",
-          "text": "The letter of the week was E. Students brainstormed E-words and practiced writing it in their Handwriting Without Tears workbook. Children quickly noticed how similar E is to the letter F, what a great connection!"
-        },
-        {
-          "type": "p",
-          "text": "The \"Me Box\" begins on Tuesday! Each day, the box will travel home with a different student. Please guide your child in choosing 2–3 items that hold personal meaning to bring back the next day. A few great ideas include a favorite seashell from a trip, a sports jersey, or a photo of a family pet. Your child will then have the opportunity to present their items to the class and share why those objects are special to them."
+          "text": "At Tuesday's assembly, we celebrated Hispanic Heritage Month by learning about the eight Spanish-speaking countries that competed in the World Cup. Finally, on Friday we had the pleasure of welcoming Harding’s Artist in Residence, Mandy Rogers Horton, to our classroom for a hands-on art project."
         },
         {
           "type": "p",
@@ -889,31 +892,21 @@
         {
           "type": "ul",
           "items": [
-            "Monday, September 21 - No School, Yom Kippur",
-            "There are still plenty of opportunities to sign up to help in Pre-K!"
+            "As we head into cooler weather, please remember to label your child’s sweaters, sweatshirts, and jackets.",
+            "Tuesday, October 6 - Photo Makeup/Retake Day",
+            "Monday, October 12 - Student Holiday, Parent/Teacher Conferences",
+            "Tuesday, October 13 - Student Holiday, Parent/Teacher Conferences",
+            "October 14 - October 18 - Fall Break",
+            "Thursday, November 5 - NOP Parent’s Party: Save the date and book an evening sitter! Details coming soon."
           ]
         },
         {
           "type": "p",
-          "text": "BIDEZ/NYE: Snack [Volunteer](https://www.signupgenius.com/go/20F0945A5AD28ABF94-65539391-prek), More Volunteer [Options!](https://www.signupgenius.com/go/30E0945A9A828A57-65550701-prek#/) (Art, Classroom, NOP, Weekly Reader)"
+          "text": "Thank you, as always, for your continued support and partnership. We’re looking forward to more learning and fun in the weeks ahead!"
         },
         {
           "type": "p",
-          "text": "HUTTCHSON/COLLINS: Snack [Volunteer](https://www.signupgenius.com/go/10C054AA8AF2EA0FDC34-65133915-prek), More Volunteer [Options!](https://www.signupgenius.com/go/30E0945A9A828A57-65550701-prek#/) (Art, Classroom, NOP, Weekly Reader)"
-        },
-        {
-          "type": "ul",
-          "items": [
-            "Thursday, November 5 - NOP Parent’s Party: Save the date and book an evening"
-          ]
-        },
-        {
-          "type": "p",
-          "text": "sitter! Details coming soon."
-        },
-        {
-          "type": "p",
-          "text": "Happy Long Weekend!"
+          "text": "Happy Weekend!"
         },
         {
           "type": "p",
@@ -922,6 +915,75 @@
       ],
       "teachers": "Bidez & Nye",
       "archive": [
+        {
+          "week": "This week",
+          "subject": "Pre-K Newsletter",
+          "date": "2026-09-18",
+          "dateLabel": "09.18.2026",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Good Afternoon Pre-K Families!"
+            },
+            {
+              "type": "p",
+              "text": "What an incredible week of firsts! On Monday, we gathered with Kindergarten for our first full Primary Division Morning Meeting of the year. On Thursday, we took our very first Harding bus ride for a wonderful trip to the Frist Art Museum. To top it all off, on Friday we met this year’s Artist in Residence, Mandy Rogers Horton, who introduced us to the creative concept of \"Mapping Time.\""
+            },
+            {
+              "type": "p",
+              "text": "As part of our Responsive Classroom approach, our Pre-K class gathered to brainstorm and create our classroom rules for the year, rooted directly in each student’s hopes and dreams. Once we agreed on our rules, every child added their fingerprint in a special ceremony, committing to a safe, fun, and supportive year of learning and growing together!"
+            },
+            {
+              "type": "p",
+              "text": "In the Discovery Lab with Ms. Perkins, your children became true engineers! They began by exploring aluminum foil through sight (shiny), sound (crunchy), and touch (bendy). Everyone wrapped foil around their finger to shape a merperson tail, leading into our engineering challenge: design a merperson tail that floats while balancing three beads on top. It was an amazing way to practice fine motor skills, problem-solving, and perseverance!"
+            },
+            {
+              "type": "p",
+              "text": "The letter of the week was E. Students brainstormed E-words and practiced writing it in their Handwriting Without Tears workbook. Children quickly noticed how similar E is to the letter F, what a great connection!"
+            },
+            {
+              "type": "p",
+              "text": "The \"Me Box\" begins on Tuesday! Each day, the box will travel home with a different student. Please guide your child in choosing 2–3 items that hold personal meaning to bring back the next day. A few great ideas include a favorite seashell from a trip, a sports jersey, or a photo of a family pet. Your child will then have the opportunity to present their items to the class and share why those objects are special to them."
+            },
+            {
+              "type": "p",
+              "text": "Reminders/Announcements"
+            },
+            {
+              "type": "ul",
+              "items": [
+                "Monday, September 21 - No School, Yom Kippur",
+                "There are still plenty of opportunities to sign up to help in Pre-K!"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "BIDEZ/NYE: Snack [Volunteer](https://www.signupgenius.com/go/20F0945A5AD28ABF94-65539391-prek), More Volunteer [Options!](https://www.signupgenius.com/go/30E0945A9A828A57-65550701-prek#/) (Art, Classroom, NOP, Weekly Reader)"
+            },
+            {
+              "type": "p",
+              "text": "HUTTCHSON/COLLINS: Snack [Volunteer](https://www.signupgenius.com/go/10C054AA8AF2EA0FDC34-65133915-prek), More Volunteer [Options!](https://www.signupgenius.com/go/30E0945A9A828A57-65550701-prek#/) (Art, Classroom, NOP, Weekly Reader)"
+            },
+            {
+              "type": "ul",
+              "items": [
+                "Thursday, November 5 - NOP Parent’s Party: Save the date and book an evening"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "sitter! Details coming soon."
+            },
+            {
+              "type": "p",
+              "text": "Happy Long Weekend!"
+            },
+            {
+              "type": "p",
+              "text": "Lauren and Greg"
+            }
+          ]
+        },
         {
           "week": "Week 4",
           "subject": "Pre-K Newsletter: Week 4",
