@@ -600,6 +600,12 @@ async function bootSync() {
             fs.writeFileSync(DATA_FILE, JSON.stringify(merged, null, 2));
             console.log('[boot] Merged GitHub content into the deployed structure.');
         }
+        // The school asked for children's last initials to come off every list
+        // now that families know each other. Runs after the merge so it also
+        // catches names that came back from GitHub, and commits the cleaned
+        // data so the initials leave the permanent record too, not just the
+        // screen. Idempotent: a second boot finds nothing to do.
+        dropLastInitials();
         // Restore any documents missing locally
         const docs = await github.listDocs();
         for (const d of docs) {
@@ -614,6 +620,51 @@ async function bootSync() {
         }
     } catch (err) {
         console.error('[boot] GitHub sync failed (continuing anyway):', err.message);
+    }
+}
+
+// ==================== ONE-TIME: DROP CHILDREN'S LAST INITIALS ====================
+
+/**
+ * Strips a trailing last initial from every child's name on the dashboard:
+ * orientation slot lists, soccer team rosters, and the carline list.
+ * "Etta A." -> "Etta", "Charlie Brad." -> "Charlie".
+ * Only a trailing initial-plus-period is touched, so ordinary text is safe.
+ */
+// End of the name, or right before a sibling join: one carline entry reads
+// "Brooks L. & London L.", so an end-anchored pattern alone would miss the
+// first child.
+const LAST_INITIAL = /\s+[A-Z][a-z]{0,3}\.(?=$|\s*(?:&|and\b|\+|,|\/))/g;
+
+function dropLastInitials() {
+    try {
+        const data = readData();
+        let changed = 0;
+        const strip = (v) => {
+            if (typeof v !== 'string') return v;
+            const out = v.trim().replace(LAST_INITIAL, '');
+            if (out === v.trim()) return v;
+            changed++;
+            return out;
+        };
+
+        (data.orientation && data.orientation.rooms || []).forEach(room => {
+            (room.slots || []).forEach(slot => {
+                if (Array.isArray(slot.students)) slot.students = slot.students.map(strip);
+            });
+        });
+        ((data.soccer || {}).teams || []).forEach(team => {
+            if (Array.isArray(team.players)) team.players = team.players.map(strip);
+        });
+        ((data.carline || {}).cars || []).forEach(car => {
+            if (car && typeof car.child === 'string') car.child = strip(car.child);
+        });
+
+        if (!changed) return;
+        writeData(data, `Remove children's last initials from ${changed} names`);
+        console.log(`[boot] Removed last initials from ${changed} children's names.`);
+    } catch (err) {
+        console.error('[boot] dropLastInitials failed (continuing anyway):', err.message);
     }
 }
 
