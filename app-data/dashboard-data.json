@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-27T11:33:57.482Z",
+  "lastUpdated": "2026-09-28T16:07:08.894Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -596,6 +596,11 @@
       "label": "Huttchson Snack Sign-Up",
       "url": "https://www.signupgenius.com/go/10C054AA8AF2EA0FDC34-65133915-prek#/",
       "icon": "fa-apple-whole"
+    },
+    {
+      "label": "Faculty Lounge Snack Cart",
+      "url": "https://www.signupgenius.com/go/10C0849AAA82EABFDC25-66221371-faculty#/",
+      "icon": "fa-mug-hot"
     }
   ],
   "allSchoolKeywords": [],
