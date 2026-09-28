@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-28T16:07:09.023Z",
+  "lastUpdated": "2026-09-28T19:56:32.347Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -39,39 +39,39 @@
           {
             "time": "8:00 – 8:20 AM",
             "students": [
-              "Charlie Brad.",
-              "Lia B.",
-              "Lolly S.",
-              "Pierce P.",
-              "Charlotte M."
+              "Charlie",
+              "Lia",
+              "Lolly",
+              "Pierce",
+              "Charlotte"
             ]
           },
           {
             "time": "8:30 – 8:50 AM",
             "students": [
-              "Charlie Bran.",
-              "Etta A.",
-              "Oliver D.",
-              "Quinley Y."
+              "Charlie",
+              "Etta",
+              "Oliver",
+              "Quinley"
             ]
           },
           {
             "time": "10:00 – 10:20 AM",
             "students": [
-              "Archie Ad.",
-              "Brooks L.",
-              "Scarlett M.",
-              "Coe K."
+              "Archie",
+              "Brooks",
+              "Scarlett",
+              "Coe"
             ]
           },
           {
             "time": "10:30 – 10:50 AM",
             "students": [
-              "Evvie P.",
-              "Field M.",
-              "London T.",
-              "Penny J.",
-              "Phinney T."
+              "Evvie",
+              "Field",
+              "London",
+              "Penny",
+              "Phinney"
             ]
           }
         ],
@@ -87,39 +87,39 @@
           {
             "time": "8:00 – 8:20 AM",
             "students": [
-              "Archie Ak.",
-              "Elijah G.",
-              "Scottie S.",
-              "Virginia M.",
-              "Phoebe W."
+              "Archie",
+              "Elijah",
+              "Scottie",
+              "Virginia",
+              "Phoebe"
             ]
           },
           {
             "time": "8:30 – 8:50 AM",
             "students": [
-              "Vivienne R.",
-              "Nora F.",
-              "James P.",
-              "Cecily P."
+              "Vivienne",
+              "Nora",
+              "James",
+              "Cecily"
             ]
           },
           {
             "time": "10:00 – 10:20 AM",
             "students": [
-              "Edie B.",
-              "London L.",
-              "Genevieve S.",
-              "Jace A."
+              "Edie",
+              "London",
+              "Genevieve",
+              "Jace"
             ]
           },
           {
             "time": "10:30 – 10:50 AM",
             "students": [
-              "Kai M.",
-              "Jack B.",
-              "Kennedy C.",
-              "Margo C.",
-              "Sammie F."
+              "Kai",
+              "Jack",
+              "Kennedy",
+              "Margo",
+              "Sammie"
             ]
           }
         ],
@@ -422,28 +422,28 @@
         "name": "Team Fran/Duncan",
         "isMine": true,
         "players": [
-          "Etta A.",
-          "Margo C.",
-          "Nora F.",
-          "Edie B.",
-          "Phineas T.",
-          "James P.",
-          "Field M.",
-          "Archie Ak."
+          "Etta",
+          "Margo",
+          "Nora",
+          "Edie",
+          "Phineas",
+          "James",
+          "Field",
+          "Archie"
         ]
       },
       {
         "name": "Team Ryan",
         "isMine": false,
         "players": [
-          "Evvie P.",
-          "Charlie Bran.",
-          "Archie Ad.",
-          "Oliver D.",
-          "London T.",
-          "Penny J.",
-          "Phoebe W.",
-          "Jace A."
+          "Evvie",
+          "Charlie",
+          "Archie",
+          "Oliver",
+          "London",
+          "Penny",
+          "Phoebe",
+          "Jace"
         ]
       }
     ],
@@ -709,103 +709,103 @@
     "cars": [
       {
         "number": "7",
-        "child": "Archie Ad.",
+        "child": "Archie",
         "room": "1",
         "teacher": ""
       },
       {
         "number": "33",
-        "child": "Edie B.",
+        "child": "Edie",
         "room": "2",
         "teacher": ""
       },
       {
         "number": "52",
-        "child": "Jace A.",
+        "child": "Jace",
         "room": "2",
         "teacher": ""
       },
       {
         "number": "63",
-        "child": "Charlie Brad.",
+        "child": "Charlie",
         "room": "1",
         "teacher": ""
       },
       {
         "number": "88",
-        "child": "Kai M.",
+        "child": "Kai",
         "room": "2",
         "teacher": ""
       },
       {
         "number": "117",
-        "child": "Evvie P.",
+        "child": "Evvie",
         "room": "1",
         "teacher": ""
       },
       {
         "number": "140",
-        "child": "Vivienne R.",
+        "child": "Vivienne",
         "room": "2",
         "teacher": ""
       },
       {
         "number": "142",
-        "child": "Charlie Bran.",
+        "child": "Charlie",
         "room": "1",
         "teacher": ""
       },
       {
         "number": "163",
-        "child": "Margo C.",
+        "child": "Margo",
         "room": "2",
         "teacher": ""
       },
       {
         "number": "170",
-        "child": "Field M.",
+        "child": "Field",
         "room": "1",
         "teacher": ""
       },
       {
         "number": "203",
-        "child": "Oliver D.",
+        "child": "Oliver",
         "room": "1",
         "teacher": ""
       },
       {
         "number": "225",
-        "child": "Penny J.",
+        "child": "Penny",
         "room": "1",
         "teacher": ""
       },
       {
         "number": "264",
-        "child": "Phoebe W.",
+        "child": "Phoebe",
         "room": "2",
         "teacher": ""
       },
       {
         "number": "269",
-        "child": "Brooks L. & London L.",
+        "child": "Brooks & London",
         "room": "1,2",
         "teacher": ""
       },
       {
         "number": "330",
-        "child": "Scarlett M.",
+        "child": "Scarlett",
         "room": "1",
         "teacher": ""
       },
       {
         "number": "360",
-        "child": "Quinley Y.",
+        "child": "Quinley",
         "room": "1",
         "teacher": ""
       },
       {
         "number": "420",
-        "child": "Lolly S.",
+        "child": "Lolly",
         "room": "1",
         "teacher": ""
       }
