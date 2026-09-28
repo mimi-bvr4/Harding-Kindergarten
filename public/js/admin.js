@@ -97,6 +97,35 @@ function go(view) {
     window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
+/* A dead GITHUB_TOKEN used to be visible only on /api/health, which nobody
+   opens. Twice it let the site serve a month-old snapshot for days. Now it is
+   the first thing on this page, on every view, and saving is blocked until it
+   is fixed. */
+async function paintSyncBanner() {
+    const el = $('syncBanner');
+    if (!el) return;
+    let gh = null;
+    try { gh = (await (await fetch('/api/health?cb=' + Date.now(), { cache: 'no-store' })).json()).github; }
+    catch (_) { return; }
+    if (!gh || !gh.degraded) { el.className = 'hidden'; el.innerHTML = ''; return; }
+    el.className = '';
+    el.innerHTML = `
+    <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:14px;
+                padding:14px 16px;margin:0 0 16px;color:#7F1D1D">
+        <div style="font-weight:800;font-size:15px;display:flex;align-items:center;gap:8px">
+            <i class="fas fa-triangle-exclamation"></i> GitHub backup is down — saving is turned off
+        </div>
+        <p style="font-size:13.5px;line-height:1.55;margin:9px 0 0">
+            Anything saved right now would be lost the next time Railway restarts, so the
+            dashboard is refusing writes. Replace <b>GITHUB_TOKEN</b> in Railway →
+            harding-app → Variables with a token that has <b>Contents: Read and write</b>,
+            then redeploy. Your published content is safe in GitHub.
+        </p>
+        <p style="font-size:12px;font-family:ui-monospace,Menlo,monospace;margin:10px 0 0;
+                  color:#991B1B;word-break:break-word">${String(gh.lastError || '').slice(0, 300)}</p>
+    </div>`;
+}
+
 function render() {
     const root = $('adminRoot');
     const v = ADMIN.view;
@@ -109,6 +138,7 @@ function render() {
     else if (v.name === 'docs') root.innerHTML = viewDocs();
     else if (v.name === 'announce') root.innerHTML = viewAnnouncement();
     wireView();
+    paintSyncBanner();
 }
 
 // ==================== VIEWS ====================

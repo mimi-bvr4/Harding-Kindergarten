@@ -170,7 +170,14 @@ app.post('/api/logout', (req, res) => {
 // ==================== PUBLIC API ====================
 
 app.get('/api/data', (req, res) => {
-    try { res.json(readData()); }
+    try {
+        const data = readData();
+        // The page renders whatever is on disk either way — the site never goes
+        // down — but it says so when that content could not be verified against
+        // GitHub on this boot.
+        if (github.status.degraded) data._stale = true;
+        res.json(data);
+    }
     catch (err) { res.status(500).json({ error: 'Failed to read dashboard data' }); }
 });
 
@@ -233,6 +240,17 @@ app.post('/api/admin/logout', (req, res) => {
  */
 app.post('/api/admin/update', requireAdmin, (req, res) => {
     const { action } = req.body || {};
+    // An edit saved while sync is down lives only in this container and is lost
+    // the moment Railway restarts — that is how a week of content vanished on
+    // 09.16 and again on 09.28. Refuse the write and say why.
+    if (github.status.degraded) {
+        return res.status(503).json({
+            error: 'Not saving — GitHub backup is down, so this change would be lost on the next restart. '
+                 + 'Fix GITHUB_TOKEN in Railway → Variables, redeploy, then try again.',
+            syncError: github.status.lastError
+        });
+    }
+
     try {
         const data = readData();
         let message = 'Dashboard update (admin page)';
@@ -605,7 +623,9 @@ async function bootSync() {
         // catches names that came back from GitHub, and commits the cleaned
         // data so the initials leave the permanent record too, not just the
         // screen. Idempotent: a second boot finds nothing to do.
-        dropLastInitials();
+        // Only clean data we were able to verify against GitHub. Rewriting an
+        // unverified snapshot would just churn the wrong copy and fail to mirror.
+        if (!github.status.degraded) dropLastInitials();
         // Restore any documents missing locally
         const docs = await github.listDocs();
         for (const d of docs) {

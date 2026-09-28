@@ -1147,8 +1147,24 @@ function renderTabBar(data, active) {
     </nav>`;
 }
 
+/* Sync is down, so what is below came off the container's own disk and could
+   not be checked against what the school published. The page still renders —
+   it never goes dark — but it stops pretending to be current. */
+function renderStaleNotice(data) {
+    if (!data._stale) return '';
+    return `
+    <div style="background:#FEF3C7;border-bottom:1px solid #FDE68A;color:#78350F;
+                padding:10px 16px;font-size:13px;font-weight:600;display:flex;
+                align-items:flex-start;gap:9px">
+        <i class="fas fa-triangle-exclamation" style="margin-top:2px"></i>
+        <span>Some details on this page may not be up to date. We're fixing it —
+        please check with the school office before relying on a date or a link.</span>
+    </div>`;
+}
+
 function page(data, active, inner) {
     return `
+    ${renderStaleNotice(data)}
     ${renderAnnouncement(data)}
     ${renderTabBar(data, active)}
     <div style="padding:16px;display:flex;flex-direction:column;gap:18px" class="page-enter">
