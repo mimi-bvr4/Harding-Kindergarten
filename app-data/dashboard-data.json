@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-02T20:45:20.524Z",
+  "lastUpdated": "2026-10-02T23:24:55.654Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -829,6 +829,13 @@
   },
   "learningResources": [
     {
+      "label": "You can learn more about Norman and his book",
+      "url": "https://normanatyourservice.com/",
+      "note": "Shared in This week · 10.02.2026",
+      "icon": "fa-link",
+      "auto": true
+    },
+    {
       "label": "We continued our map exploration by reading Rosie’s Walk",
       "url": "https://www.simonandschuster.com/books/Rosies-Walk/Pat-Hutchins/Classic-Board-Books/9781481422758",
       "note": "Shared in 9/22-9/25 · 09.25.2026",
@@ -872,30 +879,46 @@
   ],
   "classNewsletters": {
     "2": {
-      "week": "9/22-9/25",
-      "subject": "Pre-K Newsletter: 9/22-9/25",
-      "date": "2026-09-25",
-      "dateLabel": "09.25.2026",
+      "week": "This week",
+      "subject": "Pre-K Newsletter, 9/28-10/2",
+      "date": "2026-10-02",
+      "dateLabel": "10.02.2026",
       "blocks": [
         {
           "type": "p",
-          "text": "Good Afternoon Pre-K Families!"
+          "text": "Good Afternoon Pre-K Families,"
         },
         {
           "type": "p",
-          "text": "This week, our learning centered around the theme \"Where We Live.\" We explored concepts of home and community, sharing ideas like how maps help us when we’re lost, that homes are strong and safe, and that we can use maps on phones to find fun places to go! Using repurposed wooden blocks, the children designed their own houses, drawing detailed doors and windows, before adding beautiful watercolor details. These special creations are heading to our block center, where they are sure to spark plenty of imaginative play."
+          "text": "This week we expanded upon our study of maps into the shapes we see around us in the world.  We traced objects from our classroom aerial mapping project and discussed our observations. Students then practiced tracing these shapes by squeezing glue bottles, adding a fun multi-dimensional texture to their map."
         },
         {
           "type": "p",
-          "text": "We continued our map exploration by reading Rosie’s [Walk](https://www.simonandschuster.com/books/Rosies-Walk/Pat-Hutchins/Classic-Board-Books/9781481422758). As one teacher read the story aloud, the other drew a live map tracking the fox’s misadventures along the way. Afterwards, students brainstormed and developed maps that held personal meaning for them. We prompted them with a question: “What map can you make to share your interests?” Using the newly introduced medium of oil pastels, they brought their ideas to life by creating everything from imaginative treasure maps to detailed layouts of their own homes and bedrooms. To cap off our mapping unit, students worked collaboratively to create an aerial bird's-eye view of our classroom!"
+          "text": "As we moved around campus, the children participated in shape walks to spot geometry in our everyday environment. They discovered plenty of circles, squares, rectangles, and triangles, as well as a hexagon, an octagon, and a rhombus! In the classroom students enjoyed making playdoh shapes and proudly identified the number of corners and sides."
         },
         {
           "type": "p",
-          "text": "In science, we explored various seeds around campus. Ms. Perkins challenged everyone to open a stubborn sycamore seed, a process that took stomping, pressing, and ultimately a hammer to crack open!  Students then carefully used tweezers to pick through the fibers and reveal the seed hidden in the center."
+          "text": "We also launched our unit on owls! We began by gathering what the students already know about owls, which we will revisit at the end of the unit to reflect on everything they have learned. To celebrate the launch, we created a cooperative owl artwork. Working together with recycled paper scraps and feathers, the children layered materials onto the owl's body and wings. They had a wonderful time watching their collective creation come to life! Last, but not least, students had to agree on a name for their owl. This took a lot of patience, collaboration, and even some voting to finally agree on a name."
         },
         {
           "type": "p",
-          "text": "At Tuesday's assembly, we celebrated Hispanic Heritage Month by learning about the eight Spanish-speaking countries that competed in the World Cup. Finally, on Friday we had the pleasure of welcoming Harding’s Artist in Residence, Mandy Rogers Horton, to our classroom for a hands-on art project."
+          "text": "In lieu of assembly, we met our 8th grade buddies! The 8th graders lined the hallway holding photos of their Pre-K buddy, and our students walked down the hall to find their picture and greet their new friend. Afterward, we gathered in the classrooms to share a snack and spend time getting to know each other."
+        },
+        {
+          "type": "p",
+          "text": "We had another special guest visit Pre K this week! Norman the therapy dog stopped by our classrooms, giving students a wonderful opportunity to practice kindness and gentle interaction with a furry friend. Highlights included watching Norman perform his favorite trick, carrying three tennis balls at once, and getting to shower him with soft pets. You can learn more about Norman and his book [here](https://normanatyourservice.com/)."
+        },
+        {
+          "type": "p",
+          "text": "Finally, a heartfelt thank you to all the families who provided snacks and helped wash napkins these past few weeks. Your support means so much to us, and the children have thoroughly enjoyed trying new foods and learning about where they come from and how they are made. If you would like to participate in our snack curriculum, plenty of opportunities remain available through the signup links below."
+        },
+        {
+          "type": "p",
+          "text": "[Bidez/Nye](https://www.signupgenius.com/go/20F0945A5AD28ABF94-65539391-prek)"
+        },
+        {
+          "type": "p",
+          "text": "[Huttchson/Collins](https://www.signupgenius.com/go/10C054AA8AF2EA0FDC34-65133915-prek#/)"
         },
         {
           "type": "p",
@@ -904,17 +927,13 @@
         {
           "type": "ul",
           "items": [
-            "As we head into cooler weather, please remember to label your child’s sweaters, sweatshirts, and jackets.",
+            "As we head into cooler weather, please remember to LABEL your child’s sweaters, sweatshirts, and jackets.",
             "Tuesday, October 6 - Photo Makeup/Retake Day",
             "Monday, October 12 - Student Holiday, Parent/Teacher Conferences",
             "Tuesday, October 13 - Student Holiday, Parent/Teacher Conferences",
             "October 14 - October 18 - Fall Break",
             "Thursday, November 5 - NOP Parent’s Party: Save the date and book an evening sitter! Details coming soon."
           ]
-        },
-        {
-          "type": "p",
-          "text": "Thank you, as always, for your continued support and partnership. We’re looking forward to more learning and fun in the weeks ahead!"
         },
         {
           "type": "p",
@@ -927,6 +946,61 @@
       ],
       "teachers": "Bidez & Nye",
       "archive": [
+        {
+          "week": "9/22-9/25",
+          "subject": "Pre-K Newsletter: 9/22-9/25",
+          "date": "2026-09-25",
+          "dateLabel": "09.25.2026",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Good Afternoon Pre-K Families!"
+            },
+            {
+              "type": "p",
+              "text": "This week, our learning centered around the theme \"Where We Live.\" We explored concepts of home and community, sharing ideas like how maps help us when we’re lost, that homes are strong and safe, and that we can use maps on phones to find fun places to go! Using repurposed wooden blocks, the children designed their own houses, drawing detailed doors and windows, before adding beautiful watercolor details. These special creations are heading to our block center, where they are sure to spark plenty of imaginative play."
+            },
+            {
+              "type": "p",
+              "text": "We continued our map exploration by reading Rosie’s [Walk](https://www.simonandschuster.com/books/Rosies-Walk/Pat-Hutchins/Classic-Board-Books/9781481422758). As one teacher read the story aloud, the other drew a live map tracking the fox’s misadventures along the way. Afterwards, students brainstormed and developed maps that held personal meaning for them. We prompted them with a question: “What map can you make to share your interests?” Using the newly introduced medium of oil pastels, they brought their ideas to life by creating everything from imaginative treasure maps to detailed layouts of their own homes and bedrooms. To cap off our mapping unit, students worked collaboratively to create an aerial bird's-eye view of our classroom!"
+            },
+            {
+              "type": "p",
+              "text": "In science, we explored various seeds around campus. Ms. Perkins challenged everyone to open a stubborn sycamore seed, a process that took stomping, pressing, and ultimately a hammer to crack open!  Students then carefully used tweezers to pick through the fibers and reveal the seed hidden in the center."
+            },
+            {
+              "type": "p",
+              "text": "At Tuesday's assembly, we celebrated Hispanic Heritage Month by learning about the eight Spanish-speaking countries that competed in the World Cup. Finally, on Friday we had the pleasure of welcoming Harding’s Artist in Residence, Mandy Rogers Horton, to our classroom for a hands-on art project."
+            },
+            {
+              "type": "p",
+              "text": "Reminders/Announcements"
+            },
+            {
+              "type": "ul",
+              "items": [
+                "As we head into cooler weather, please remember to label your child’s sweaters, sweatshirts, and jackets.",
+                "Tuesday, October 6 - Photo Makeup/Retake Day",
+                "Monday, October 12 - Student Holiday, Parent/Teacher Conferences",
+                "Tuesday, October 13 - Student Holiday, Parent/Teacher Conferences",
+                "October 14 - October 18 - Fall Break",
+                "Thursday, November 5 - NOP Parent’s Party: Save the date and book an evening sitter! Details coming soon."
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Thank you, as always, for your continued support and partnership. We’re looking forward to more learning and fun in the weeks ahead!"
+            },
+            {
+              "type": "p",
+              "text": "Happy Weekend!"
+            },
+            {
+              "type": "p",
+              "text": "Lauren and Greg"
+            }
+          ]
+        },
         {
           "week": "This week",
           "subject": "Pre-K Newsletter",
