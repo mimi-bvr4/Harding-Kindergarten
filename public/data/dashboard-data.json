@@ -296,7 +296,7 @@
     "show": true,
     "headline": "PreK Soccer — Upward at First Presbyterian",
     "blurb": "All 16 kids practice together on Thursdays, then split into two teams for games. A low-pressure intro to soccer and a good way for the kids (and parents) to connect outside the classroom.",
-    "highlight": "No practice this Thursday 09.17.2026 — back at Parmer Park on 09.24.",
+    "highlight": "Saturday 10.03.2026 games moved to Field 7.",
     "season": "Fall 2026",
     "deadline": "",
     "grades": "PreK 5U, co-ed",
@@ -392,9 +392,10 @@
           {
             "date": "2026-10-03",
             "time": "10:15–11:00 AM",
-            "field": "Field 6",
+            "field": "Field 7",
             "opponent": "Ferguson/Geismar/Barry",
-            "jersey": "blue"
+            "jersey": "blue",
+            "note": "Moved to Field 7"
           },
           {
             "date": "2026-10-10",
@@ -449,7 +450,8 @@
             "time": "10:15–11:00 AM",
             "field": "Field 7",
             "opponent": "Lodge/LeMense",
-            "jersey": "red"
+            "jersey": "red",
+            "note": "Moved to Field 7"
           },
           {
             "date": "2026-10-10",
