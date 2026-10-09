@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-09T16:05:22.477Z",
+  "lastUpdated": "2026-10-09T16:08:55.994Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -387,7 +387,7 @@
     "show": true,
     "headline": "PreK Soccer — Upward at First Presbyterian",
     "blurb": "All 16 kids practice together on Thursdays, then split into two teams for games. A low-pressure intro to soccer and a good way for the kids (and parents) to connect outside the classroom.",
-    "highlight": "Saturday 10.03.2026 games moved to Field 7.",
+    "highlight": "No games this Saturday 10.10.2026 — cancelled for the weather.",
     "season": "Fall 2026",
     "deadline": "",
     "grades": "PreK 5U, co-ed",
@@ -493,7 +493,9 @@
             "time": "11:45 AM–12:30 PM",
             "field": "Field 7",
             "opponent": "Coleman/West",
-            "jersey": "blue"
+            "jersey": "blue",
+            "cancelled": true,
+            "note": "Cancelled — weather"
           },
           {
             "date": "2026-10-24",
@@ -549,7 +551,9 @@
             "time": "11:45 AM–12:30 PM",
             "field": "Field 6",
             "opponent": "Jeff Turpin",
-            "jersey": "red"
+            "jersey": "red",
+            "cancelled": true,
+            "note": "Cancelled — weather"
           },
           {
             "date": "2026-10-24",
