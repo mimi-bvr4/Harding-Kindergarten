@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-09T16:13:06.250Z",
+  "lastUpdated": "2026-10-09T16:20:43.500Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -166,7 +166,8 @@
     {
       "date": "2026-10-12",
       "label": "Parent/Teacher Conferences",
-      "end": "2026-10-13"
+      "end": "2026-10-13",
+      "note": "In person in your child's classroom — knock gently when you arrive. 20 minutes each; teachers are happy to set up a follow-up if you need more time. Park in the Visitor's lot or along the right side of Loop Road; overflow at Kever."
     },
     {
       "date": "2026-10-14",
