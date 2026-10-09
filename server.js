@@ -444,9 +444,42 @@ app.post('/api/data', (req, res) => {
                 }
                 merged.learningResources = [...byUrl.values()];
             } else if (k === 'classNewsletters' && incoming.classNewsletters) {
-                // Merge per room. A push for room 2 must never wipe room 1.
-                merged.classNewsletters = { ...(merged.classNewsletters || {}),
-                                            ...incoming.classNewsletters };
+                // Merge per room. A push for room 2 must never wipe room 1 —
+                // and, just as important, a new week must never wipe the
+                // earlier weeks. The page has an "Earlier weeks" section fed
+                // by nl.archive; a plain spread replaced the whole room
+                // object and silently threw that history away every Friday.
+                const out = { ...(merged.classNewsletters || {}) };
+                const weekKey = (n) => String((n && (n.dateLabel || n.week)) || '').trim();
+
+                for (const room of Object.keys(incoming.classNewsletters)) {
+                    const fresh = incoming.classNewsletters[room];
+                    if (!fresh) continue;
+                    const prior = out[room];
+
+                    // Start from whatever history either side already knows about.
+                    let archive = (fresh.archive || (prior && prior.archive) || []).slice();
+
+                    // A genuinely new week pushes the one it replaces onto the pile.
+                    if (prior && (prior.blocks || []).length && weekKey(prior) !== weekKey(fresh)) {
+                        const demoted = { ...prior };
+                        delete demoted.archive;
+                        archive.unshift(demoted);
+                    }
+
+                    // Newest first, one entry per week, never the current week,
+                    // and capped so the data file cannot grow without bound.
+                    const seen = new Set([weekKey(fresh)]);
+                    archive = archive.filter(a => {
+                        const k2 = weekKey(a);
+                        if (!k2 || seen.has(k2) || !(a.blocks || []).length) return false;
+                        seen.add(k2);
+                        return true;
+                    }).slice(0, 16);
+
+                    out[room] = { ...fresh, archive };
+                }
+                merged.classNewsletters = out;
             } else {
                 merged[k] = incoming[k];
             }
