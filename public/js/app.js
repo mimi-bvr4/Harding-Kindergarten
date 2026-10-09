@@ -10,7 +10,7 @@
 
 const CALENDAR_URL = 'https://hardingacademy.myschoolapp.com/podium/feed/iCal.aspx?z=96wT5QnMrJrphQP5BInbTmAAJCsRcQpy%2bmDKcAacSR8eeFymiEdCFAWuYOhCPhXy4XjpFPFcjomN3uHn%2bWimYA%3d%3d';
 
-const APP = { data: null, room: 0, classRoom: 0, activity: 0 };
+const APP = { data: null, room: 0, classRoom: null, activity: 0 };
 
 // ==================== DATA ====================
 
@@ -123,9 +123,15 @@ function newsletterJump(data, roomKey) {
 function renderNewsletter(data, roomKey, roomLabel) {
     const nl = (data.classNewsletters || {})[roomKey];
     if (!nl || !(nl.blocks || []).length) {
+        // Don't dead-end. Name the room that does publish one, so a parent
+        // on the wrong tab doesn't conclude the newsletters have vanished.
+        const other = classesOf(data).find(c => c.key !== roomKey &&
+            (((data.classNewsletters || {})[c.key] || {}).blocks || []).length);
         return `<div class="archived-note" style="margin-top:12px">
             <i class="fas fa-envelope" style="margin-top:2px"></i>
-            <span>No newsletter posted for ${esc(roomLabel)} yet.</span></div>`;
+            <span>${esc(roomLabel)} doesn't send a newsletter to this page.${
+                other ? ` The <b>${esc(other.name)}</b> tab above has theirs, plus earlier weeks.` : ''
+            }</span></div>`;
     }
 
     const body = newsletterBody(nl.blocks);
@@ -1336,6 +1342,14 @@ function renderClassesPage(data) {
         '<div class="archived-note"><i class="fas fa-users" style="margin-top:2px"></i>' +
         '<span>No class lists yet.</span></div>');
 
+    // The tab order puts Pre-K 1 first, and only Bidez & Nye send their
+    // newsletter to this page — so the default tab showed "No newsletter
+    // posted yet" and the six archived weeks sat one tap away, unseen.
+    // Until the parent picks a room, open the one that has a newsletter.
+    if (APP.classRoom === null) {
+        const withNews = classes.findIndex(c => ((data.classNewsletters || {})[c.key] || {}).blocks);
+        APP.classRoom = withNews === -1 ? 0 : withNews;
+    }
     const active = Math.min(APP.classRoom, classes.length - 1);
     const shown = [classes[active]];
 
