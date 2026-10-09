@@ -870,9 +870,14 @@ function renderGameSchedule(s) {
         ${(block.games || []).map(g => {
             const dt = parseISO(g.date);
             const past = dt && dt < today;
+            // A rained-out game stays on the list rather than vanishing — a
+            // parent who remembers a Saturday game needs to see it struck
+            // through, not wonder whether the page is wrong.
+            const off = !!g.cancelled;
             return `
             <div style="display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:13px;
-                        background:${past ? '#F8FAFC' : '#fff'};border:1px solid #EEF2F7;${past ? 'opacity:.5' : ''}">
+                        background:${off ? '#FEF2F2' : past ? '#F8FAFC' : '#fff'};
+                        border:1px solid ${off ? '#FECACA' : '#EEF2F7'};${past && !off ? 'opacity:.5' : ''}">
                 <div style="flex:0 0 40px;text-align:center">
                     <div style="font-size:9.5px;font-weight:800;color:#94A3B8;letter-spacing:.06em">
                         ${dt ? MONTHS[dt.getMonth()].toUpperCase() : '·'}</div>
@@ -880,11 +885,14 @@ function renderGameSchedule(s) {
                         ${dt ? dt.getDate() : '–'}</div>
                 </div>
                 <div style="flex:1;min-width:0">
-                    <div style="font-size:13.5px;font-weight:700;color:#1E293B">${esc(g.time)}</div>
-                    <div style="font-size:12px;color:#94A3B8;margin-top:1px">
+                    <div style="font-size:13.5px;font-weight:700;color:#1E293B;${off ? 'text-decoration:line-through;color:#991B1B' : ''}">
+                        ${esc(g.time)}</div>
+                    <div style="font-size:12px;color:${off ? '#B91C1C' : '#94A3B8'};margin-top:1px">
                         ${esc(g.field)} · vs ${esc(g.opponent)}${g.note ? ` · ${esc(g.note)}` : ''}</div>
                 </div>
-                ${jerseyChip(g.jersey)}
+                ${off ? `<span style="flex:0 0 auto;background:#DC2626;color:#fff;border-radius:999px;
+                    padding:4px 10px;font-size:10.5px;font-weight:800;letter-spacing:.04em">CANCELLED</span>`
+                      : jerseyChip(g.jersey)}
             </div>`;
         }).join('')}
         </div>
