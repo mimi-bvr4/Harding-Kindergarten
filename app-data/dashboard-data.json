@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-18T23:15:42.190Z",
+  "lastUpdated": "2026-10-18T23:15:42.278Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -627,6 +627,11 @@
       "label": "Faculty Lounge Snack Cart",
       "url": "https://www.signupgenius.com/go/10C0849AAA82EABFDC25-66221371-faculty#/",
       "icon": "fa-mug-hot"
+    },
+    {
+      "label": "Halloween Party Volunteer",
+      "url": "https://www.signupgenius.com/go/20F0945A5AD28ABF94-66711017-halloween",
+      "icon": "fa-ghost"
     }
   ],
   "allSchoolKeywords": [],
