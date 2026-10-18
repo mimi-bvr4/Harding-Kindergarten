@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-18T23:15:42.278Z",
+  "lastUpdated": "2026-10-18T23:38:47.198Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -903,61 +903,65 @@
   ],
   "classNewsletters": {
     "2": {
-      "week": "This week",
-      "subject": "Pre-K Newsletter, 9/28-10/2",
-      "date": "2026-10-02",
-      "dateLabel": "10.02.2026",
+      "week": "10/5-10/9",
+      "subject": "Pe-K Newsletter: 10/5-10/9",
+      "date": "2026-10-09",
+      "dateLabel": "10.09.2026",
       "blocks": [
         {
           "type": "p",
-          "text": "Good Afternoon Pre-K Families,"
-        },
-        {
-          "type": "p",
-          "text": "This week we expanded upon our study of maps into the shapes we see around us in the world.  We traced objects from our classroom aerial mapping project and discussed our observations. Students then practiced tracing these shapes by squeezing glue bottles, adding a fun multi-dimensional texture to their map."
-        },
-        {
-          "type": "p",
-          "text": "As we moved around campus, the children participated in shape walks to spot geometry in our everyday environment. They discovered plenty of circles, squares, rectangles, and triangles, as well as a hexagon, an octagon, and a rhombus! In the classroom students enjoyed making playdoh shapes and proudly identified the number of corners and sides."
-        },
-        {
-          "type": "p",
-          "text": "We also launched our unit on owls! We began by gathering what the students already know about owls, which we will revisit at the end of the unit to reflect on everything they have learned. To celebrate the launch, we created a cooperative owl artwork. Working together with recycled paper scraps and feathers, the children layered materials onto the owl's body and wings. They had a wonderful time watching their collective creation come to life! Last, but not least, students had to agree on a name for their owl. This took a lot of patience, collaboration, and even some voting to finally agree on a name."
-        },
-        {
-          "type": "p",
-          "text": "In lieu of assembly, we met our 8th grade buddies! The 8th graders lined the hallway holding photos of their Pre-K buddy, and our students walked down the hall to find their picture and greet their new friend. Afterward, we gathered in the classrooms to share a snack and spend time getting to know each other."
-        },
-        {
-          "type": "p",
-          "text": "We had another special guest visit Pre K this week! Norman the therapy dog stopped by our classrooms, giving students a wonderful opportunity to practice kindness and gentle interaction with a furry friend. Highlights included watching Norman perform his favorite trick, carrying three tennis balls at once, and getting to shower him with soft pets. You can learn more about Norman and his book [here](https://normanatyourservice.com/)."
-        },
-        {
-          "type": "p",
-          "text": "Finally, a heartfelt thank you to all the families who provided snacks and helped wash napkins these past few weeks. Your support means so much to us, and the children have thoroughly enjoyed trying new foods and learning about where they come from and how they are made. If you would like to participate in our snack curriculum, plenty of opportunities remain available through the signup links below."
-        },
-        {
-          "type": "p",
-          "text": "[Bidez/Nye](https://www.signupgenius.com/go/20F0945A5AD28ABF94-65539391-prek)"
-        },
-        {
-          "type": "p",
-          "text": "[Huttchson/Collins](https://www.signupgenius.com/go/10C054AA8AF2EA0FDC34-65133915-prek#/)"
-        },
-        {
-          "type": "p",
-          "text": "Reminders/Announcements"
+          "text": "Good Afternoon Pre-K Families!"
         },
         {
           "type": "ul",
           "items": [
-            "As we head into cooler weather, please remember to LABEL your child’s sweaters, sweatshirts, and jackets.",
-            "Tuesday, October 6 - Photo Makeup/Retake Day",
+            "Different owls make different calls.",
+            "Most owls are nocturnal.",
+            "They have a third eyelid for cleaning their eyes!"
+          ],
+          "heading": "This week, the class explored the fascinating world of owls! Here are a few things they discovered"
+        },
+        {
+          "type": "p",
+          "text": "With the help of Ms. Zuberer and her trusty sewing machine, the children created sock owls. Each child chose a sock, stuffed it, and assisted with the sewing by pressing the pedal on the machine. The final, and most important step, was naming their owls."
+        },
+        {
+          "type": "p",
+          "text": "Using oil pastels, each child created a watercolor-resist owl painting, be sure to check them out at conferences! When drawing their owls, students practiced working with shapes, and strengthened visual-spatial skills as they decided how to arrange the body parts. It was truly a hoot!"
+        },
+        {
+          "type": "p",
+          "text": "We have continued to learn about shapes, begun sorting by size and various other attributes, and started exploring patterns."
+        },
+        {
+          "type": "p",
+          "text": "It has been so fun watching the kids share their \"Me Box\" treasures with their classmates! When your child’s turn arrives, please help them pick out a few special items to bring in. While favorite toys are often a hit, please help guide your child to think outside the toy box. Items like a favorite seashell, a family photo, a special craft, or a souvenir from a trip are fantastic ways for them to tell their story."
+        },
+        {
+          "type": "p",
+          "text": "The teachers have been busy preparing for parent-teacher conferences next week, and we are so excited to share all the wonderful growth and learning happening with your child!"
+        },
+        {
+          "type": "p",
+          "text": "Looking ahead, when we return to school on Monday, October 19th, it will be our first Natural Outdoor Playspace (NOP) week of the year! During this week, the majority of our days will be spent outside as students explore, learn, and engage with the natural world around them."
+        },
+        {
+          "type": "ul",
+          "items": [
             "Monday, October 12 - Student Holiday, Parent/Teacher Conferences",
             "Tuesday, October 13 - Student Holiday, Parent/Teacher Conferences",
             "October 14 - October 18 - Fall Break",
+            "October 19 - October 23 - NOP Week",
+            "Friday, October 30 - Class Halloween Parties!",
+            "Bidez/Nye (1:45-2:45PM)",
+            "Huttchson/Collins (2:05-2:45PM)",
             "Thursday, November 5 - NOP Parent’s Party: Save the date and book an evening sitter! Details coming soon."
-          ]
+          ],
+          "heading": "UUpcoming Dates"
+        },
+        {
+          "type": "p",
+          "text": "We look forward to seeing you at conferences and wish you a fun and safe fall break!"
         },
         {
           "type": "p",
@@ -970,6 +974,74 @@
       ],
       "teachers": "Bidez & Nye",
       "archive": [
+        {
+          "week": "This week",
+          "subject": "Pre-K Newsletter, 9/28-10/2",
+          "date": "2026-10-02",
+          "dateLabel": "10.02.2026",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Good Afternoon Pre-K Families,"
+            },
+            {
+              "type": "p",
+              "text": "This week we expanded upon our study of maps into the shapes we see around us in the world.  We traced objects from our classroom aerial mapping project and discussed our observations. Students then practiced tracing these shapes by squeezing glue bottles, adding a fun multi-dimensional texture to their map."
+            },
+            {
+              "type": "p",
+              "text": "As we moved around campus, the children participated in shape walks to spot geometry in our everyday environment. They discovered plenty of circles, squares, rectangles, and triangles, as well as a hexagon, an octagon, and a rhombus! In the classroom students enjoyed making playdoh shapes and proudly identified the number of corners and sides."
+            },
+            {
+              "type": "p",
+              "text": "We also launched our unit on owls! We began by gathering what the students already know about owls, which we will revisit at the end of the unit to reflect on everything they have learned. To celebrate the launch, we created a cooperative owl artwork. Working together with recycled paper scraps and feathers, the children layered materials onto the owl's body and wings. They had a wonderful time watching their collective creation come to life! Last, but not least, students had to agree on a name for their owl. This took a lot of patience, collaboration, and even some voting to finally agree on a name."
+            },
+            {
+              "type": "p",
+              "text": "In lieu of assembly, we met our 8th grade buddies! The 8th graders lined the hallway holding photos of their Pre-K buddy, and our students walked down the hall to find their picture and greet their new friend. Afterward, we gathered in the classrooms to share a snack and spend time getting to know each other."
+            },
+            {
+              "type": "p",
+              "text": "We had another special guest visit Pre K this week! Norman the therapy dog stopped by our classrooms, giving students a wonderful opportunity to practice kindness and gentle interaction with a furry friend. Highlights included watching Norman perform his favorite trick, carrying three tennis balls at once, and getting to shower him with soft pets. You can learn more about Norman and his book [here](https://normanatyourservice.com/)."
+            },
+            {
+              "type": "p",
+              "text": "Finally, a heartfelt thank you to all the families who provided snacks and helped wash napkins these past few weeks. Your support means so much to us, and the children have thoroughly enjoyed trying new foods and learning about where they come from and how they are made. If you would like to participate in our snack curriculum, plenty of opportunities remain available through the signup links below."
+            },
+            {
+              "type": "p",
+              "text": "[Bidez/Nye](https://www.signupgenius.com/go/20F0945A5AD28ABF94-65539391-prek)"
+            },
+            {
+              "type": "p",
+              "text": "[Huttchson/Collins](https://www.signupgenius.com/go/10C054AA8AF2EA0FDC34-65133915-prek#/)"
+            },
+            {
+              "type": "p",
+              "text": "Reminders/Announcements"
+            },
+            {
+              "type": "ul",
+              "items": [
+                "As we head into cooler weather, please remember to LABEL your child’s sweaters, sweatshirts, and jackets.",
+                "Tuesday, October 6 - Photo Makeup/Retake Day",
+                "Monday, October 12 - Student Holiday, Parent/Teacher Conferences",
+                "Tuesday, October 13 - Student Holiday, Parent/Teacher Conferences",
+                "October 14 - October 18 - Fall Break",
+                "Thursday, November 5 - NOP Parent’s Party: Save the date and book an evening sitter! Details coming soon."
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Happy Weekend!"
+            },
+            {
+              "type": "p",
+              "text": "Lauren and Greg"
+            }
+          ],
+          "teachers": "Bidez & Nye"
+        },
         {
           "week": "9/22-9/25",
           "subject": "Pre-K Newsletter: 9/22-9/25",
