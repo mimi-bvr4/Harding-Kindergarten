@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-23T21:13:51.040Z",
+  "lastUpdated": "2026-10-23T23:24:56.232Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -853,6 +853,34 @@
   },
   "learningResources": [
     {
+      "label": "You can learn more about the experiment",
+      "url": "https://www.simplykinder.com/pumpkin-jack-in-the-classroom/",
+      "note": "Shared in 10/19-10/23 · 10.23.2026",
+      "icon": "fa-link",
+      "auto": true
+    },
+    {
+      "label": "Montgomery, joined us in the NOP to read a variety of books about dogs, including Some…",
+      "url": "https://www.publishersweekly.com/9780763622015",
+      "note": "Shared in 10/19-10/23 · 10.23.2026",
+      "icon": "fa-link",
+      "auto": true
+    },
+    {
+      "label": "Montgomery, joined us in the NOP to read a variety of books about dogs, including Some…",
+      "url": "https://www.youtube.com/watch?v=vMiGX0OSiyM",
+      "note": "Shared in 10/19-10/23 · 10.23.2026",
+      "icon": "fa-play",
+      "auto": true
+    },
+    {
+      "label": "Montgomery, joined us in the NOP to read a variety of books about dogs, including Some…",
+      "url": "https://www.amazon.com/Bark-George-Jules-Feiffer/dp/0062051857",
+      "note": "Shared in 10/19-10/23 · 10.23.2026",
+      "icon": "fa-link",
+      "auto": true
+    },
+    {
       "label": "You can learn more about Norman and his book",
       "url": "https://normanatyourservice.com/",
       "note": "Shared in This week · 10.02.2026",
@@ -903,77 +931,183 @@
   ],
   "classNewsletters": {
     "2": {
-      "week": "10/5-10/9",
-      "subject": "Pe-K Newsletter: 10/5-10/9",
-      "date": "2026-10-09",
-      "dateLabel": "10.09.2026",
+      "week": "10/19-10/23",
+      "subject": "Pre-K Newsletter: 10/19-10/23",
+      "date": "2026-10-23",
+      "dateLabel": "10.23.2026",
       "blocks": [
         {
           "type": "p",
-          "text": "Good Afternoon Pre-K Families!"
+          "text": "Dear Pre-K Families,"
+        },
+        {
+          "type": "p",
+          "text": "What a wonderful week we had celebrating the joys of fall, all while outside! The weather was beautiful, and your children embraced every moment of learning and playing in the NOP.  Here’s a look back at our outdoor autumn week together:"
+        },
+        {
+          "type": "p",
+          "text": "Art in Nature Children painted watercolor pumpkins with tree stumps as their stools and tabletops."
+        },
+        {
+          "type": "p",
+          "text": "Dining Al Fresco Each day, everyone enjoyed snacks and lunch picnic-style in the shade. It was a fun way to connect with one another in a different setting."
+        },
+        {
+          "type": "p",
+          "text": "Spanish Al Aire Libre Spanish class also went outside! The children practiced their counting and went on a color hunt."
+        },
+        {
+          "type": "p",
+          "text": "Outdoor Exploration"
+        },
+        {
+          "type": "p",
+          "text": "The children collaborated to move large tree limbs and build imaginative new structures. They also explored flowering gourd vines, closely observed a variety of insects, ran a salon, started a band, and took care of pumpkin “babies”. This open ended play allowed your child to embrace their imagination while developing their interpersonal, social-emotional, and problem solving skills."
+        },
+        {
+          "type": "p",
+          "text": "Seed Exploration"
+        },
+        {
+          "type": "p",
+          "text": "Students had a blast dissecting a pumpkin, scooping out the pulp, cleaning the seeds, and learning all about the pumpkin life cycle. They even got to taste roasted pumpkin seeds during snack time! Based on the story Pumpkin Jack, we kicked off our own 'Pumpkin Jack' experiment! Each class carved a pumpkin and placed it in a jar with soil, giving us a front-row seat to watch the decomposition process. We're excited to observe the full life cycle, with the goal of planting the vines in the spring to grow our very own pumpkins. You can learn more about the experiment [here](https://www.simplykinder.com/pumpkin-jack-in-the-classroom/)."
+        },
+        {
+          "type": "p",
+          "text": "Eighth grade buddies joined us again, this time working alongside their Pre-K friends to dissect and count the seeds in a cherry tomato."
+        },
+        {
+          "type": "p",
+          "text": "Storytime in the Shade The librarian, Mrs. Montgomery, joined us in the NOP to read a variety of books about dogs, including Some Dogs [Do](https://www.publishersweekly.com/9780763622015), Harry the Dirty [Dog](https://www.youtube.com/watch?v=vMiGX0OSiyM), and Bark, [George!](https://www.amazon.com/Bark-George-Jules-Feiffer/dp/0062051857) It was the perfect way to enjoy literature amongst nature."
+        },
+        {
+          "type": "p",
+          "text": "Dancing in the Sunshine"
+        },
+        {
+          "type": "p",
+          "text": "The children had a blast in dance class dancing in the open air and expressing themselves through movement and rhythm."
+        },
+        {
+          "type": "p",
+          "text": "Science in the Fall Breeze Ms. Perkins joined us outside for Science this week. She read Spookly, The Square Pumpkin and then we explored shapes with chalk."
+        },
+        {
+          "type": "p",
+          "text": "It was a memorable week full of fresh air, friendship, and fall magic. We loved every minute,  and your children did too!"
+        },
+        {
+          "type": "p",
+          "text": "IMPORTANT DATES AND REMINDERS"
         },
         {
           "type": "ul",
           "items": [
-            "Different owls make different calls.",
-            "Most owls are nocturnal.",
-            "They have a third eyelid for cleaning their eyes!"
-          ],
-          "heading": "This week, the class explored the fascinating world of owls! Here are a few things they discovered"
+            "School wide Fall Festival: Saturday, October 24th from 2:00-5:00PM",
+            "Bidez/Nye Halloween Party: Friday, October 30th from 1:45-2:45PM"
+          ]
         },
         {
           "type": "p",
-          "text": "With the help of Ms. Zuberer and her trusty sewing machine, the children created sock owls. Each child chose a sock, stuffed it, and assisted with the sewing by pressing the pedal on the machine. The final, and most important step, was naming their owls."
-        },
-        {
-          "type": "p",
-          "text": "Using oil pastels, each child created a watercolor-resist owl painting, be sure to check them out at conferences! When drawing their owls, students practiced working with shapes, and strengthened visual-spatial skills as they decided how to arrange the body parts. It was truly a hoot!"
-        },
-        {
-          "type": "p",
-          "text": "We have continued to learn about shapes, begun sorting by size and various other attributes, and started exploring patterns."
-        },
-        {
-          "type": "p",
-          "text": "It has been so fun watching the kids share their \"Me Box\" treasures with their classmates! When your child’s turn arrives, please help them pick out a few special items to bring in. While favorite toys are often a hit, please help guide your child to think outside the toy box. Items like a favorite seashell, a family photo, a special craft, or a souvenir from a trip are fantastic ways for them to tell their story."
-        },
-        {
-          "type": "p",
-          "text": "The teachers have been busy preparing for parent-teacher conferences next week, and we are so excited to share all the wonderful growth and learning happening with your child!"
-        },
-        {
-          "type": "p",
-          "text": "Looking ahead, when we return to school on Monday, October 19th, it will be our first Natural Outdoor Playspace (NOP) week of the year! During this week, the majority of our days will be spent outside as students explore, learn, and engage with the natural world around them."
+          "text": "B/N Halloween Party Volunteer [Sign-Up](https://www.signupgenius.com/go/20F0945A5AD28ABF94-66711017-halloween)"
         },
         {
           "type": "ul",
           "items": [
-            "Monday, October 12 - Student Holiday, Parent/Teacher Conferences",
-            "Tuesday, October 13 - Student Holiday, Parent/Teacher Conferences",
-            "October 14 - October 18 - Fall Break",
-            "October 19 - October 23 - NOP Week",
-            "Friday, October 30 - Class Halloween Parties!",
-            "Bidez/Nye (1:45-2:45PM)",
-            "Huttchson/Collins (2:05-2:45PM)",
-            "Thursday, November 5 - NOP Parent’s Party: Save the date and book an evening sitter! Details coming soon."
-          ],
-          "heading": "UUpcoming Dates"
+            "Huttchson/Collins Halloween Party: Friday, October 30th from 2:05-2:45PM"
+          ]
         },
         {
           "type": "p",
-          "text": "We look forward to seeing you at conferences and wish you a fun and safe fall break!"
+          "text": "H/C Halloween Party Volunteer [Sign-Up](http://signupgenius.com/go/10C054AA8AF2EA0FDC34-66710970-halloween)"
+        },
+        {
+          "type": "ul",
+          "items": [
+            "NOP Parent’s Party: Thursday, November 5th from 6:00-8:00PM.  RSVP to Anne Zuberer and book an evening sitter!",
+            "A quick reminder that Pre-K does NOT participate in Grandparent’s Chocolate.",
+            "Please remember to label your child’s jackets/sweaters!"
+          ]
         },
         {
           "type": "p",
-          "text": "Happy Weekend!"
-        },
-        {
-          "type": "p",
-          "text": "Lauren and Greg"
+          "text": "Happy Weekend! Lauren and Greg"
         }
       ],
       "teachers": "Bidez & Nye",
       "archive": [
+        {
+          "week": "10/5-10/9",
+          "subject": "Pe-K Newsletter: 10/5-10/9",
+          "date": "2026-10-09",
+          "dateLabel": "10.09.2026",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Good Afternoon Pre-K Families!"
+            },
+            {
+              "type": "ul",
+              "items": [
+                "Different owls make different calls.",
+                "Most owls are nocturnal.",
+                "They have a third eyelid for cleaning their eyes!"
+              ],
+              "heading": "This week, the class explored the fascinating world of owls! Here are a few things they discovered"
+            },
+            {
+              "type": "p",
+              "text": "With the help of Ms. Zuberer and her trusty sewing machine, the children created sock owls. Each child chose a sock, stuffed it, and assisted with the sewing by pressing the pedal on the machine. The final, and most important step, was naming their owls."
+            },
+            {
+              "type": "p",
+              "text": "Using oil pastels, each child created a watercolor-resist owl painting, be sure to check them out at conferences! When drawing their owls, students practiced working with shapes, and strengthened visual-spatial skills as they decided how to arrange the body parts. It was truly a hoot!"
+            },
+            {
+              "type": "p",
+              "text": "We have continued to learn about shapes, begun sorting by size and various other attributes, and started exploring patterns."
+            },
+            {
+              "type": "p",
+              "text": "It has been so fun watching the kids share their \"Me Box\" treasures with their classmates! When your child’s turn arrives, please help them pick out a few special items to bring in. While favorite toys are often a hit, please help guide your child to think outside the toy box. Items like a favorite seashell, a family photo, a special craft, or a souvenir from a trip are fantastic ways for them to tell their story."
+            },
+            {
+              "type": "p",
+              "text": "The teachers have been busy preparing for parent-teacher conferences next week, and we are so excited to share all the wonderful growth and learning happening with your child!"
+            },
+            {
+              "type": "p",
+              "text": "Looking ahead, when we return to school on Monday, October 19th, it will be our first Natural Outdoor Playspace (NOP) week of the year! During this week, the majority of our days will be spent outside as students explore, learn, and engage with the natural world around them."
+            },
+            {
+              "type": "ul",
+              "items": [
+                "Monday, October 12 - Student Holiday, Parent/Teacher Conferences",
+                "Tuesday, October 13 - Student Holiday, Parent/Teacher Conferences",
+                "October 14 - October 18 - Fall Break",
+                "October 19 - October 23 - NOP Week",
+                "Friday, October 30 - Class Halloween Parties!",
+                "Bidez/Nye (1:45-2:45PM)",
+                "Huttchson/Collins (2:05-2:45PM)",
+                "Thursday, November 5 - NOP Parent’s Party: Save the date and book an evening sitter! Details coming soon."
+              ],
+              "heading": "UUpcoming Dates"
+            },
+            {
+              "type": "p",
+              "text": "We look forward to seeing you at conferences and wish you a fun and safe fall break!"
+            },
+            {
+              "type": "p",
+              "text": "Happy Weekend!"
+            },
+            {
+              "type": "p",
+              "text": "Lauren and Greg"
+            }
+          ],
+          "teachers": "Bidez & Nye"
+        },
         {
           "week": "This week",
           "subject": "Pre-K Newsletter, 9/28-10/2",
@@ -1039,8 +1173,7 @@
               "type": "p",
               "text": "Lauren and Greg"
             }
-          ],
-          "teachers": "Bidez & Nye"
+          ]
         },
         {
           "week": "9/22-9/25",
