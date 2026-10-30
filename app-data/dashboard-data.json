@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-30T20:45:45.843Z",
+  "lastUpdated": "2026-10-30T23:25:00.019Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -853,6 +853,27 @@
   },
   "learningResources": [
     {
+      "label": "To support our exploration of bones, we read books like You Can't See Your Bones With…",
+      "url": "https://www.youtube.com/watch?v=TKQ66IqOQ4g",
+      "note": "Shared in This week · 10.30.2026",
+      "icon": "fa-play",
+      "auto": true
+    },
+    {
+      "label": "To support our exploration of bones, we read books like You Can't See Your Bones With…",
+      "url": "https://www.youtube.com/watch?v=pnRcIUwcd-U",
+      "note": "Shared in This week · 10.30.2026",
+      "icon": "fa-play",
+      "auto": true
+    },
+    {
+      "label": "We also watched an educational video that helped us visualize where our bones are…",
+      "url": "https://www.youtube.com/watch?v=ywDOiNEdJVc",
+      "note": "Shared in This week · 10.30.2026",
+      "icon": "fa-play",
+      "auto": true
+    },
+    {
       "label": "You can learn more about the experiment",
       "url": "https://www.simplykinder.com/pumpkin-jack-in-the-classroom/",
       "note": "Shared in 10/19-10/23 · 10.23.2026",
@@ -931,10 +952,10 @@
   ],
   "classNewsletters": {
     "2": {
-      "week": "10/19-10/23",
-      "subject": "Pre-K Newsletter: 10/19-10/23",
-      "date": "2026-10-23",
-      "dateLabel": "10.23.2026",
+      "week": "This week",
+      "subject": "Pre-K Newsletter 10/30",
+      "date": "2026-10-30",
+      "dateLabel": "10.30.2026",
       "blocks": [
         {
           "type": "p",
@@ -942,91 +963,40 @@
         },
         {
           "type": "p",
-          "text": "What a wonderful week we had celebrating the joys of fall, all while outside! The weather was beautiful, and your children embraced every moment of learning and playing in the NOP.  Here’s a look back at our outdoor autumn week together:"
+          "text": "What a wonderful week it has been! Thank you for making our Halloween parties a success. We truly could not have done it without you!"
         },
         {
           "type": "p",
-          "text": "Art in Nature Children painted watercolor pumpkins with tree stumps as their stools and tabletops."
+          "text": "This week in Pre-K, our learning centered around bilateral symmetry and bone health, a perfect seasonal tie-in as we approach Halloween! We began by tracing the full outlines of each child’s body onto black paper. Then came the fun part: painting one half of their traced silhouette in white paint. With a quick fold down the middle (right along the line of symmetry!), they used their hands to press and transfer the paint - revealing a symmetrical skeleton! Once dry, we labeled the various bones, reinforcing both anatomy and vocabulary. We also explored symmetry in nature by observing butterflies, insects, and leaves, helping us understand this fascinating concept in the world around us."
         },
         {
           "type": "p",
-          "text": "Dining Al Fresco Each day, everyone enjoyed snacks and lunch picnic-style in the shade. It was a fun way to connect with one another in a different setting."
+          "text": "To support our exploration of bones, we read books like You Can't See Your Bones With [Binoculars](https://www.youtube.com/watch?v=TKQ66IqOQ4g) and [Bones](https://www.youtube.com/watch?v=pnRcIUwcd-U). We also watched an educational [video](https://www.youtube.com/watch?v=ywDOiNEdJVc)  that helped us visualize where our bones are located and understand how they support our bodies."
         },
         {
           "type": "p",
-          "text": "Spanish Al Aire Libre Spanish class also went outside! The children practiced their counting and went on a color hunt."
+          "text": "Our letter of the week was C and we’ve been busy practicing its sound and shape through our Handwriting Without Tears manipulatives and workbooks."
         },
         {
           "type": "p",
-          "text": "Outdoor Exploration"
+          "text": "We also began preparing for Día de los Muertos by creating a beautiful classroom ofrenda, or altar, to honor our loved ones who have passed. If your family would like to contribute a photo or small item to represent someone special, we warmly welcome it. Please label any items so we can ensure they are returned safely after our celebration."
         },
         {
           "type": "p",
-          "text": "The children collaborated to move large tree limbs and build imaginative new structures. They also explored flowering gourd vines, closely observed a variety of insects, ran a salon, started a band, and took care of pumpkin “babies”. This open ended play allowed your child to embrace their imagination while developing their interpersonal, social-emotional, and problem solving skills."
+          "text": "Thank you, as always, for being such an important part of our classroom community. Wishing you and your families a fun, safe, and happy Halloween! 🎃👻"
         },
         {
           "type": "p",
-          "text": "Seed Exploration"
-        },
-        {
-          "type": "p",
-          "text": "Students had a blast dissecting a pumpkin, scooping out the pulp, cleaning the seeds, and learning all about the pumpkin life cycle. They even got to taste roasted pumpkin seeds during snack time! Based on the story Pumpkin Jack, we kicked off our own 'Pumpkin Jack' experiment! Each class carved a pumpkin and placed it in a jar with soil, giving us a front-row seat to watch the decomposition process. We're excited to observe the full life cycle, with the goal of planting the vines in the spring to grow our very own pumpkins. You can learn more about the experiment [here](https://www.simplykinder.com/pumpkin-jack-in-the-classroom/)."
-        },
-        {
-          "type": "p",
-          "text": "Eighth grade buddies joined us again, this time working alongside their Pre-K friends to dissect and count the seeds in a cherry tomato."
-        },
-        {
-          "type": "p",
-          "text": "Storytime in the Shade The librarian, Mrs. Montgomery, joined us in the NOP to read a variety of books about dogs, including Some Dogs [Do](https://www.publishersweekly.com/9780763622015), Harry the Dirty [Dog](https://www.youtube.com/watch?v=vMiGX0OSiyM), and Bark, [George!](https://www.amazon.com/Bark-George-Jules-Feiffer/dp/0062051857) It was the perfect way to enjoy literature amongst nature."
-        },
-        {
-          "type": "p",
-          "text": "Dancing in the Sunshine"
-        },
-        {
-          "type": "p",
-          "text": "The children had a blast in dance class dancing in the open air and expressing themselves through movement and rhythm."
-        },
-        {
-          "type": "p",
-          "text": "Science in the Fall Breeze Ms. Perkins joined us outside for Science this week. She read Spookly, The Square Pumpkin and then we explored shapes with chalk."
-        },
-        {
-          "type": "p",
-          "text": "It was a memorable week full of fresh air, friendship, and fall magic. We loved every minute,  and your children did too!"
-        },
-        {
-          "type": "p",
-          "text": "IMPORTANT DATES AND REMINDERS"
+          "text": "Reminders"
         },
         {
           "type": "ul",
           "items": [
-            "School wide Fall Festival: Saturday, October 24th from 2:00-5:00PM",
-            "Bidez/Nye Halloween Party: Friday, October 30th from 1:45-2:45PM"
-          ]
-        },
-        {
-          "type": "p",
-          "text": "B/N Halloween Party Volunteer [Sign-Up](https://www.signupgenius.com/go/20F0945A5AD28ABF94-66711017-halloween)"
-        },
-        {
-          "type": "ul",
-          "items": [
-            "Huttchson/Collins Halloween Party: Friday, October 30th from 2:05-2:45PM"
-          ]
-        },
-        {
-          "type": "p",
-          "text": "H/C Halloween Party Volunteer [Sign-Up](http://signupgenius.com/go/10C054AA8AF2EA0FDC34-66710970-halloween)"
-        },
-        {
-          "type": "ul",
-          "items": [
-            "NOP Parent’s Party: Thursday, November 5th from 6:00-8:00PM.  RSVP to Anne Zuberer and book an evening sitter!",
-            "A quick reminder that Pre-K does NOT participate in Grandparent’s Chocolate.",
-            "Please remember to label your child’s jackets/sweaters!"
+            "Please remember to label your child’s jackets/sweaters!",
+            "Thursday, November 5th from 6:00-8:00PM: NOP Parent’s Party. All Pre-K classroom teachers will be there! Please RSVP via the original email from Anne Zuberer.",
+            "Friday, November 13th at 4:00PM: Trimester 1 reports are posted on CompassNet.",
+            "Tuesday, November 24th: Dismissal at 12:00PM, no Pursuit available.",
+            "Wednesday, November 25th thru Sunday, November 29th: Thanksgiving Break, no school."
           ]
         },
         {
@@ -1036,6 +1006,112 @@
       ],
       "teachers": "Bidez & Nye",
       "archive": [
+        {
+          "week": "10/19-10/23",
+          "subject": "Pre-K Newsletter: 10/19-10/23",
+          "date": "2026-10-23",
+          "dateLabel": "10.23.2026",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Dear Pre-K Families,"
+            },
+            {
+              "type": "p",
+              "text": "What a wonderful week we had celebrating the joys of fall, all while outside! The weather was beautiful, and your children embraced every moment of learning and playing in the NOP.  Here’s a look back at our outdoor autumn week together:"
+            },
+            {
+              "type": "p",
+              "text": "Art in Nature Children painted watercolor pumpkins with tree stumps as their stools and tabletops."
+            },
+            {
+              "type": "p",
+              "text": "Dining Al Fresco Each day, everyone enjoyed snacks and lunch picnic-style in the shade. It was a fun way to connect with one another in a different setting."
+            },
+            {
+              "type": "p",
+              "text": "Spanish Al Aire Libre Spanish class also went outside! The children practiced their counting and went on a color hunt."
+            },
+            {
+              "type": "p",
+              "text": "Outdoor Exploration"
+            },
+            {
+              "type": "p",
+              "text": "The children collaborated to move large tree limbs and build imaginative new structures. They also explored flowering gourd vines, closely observed a variety of insects, ran a salon, started a band, and took care of pumpkin “babies”. This open ended play allowed your child to embrace their imagination while developing their interpersonal, social-emotional, and problem solving skills."
+            },
+            {
+              "type": "p",
+              "text": "Seed Exploration"
+            },
+            {
+              "type": "p",
+              "text": "Students had a blast dissecting a pumpkin, scooping out the pulp, cleaning the seeds, and learning all about the pumpkin life cycle. They even got to taste roasted pumpkin seeds during snack time! Based on the story Pumpkin Jack, we kicked off our own 'Pumpkin Jack' experiment! Each class carved a pumpkin and placed it in a jar with soil, giving us a front-row seat to watch the decomposition process. We're excited to observe the full life cycle, with the goal of planting the vines in the spring to grow our very own pumpkins. You can learn more about the experiment [here](https://www.simplykinder.com/pumpkin-jack-in-the-classroom/)."
+            },
+            {
+              "type": "p",
+              "text": "Eighth grade buddies joined us again, this time working alongside their Pre-K friends to dissect and count the seeds in a cherry tomato."
+            },
+            {
+              "type": "p",
+              "text": "Storytime in the Shade The librarian, Mrs. Montgomery, joined us in the NOP to read a variety of books about dogs, including Some Dogs [Do](https://www.publishersweekly.com/9780763622015), Harry the Dirty [Dog](https://www.youtube.com/watch?v=vMiGX0OSiyM), and Bark, [George!](https://www.amazon.com/Bark-George-Jules-Feiffer/dp/0062051857) It was the perfect way to enjoy literature amongst nature."
+            },
+            {
+              "type": "p",
+              "text": "Dancing in the Sunshine"
+            },
+            {
+              "type": "p",
+              "text": "The children had a blast in dance class dancing in the open air and expressing themselves through movement and rhythm."
+            },
+            {
+              "type": "p",
+              "text": "Science in the Fall Breeze Ms. Perkins joined us outside for Science this week. She read Spookly, The Square Pumpkin and then we explored shapes with chalk."
+            },
+            {
+              "type": "p",
+              "text": "It was a memorable week full of fresh air, friendship, and fall magic. We loved every minute,  and your children did too!"
+            },
+            {
+              "type": "p",
+              "text": "IMPORTANT DATES AND REMINDERS"
+            },
+            {
+              "type": "ul",
+              "items": [
+                "School wide Fall Festival: Saturday, October 24th from 2:00-5:00PM",
+                "Bidez/Nye Halloween Party: Friday, October 30th from 1:45-2:45PM"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "B/N Halloween Party Volunteer [Sign-Up](https://www.signupgenius.com/go/20F0945A5AD28ABF94-66711017-halloween)"
+            },
+            {
+              "type": "ul",
+              "items": [
+                "Huttchson/Collins Halloween Party: Friday, October 30th from 2:05-2:45PM"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "H/C Halloween Party Volunteer [Sign-Up](http://signupgenius.com/go/10C054AA8AF2EA0FDC34-66710970-halloween)"
+            },
+            {
+              "type": "ul",
+              "items": [
+                "NOP Parent’s Party: Thursday, November 5th from 6:00-8:00PM.  RSVP to Anne Zuberer and book an evening sitter!",
+                "A quick reminder that Pre-K does NOT participate in Grandparent’s Chocolate.",
+                "Please remember to label your child’s jackets/sweaters!"
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Happy Weekend! Lauren and Greg"
+            }
+          ],
+          "teachers": "Bidez & Nye"
+        },
         {
           "week": "10/5-10/9",
           "subject": "Pe-K Newsletter: 10/5-10/9",
@@ -1105,8 +1181,7 @@
               "type": "p",
               "text": "Lauren and Greg"
             }
-          ],
-          "teachers": "Bidez & Nye"
+          ]
         },
         {
           "week": "This week",
