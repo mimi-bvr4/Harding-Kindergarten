@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-06T21:45:21.134Z",
+  "lastUpdated": "2026-11-07T00:25:07.441Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -853,6 +853,20 @@
   },
   "learningResources": [
     {
+      "label": "We also read wonderful books about voting, including The President of the Jungle,…",
+      "url": "https://www.youtube.com/watch?v=XAq0wlZjFUc",
+      "note": "Shared in This week · 11.06.2026",
+      "icon": "fa-play",
+      "auto": true
+    },
+    {
+      "label": "He is also a co-founder of IndigeNash, Nashville's Indigenous arts and culture festival",
+      "url": "https://www.indigenash.org/",
+      "note": "Shared in This week · 11.06.2026",
+      "icon": "fa-link",
+      "auto": true
+    },
+    {
       "label": "To support our exploration of bones, we read books like You Can't See Your Bones With…",
       "url": "https://www.youtube.com/watch?v=TKQ66IqOQ4g",
       "note": "Shared in This week · 10.30.2026",
@@ -953,9 +967,9 @@
   "classNewsletters": {
     "2": {
       "week": "This week",
-      "subject": "Pre-K Newsletter 10/30",
-      "date": "2026-10-30",
-      "dateLabel": "10.30.2026",
+      "subject": "Pre-K Newsletter 11/6",
+      "date": "2026-11-06",
+      "dateLabel": "11.06.2026",
       "blocks": [
         {
           "type": "p",
@@ -963,27 +977,39 @@
         },
         {
           "type": "p",
-          "text": "What a wonderful week it has been! Thank you for making our Halloween parties a success. We truly could not have done it without you!"
+          "text": "This week, our exploration of symmetry continued as we dove into the fascinating world of monarch butterflies and their incredible migration. We learned that migrate means “to move,” and discovered how monarchs journey all the way to Mexico for the winter. Through engaging videos, we traveled alongside them, witnessing their breathtaking migration firsthand."
         },
         {
           "type": "p",
-          "text": "This week in Pre-K, our learning centered around bilateral symmetry and bone health, a perfect seasonal tie-in as we approach Halloween! We began by tracing the full outlines of each child’s body onto black paper. Then came the fun part: painting one half of their traced silhouette in white paint. With a quick fold down the middle (right along the line of symmetry!), they used their hands to press and transfer the paint - revealing a symmetrical skeleton! Once dry, we labeled the various bones, reinforcing both anatomy and vocabulary. We also explored symmetry in nature by observing butterflies, insects, and leaves, helping us understand this fascinating concept in the world around us."
+          "text": "Then came the art! Over two days, we created our very own monarch butterflies using watercolor paints. First, we painted our paper and pressed crinkled saran wrap on top while it dried to create delicate lines, just like those on butterfly wings. On day two, we folded our paper along a line of symmetry, traced half a butterfly wing, carefully cut along the lines, and unfolded our creations to reveal beautiful, one-of-a-kind butterflies!"
         },
         {
           "type": "p",
-          "text": "To support our exploration of bones, we read books like You Can't See Your Bones With [Binoculars](https://www.youtube.com/watch?v=TKQ66IqOQ4g) and [Bones](https://www.youtube.com/watch?v=pnRcIUwcd-U). We also watched an educational [video](https://www.youtube.com/watch?v=ywDOiNEdJVc)  that helped us visualize where our bones are located and understand how they support our bodies."
+          "text": "Our unit on voting began Monday morning when students signed their voter registration cards and provided their birthdays. Then voting began on Tuesday with our first decision: whether to have morning recess in the NOP or the Courtyard. NOP won! Several friends felt disappointed by the results, which led to a thoughtful conversation about how voting is a fair way to make decisions, even though it can leave some people happy with the outcome and others disappointed."
         },
         {
           "type": "p",
-          "text": "Our letter of the week was C and we’ve been busy practicing its sound and shape through our Handwriting Without Tears manipulatives and workbooks."
+          "text": "Throughout the week, we continued to vote on various topics such as which book to read during group time, which snack to enjoy, and whether to have a picnic snack or lunch. We also read wonderful books about voting, including The President of the [Jungle](https://www.youtube.com/watch?v=XAq0wlZjFUc), which helped students understand what it means to vote and how every vote can impact a community."
         },
         {
           "type": "p",
-          "text": "We also began preparing for Día de los Muertos by creating a beautiful classroom ofrenda, or altar, to honor our loved ones who have passed. If your family would like to contribute a photo or small item to represent someone special, we warmly welcome it. Please label any items so we can ensure they are returned safely after our celebration."
+          "text": "As part of our voting unit, we emphasized three core values: every person gets one vote, your vote is private (unless you choose to share it), and voting directly impacts both the individual voter and their community."
         },
         {
           "type": "p",
-          "text": "Thank you, as always, for being such an important part of our classroom community. Wishing you and your families a fun, safe, and happy Halloween! 🎃👻"
+          "text": "In the spirit of voting, we created a cooperative paper weaving art piece. This project reflected our voting study by using a process that required everyone’s participation to create a final product. It also introduced basic weaving techniques and prepositions (under, over, in front, behind) while strengthening fine motor skills. Photos from the week show students painting side by side in teams, creating the colorful pieces that made up the final artwork."
+        },
+        {
+          "type": "p",
+          "text": "In honor of Native American Heritage month, we welcomed Trenton Wheeler to campus on Tuesday. Trenton is a member of the Blackfeet Tribe, a musician, artist, and cultural educator. He is also a co-founder of [IndigeNash](https://www.indigenash.org/), Nashville's Indigenous arts and culture festival. Through storytelling, music, and traditional demonstrations, including the Northern Plains Grass Dance, Trenton shared his heritage and helped showcase Native American culture both past and present."
+        },
+        {
+          "type": "p",
+          "text": "We had a great time with you at our first Pre-K Parent Party in the NOP! Thank you for making the effort to join us."
+        },
+        {
+          "type": "p",
+          "text": "DISMISSAL TIME CHANGE: Tuesday, November 24th: Dismissal at **11:30AM**, no Pursuit available. This is a change from the previously announced dismissal time of noon."
         },
         {
           "type": "p",
@@ -992,20 +1018,77 @@
         {
           "type": "ul",
           "items": [
-            "Please remember to label your child’s jackets/sweaters!",
-            "Thursday, November 5th from 6:00-8:00PM: NOP Parent’s Party. All Pre-K classroom teachers will be there! Please RSVP via the original email from Anne Zuberer.",
             "Friday, November 13th at 4:00PM: Trimester 1 reports are posted on CompassNet.",
-            "Tuesday, November 24th: Dismissal at 12:00PM, no Pursuit available.",
+            "Tuesday, November 24th: Dismissal at **11:30AM**, no Pursuit available.",
             "Wednesday, November 25th thru Sunday, November 29th: Thanksgiving Break, no school."
           ]
         },
         {
           "type": "p",
-          "text": "Happy Weekend! Lauren and Greg"
+          "text": "Happy Weekend!"
+        },
+        {
+          "type": "p",
+          "text": "Lauren and Greg"
         }
       ],
       "teachers": "Bidez & Nye",
       "archive": [
+        {
+          "week": "This week",
+          "subject": "Pre-K Newsletter 10/30",
+          "date": "2026-10-30",
+          "dateLabel": "10.30.2026",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Dear Pre-K Families,"
+            },
+            {
+              "type": "p",
+              "text": "What a wonderful week it has been! Thank you for making our Halloween parties a success. We truly could not have done it without you!"
+            },
+            {
+              "type": "p",
+              "text": "This week in Pre-K, our learning centered around bilateral symmetry and bone health, a perfect seasonal tie-in as we approach Halloween! We began by tracing the full outlines of each child’s body onto black paper. Then came the fun part: painting one half of their traced silhouette in white paint. With a quick fold down the middle (right along the line of symmetry!), they used their hands to press and transfer the paint - revealing a symmetrical skeleton! Once dry, we labeled the various bones, reinforcing both anatomy and vocabulary. We also explored symmetry in nature by observing butterflies, insects, and leaves, helping us understand this fascinating concept in the world around us."
+            },
+            {
+              "type": "p",
+              "text": "To support our exploration of bones, we read books like You Can't See Your Bones With [Binoculars](https://www.youtube.com/watch?v=TKQ66IqOQ4g) and [Bones](https://www.youtube.com/watch?v=pnRcIUwcd-U). We also watched an educational [video](https://www.youtube.com/watch?v=ywDOiNEdJVc)  that helped us visualize where our bones are located and understand how they support our bodies."
+            },
+            {
+              "type": "p",
+              "text": "Our letter of the week was C and we’ve been busy practicing its sound and shape through our Handwriting Without Tears manipulatives and workbooks."
+            },
+            {
+              "type": "p",
+              "text": "We also began preparing for Día de los Muertos by creating a beautiful classroom ofrenda, or altar, to honor our loved ones who have passed. If your family would like to contribute a photo or small item to represent someone special, we warmly welcome it. Please label any items so we can ensure they are returned safely after our celebration."
+            },
+            {
+              "type": "p",
+              "text": "Thank you, as always, for being such an important part of our classroom community. Wishing you and your families a fun, safe, and happy Halloween! 🎃👻"
+            },
+            {
+              "type": "p",
+              "text": "Reminders"
+            },
+            {
+              "type": "ul",
+              "items": [
+                "Please remember to label your child’s jackets/sweaters!",
+                "Thursday, November 5th from 6:00-8:00PM: NOP Parent’s Party. All Pre-K classroom teachers will be there! Please RSVP via the original email from Anne Zuberer.",
+                "Friday, November 13th at 4:00PM: Trimester 1 reports are posted on CompassNet.",
+                "Tuesday, November 24th: Dismissal at 12:00PM, no Pursuit available.",
+                "Wednesday, November 25th thru Sunday, November 29th: Thanksgiving Break, no school."
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Happy Weekend! Lauren and Greg"
+            }
+          ],
+          "teachers": "Bidez & Nye"
+        },
         {
           "week": "10/19-10/23",
           "subject": "Pre-K Newsletter: 10/19-10/23",
@@ -1109,8 +1192,7 @@
               "type": "p",
               "text": "Happy Weekend! Lauren and Greg"
             }
-          ],
-          "teachers": "Bidez & Nye"
+          ]
         },
         {
           "week": "10/5-10/9",
