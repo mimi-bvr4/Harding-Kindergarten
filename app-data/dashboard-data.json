@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-08T15:26:42.288Z",
+  "lastUpdated": "2026-11-08T21:55:03.055Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -194,8 +194,15 @@
       "note": "Adults-only event."
     },
     {
+      "date": "2026-11-23",
+      "label": "Grandparents & Special Friends Chocolate — Parent Performance",
+      "time": "09:00"
+    },
+    {
       "date": "2026-11-24",
-      "label": "Grandparents Chocolate — early dismissal"
+      "label": "Grandparents & Special Friends Chocolate — 11:30 AM dismissal",
+      "time": "11:30",
+      "note": "9:00 AM for grandparents and special friends. Pursuit and Study Hall closed."
     },
     {
       "date": "2026-11-25",
@@ -204,7 +211,9 @@
     },
     {
       "date": "2026-12-18",
-      "label": "Early Dismissal"
+      "label": "Early Dismissal — 12:00 PM",
+      "time": "12:00",
+      "note": "Pursuit and Study Hall closed."
     },
     {
       "date": "2026-12-21",
