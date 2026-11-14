@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-13T21:45:43.790Z",
+  "lastUpdated": "2026-11-14T00:24:57.387Z",
   "programName": "Harding PreK",
   "programSubtitle": "A parent-built page",
   "welcome": "Welcome to PreK! Orientation is Monday, August 17 — your family's time slot is below.",
@@ -857,6 +857,13 @@
   },
   "learningResources": [
     {
+      "label": "Inspired by Berry Woman's Children, students discovered the vital role animal stories…",
+      "url": "https://daledearmond.com/berry-womans-children/",
+      "note": "Shared in This week · 11.13.2026",
+      "icon": "fa-link",
+      "auto": true
+    },
+    {
       "label": "We also read wonderful books about voting, including The President of the Jungle,…",
       "url": "https://www.youtube.com/watch?v=XAq0wlZjFUc",
       "note": "Shared in This week · 11.06.2026",
@@ -971,9 +978,9 @@
   "classNewsletters": {
     "2": {
       "week": "This week",
-      "subject": "Pre-K Newsletter 11/6",
-      "date": "2026-11-06",
-      "dateLabel": "11.06.2026",
+      "subject": "Pre-K Newsletter 11/13",
+      "date": "2026-11-13",
+      "dateLabel": "11.13.2026",
       "blocks": [
         {
           "type": "p",
@@ -981,51 +988,37 @@
         },
         {
           "type": "p",
-          "text": "This week, our exploration of symmetry continued as we dove into the fascinating world of monarch butterflies and their incredible migration. We learned that migrate means “to move,” and discovered how monarchs journey all the way to Mexico for the winter. Through engaging videos, we traveled alongside them, witnessing their breathtaking migration firsthand."
+          "text": "This week, we learned about Diwali traditions. Students learned about how Diwali symbolizes the victory of light over darkness and good over evil. The celebration brought warmth to our campus with festive lights displayed throughout the halls, colorful decorations adorning our cubby room, and an interactive rangoli station within the classroom."
         },
         {
           "type": "p",
-          "text": "Then came the art! Over two days, we created our very own monarch butterflies using watercolor paints. First, we painted our paper and pressed crinkled saran wrap on top while it dried to create delicate lines, just like those on butterfly wings. On day two, we folded our paper along a line of symmetry, traced half a butterfly wing, carefully cut along the lines, and unfolded our creations to reveal beautiful, one-of-a-kind butterflies!"
+          "text": "With autumn all around us, we were inspired to bring fallen leaves to our science tables. Students practiced sorting leaves by shape and color, comparing and contrasting their different features, and using magnifying glasses to take a closer look."
         },
         {
           "type": "p",
-          "text": "Our unit on voting began Monday morning when students signed their voter registration cards and provided their birthdays. Then voting began on Tuesday with our first decision: whether to have morning recess in the NOP or the Courtyard. NOP won! Several friends felt disappointed by the results, which led to a thoughtful conversation about how voting is a fair way to make decisions, even though it can leave some people happy with the outcome and others disappointed."
+          "text": "This week, our class explored the deep connection between Indigenous peoples, animals, and the land. Inspired by Berry Woman's [Children](https://daledearmond.com/berry-womans-children/), students discovered the vital role animal stories play in Indigenous cultures. We read Native American tales featuring animals native to Tennessee, including deer, catfish, turtles, snakes, ducks, rabbits, bears, and owls. After listening to a fable about each animal, students chose their favorite to inspire a piece of monoprint art. This multi-step process introduced new vocabulary such as monoprint, brayer, and burnish."
         },
         {
           "type": "p",
-          "text": "Throughout the week, we continued to vote on various topics such as which book to read during group time, which snack to enjoy, and whether to have a picnic snack or lunch. We also read wonderful books about voting, including The President of the [Jungle](https://www.youtube.com/watch?v=XAq0wlZjFUc), which helped students understand what it means to vote and how every vote can impact a community."
+          "text": "Students began by sketching their chosen animal with Sharpie on white paper. Next, they prepared their printing plates by using a brayer to roll ink onto the printing plate. Their next step was to use a dull pencil, or eraser to draw their images into the ink and pull one-of-a-kind mono prints. The printing process was a bit tricky at first, but with patience and practice, each student created a beautiful, unique animal print!"
         },
         {
           "type": "p",
-          "text": "As part of our voting unit, we emphasized three core values: every person gets one vote, your vote is private (unless you choose to share it), and voting directly impacts both the individual voter and their community."
+          "text": "In math this week, we dove into data collection and graphing using a variety of hands-on approaches. Students created interactive bar graphs to compare our ages, mapped out our daily feelings to notice class patterns, and even organized our shoes by type, color, and fastener style. The children loved placing their actual shoes into graph lanes on the rug, counting each column together, and using math vocabulary like more than, less than, and equal to to analyze our visual data!"
         },
         {
           "type": "p",
-          "text": "In the spirit of voting, we created a cooperative paper weaving art piece. This project reflected our voting study by using a process that required everyone’s participation to create a final product. It also introduced basic weaving techniques and prepositions (under, over, in front, behind) while strengthening fine motor skills. Photos from the week show students painting side by side in teams, creating the colorful pieces that made up the final artwork."
-        },
-        {
-          "type": "p",
-          "text": "In honor of Native American Heritage month, we welcomed Trenton Wheeler to campus on Tuesday. Trenton is a member of the Blackfeet Tribe, a musician, artist, and cultural educator. He is also a co-founder of [IndigeNash](https://www.indigenash.org/), Nashville's Indigenous arts and culture festival. Through storytelling, music, and traditional demonstrations, including the Northern Plains Grass Dance, Trenton shared his heritage and helped showcase Native American culture both past and present."
-        },
-        {
-          "type": "p",
-          "text": "We had a great time with you at our first Pre-K Parent Party in the NOP! Thank you for making the effort to join us."
-        },
-        {
-          "type": "p",
-          "text": "DISMISSAL TIME CHANGE: Tuesday, November 24th: Dismissal at **11:30AM**, no Pursuit available. This is a change from the previously announced dismissal time of noon."
-        },
-        {
-          "type": "p",
-          "text": "Reminders"
+          "text": "Three Guatemalan exchange students, Colette, Cami, and Nicole, spent a few mornings in Pre-K with us! They are attending middle school at Harding Academy for two months and will return home at winter break. While the middle schoolers completed ERB testing this week, they joined us for morning meetings, NOP time, snack, specials, and art projects. Our students loved welcoming them and showing what life in Pre-K is all about!"
         },
         {
           "type": "ul",
           "items": [
-            "Friday, November 13th at 4:00PM: Trimester 1 reports are posted on CompassNet.",
-            "Tuesday, November 24th: Dismissal at **11:30AM**, no Pursuit available.",
+            "COLD WEATHER WEAR: If it is above 13 degrees, we will be going outside. As colder weather sets in, please refer to the weather for the 8AM-9AM hour to know what to send: coats, hats, gloves, etc.  Please work with your child to practice putting on their gloves and coat independently, as well as zipping their coats independently. Remember to label outerwear with your child’s name.",
+            "Tuesday, November 24th: Dismissal at 11:30AM - NO Pursuit. Please be aware that this is a very busy day on campus, so pick-up may take a bit longer than usual.",
+            "If your child has an older sibling participating in Grandparent’s Chocolate, please let grandparents know they are welcome to stop by the PreK classrooms! If your child plans to leave with a grandparent, please let both your child and their teacher know in advance. Don’t forget: grandparents will need your child’s 4-digit Procare code to check them out of school OR an email from you giving them permission.",
             "Wednesday, November 25th thru Sunday, November 29th: Thanksgiving Break, no school."
-          ]
+          ],
+          "heading": "Reminders"
         },
         {
           "type": "p",
@@ -1038,6 +1031,75 @@
       ],
       "teachers": "Bidez & Nye",
       "archive": [
+        {
+          "week": "This week",
+          "subject": "Pre-K Newsletter 11/6",
+          "date": "2026-11-06",
+          "dateLabel": "11.06.2026",
+          "blocks": [
+            {
+              "type": "p",
+              "text": "Dear Pre-K Families,"
+            },
+            {
+              "type": "p",
+              "text": "This week, our exploration of symmetry continued as we dove into the fascinating world of monarch butterflies and their incredible migration. We learned that migrate means “to move,” and discovered how monarchs journey all the way to Mexico for the winter. Through engaging videos, we traveled alongside them, witnessing their breathtaking migration firsthand."
+            },
+            {
+              "type": "p",
+              "text": "Then came the art! Over two days, we created our very own monarch butterflies using watercolor paints. First, we painted our paper and pressed crinkled saran wrap on top while it dried to create delicate lines, just like those on butterfly wings. On day two, we folded our paper along a line of symmetry, traced half a butterfly wing, carefully cut along the lines, and unfolded our creations to reveal beautiful, one-of-a-kind butterflies!"
+            },
+            {
+              "type": "p",
+              "text": "Our unit on voting began Monday morning when students signed their voter registration cards and provided their birthdays. Then voting began on Tuesday with our first decision: whether to have morning recess in the NOP or the Courtyard. NOP won! Several friends felt disappointed by the results, which led to a thoughtful conversation about how voting is a fair way to make decisions, even though it can leave some people happy with the outcome and others disappointed."
+            },
+            {
+              "type": "p",
+              "text": "Throughout the week, we continued to vote on various topics such as which book to read during group time, which snack to enjoy, and whether to have a picnic snack or lunch. We also read wonderful books about voting, including The President of the [Jungle](https://www.youtube.com/watch?v=XAq0wlZjFUc), which helped students understand what it means to vote and how every vote can impact a community."
+            },
+            {
+              "type": "p",
+              "text": "As part of our voting unit, we emphasized three core values: every person gets one vote, your vote is private (unless you choose to share it), and voting directly impacts both the individual voter and their community."
+            },
+            {
+              "type": "p",
+              "text": "In the spirit of voting, we created a cooperative paper weaving art piece. This project reflected our voting study by using a process that required everyone’s participation to create a final product. It also introduced basic weaving techniques and prepositions (under, over, in front, behind) while strengthening fine motor skills. Photos from the week show students painting side by side in teams, creating the colorful pieces that made up the final artwork."
+            },
+            {
+              "type": "p",
+              "text": "In honor of Native American Heritage month, we welcomed Trenton Wheeler to campus on Tuesday. Trenton is a member of the Blackfeet Tribe, a musician, artist, and cultural educator. He is also a co-founder of [IndigeNash](https://www.indigenash.org/), Nashville's Indigenous arts and culture festival. Through storytelling, music, and traditional demonstrations, including the Northern Plains Grass Dance, Trenton shared his heritage and helped showcase Native American culture both past and present."
+            },
+            {
+              "type": "p",
+              "text": "We had a great time with you at our first Pre-K Parent Party in the NOP! Thank you for making the effort to join us."
+            },
+            {
+              "type": "p",
+              "text": "DISMISSAL TIME CHANGE: Tuesday, November 24th: Dismissal at **11:30AM**, no Pursuit available. This is a change from the previously announced dismissal time of noon."
+            },
+            {
+              "type": "p",
+              "text": "Reminders"
+            },
+            {
+              "type": "ul",
+              "items": [
+                "Friday, November 13th at 4:00PM: Trimester 1 reports are posted on CompassNet.",
+                "Tuesday, November 24th: Dismissal at **11:30AM**, no Pursuit available.",
+                "Wednesday, November 25th thru Sunday, November 29th: Thanksgiving Break, no school."
+              ]
+            },
+            {
+              "type": "p",
+              "text": "Happy Weekend!"
+            },
+            {
+              "type": "p",
+              "text": "Lauren and Greg"
+            }
+          ],
+          "teachers": "Bidez & Nye"
+        },
         {
           "week": "This week",
           "subject": "Pre-K Newsletter 10/30",
@@ -1090,8 +1152,7 @@
               "type": "p",
               "text": "Happy Weekend! Lauren and Greg"
             }
-          ],
-          "teachers": "Bidez & Nye"
+          ]
         },
         {
           "week": "10/19-10/23",
